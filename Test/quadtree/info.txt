@@ -1,0 +1,7 @@
+
+512	2560
+1280	384
+END
+Chu thich:
+Dong dau tien min max camera
+Dong thu hai vi tri samus
