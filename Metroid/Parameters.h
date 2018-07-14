@@ -190,7 +190,7 @@ class Energy;
 
 #define BIRD_WIDTH 36
 #define BIRD_HEIGHT 52
-
+#define TIMEBEFOREEXPLODE 3000
 #define BIRD_FLY_SPRITE_COUNT 3
 
 #define BIRD_FLY "sprites\\enemy\\BIRD_FLY.txt"

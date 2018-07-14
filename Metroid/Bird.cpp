@@ -21,6 +21,7 @@ Bird::Bird(LPD3DXSPRITE spriteHandler, World * manager, ENEMY_TYPE enemy_type) :
 
 	//Khởi tạo sát thương
 	damage = DAMAGE_BIRD;
+	TimeBeforeExplode = TIMEBEFOREEXPLODE;
 
 	width = BIRD_WIDTH;
 	height = BIRD_HEIGHT;

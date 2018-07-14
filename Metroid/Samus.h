@@ -124,7 +124,12 @@ public:
 	float GetHealth();
 	void TakeDamage(float damage);
 
-	void OnkeyDown(int KeyCode , Metroid* );
+	void _Shoot(BULLET_DIRECTION dir,Metroid*);
+	void _ShootMissile(BULLET_DIRECTION dir , Metroid*);
+
+	void ProcessInput(LPDIRECT3DDEVICE9 d3ddv, float Delta , Metroid*);
+	void OnkeyDown(int KeyCode , Metroid* ,int&);
+
 
 	void Response(GameObject *target, const float &DeltaTime, const float &CollisionTimeScale);
 	void SlideFromGround(GameObject *target, const float &DeltaTime, const float &CollisionTimeScale);

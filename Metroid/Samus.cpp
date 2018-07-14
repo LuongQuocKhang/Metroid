@@ -136,6 +136,26 @@ void Samus::TakeDamage(float damage)
 		Destroy();
 }
 
+void Samus::_Shoot(BULLET_DIRECTION dir, Metroid * metroid)
+{
+	metroid->SetNow_shoot(GetTickCount());
+	if (metroid->GetStart_shoot() <= 0) //if shooting is active
+	{
+		metroid->SetStart_shoot(GetTickCount());
+		(metroid->GetWorld())->bullets->Next(dir, this->GetPosX(), this->GetPosY());
+	}
+	else if ((metroid->GetNow_shoot() - metroid->GetStart_shoot()) > SHOOTING_SPEED * metroid->GetTickPerFrame())
+	{
+		//Reset start_shoot
+		metroid->SetStart_shoot(0);
+	}
+}
+
+void Samus::_ShootMissile(BULLET_DIRECTION dir, Metroid * metroid)
+{
+	(metroid->GetWorld())->missiles->Next(dir, this->GetPosX(), this->GetPosY());
+}
+
 void Samus::SetHealth(float value)
 {
 	health = value;
@@ -812,5 +832,511 @@ void Samus::Slide(GameObject *target, float remainingtime)
 	float dotprod = (this->GetVelocityX() * normaly + this->GetVelocityY() * normalx) * remainingtime;
 	this->SetVelocityX(dotprod * normalx);
 	this->SetVelocityY(dotprod * normaly);
+}
+
+void Samus::ProcessInput(LPDIRECT3DDEVICE9 d3ddv, float Delta,Metroid* metroid)
+{
+	if (metroid->isInGame)
+		return;
+
+	if (metroid->IsKeyDown(DIK_RIGHT))
+	{
+
+		/*Camera::currentCamX += 2.0f;
+		float c = Camera::currentCamY + 5;*/
+
+		//this->setNormalx(1.0f);
+		//this->setgravity(FALLDOWN_VELOCITY_DECREASE);
+		this->SetVelocityXLast(this->GetVelocityX());
+		this->SetVelocityX(SAMUS_SPEED);
+		if (this->GetState() != ON_MORPH_LEFT && this->GetState() != ON_MORPH_RIGHT
+			&& this->GetState() != ON_JUMP_LEFT && this->GetState() != ON_JUMP_RIGHT
+			&& this->GetState() != ON_JUMPING_SHOOTING_LEFT && this->GetState() != ON_JUMPING_SHOOTING_RIGHT
+			&& this->GetState() != ON_SOMERSAULT_LEFT && this->GetState() != ON_SOMERSAULT_RIGHT)
+		{
+			this->SetState(RIGHTING);
+		}
+	}
+	else if (metroid->IsKeyDown(DIK_LEFT))
+	{
+		//Camera::currentCamX -= 2.0f;
+
+		//this->setgravity(FALLDOWN_VELOCITY_DECREASE);
+		//this->setNormalx(-1.0f);
+		this->SetVelocityXLast(this->GetVelocityX());
+		this->SetVelocityX(-SAMUS_SPEED);
+		if (this->GetState() != ON_MORPH_LEFT && this->GetState() != ON_MORPH_RIGHT
+			&& this->GetState() != ON_JUMP_LEFT && this->GetState() != ON_JUMP_RIGHT
+			&& this->GetState() != ON_JUMPING_SHOOTING_LEFT && this->GetState() != ON_JUMPING_SHOOTING_RIGHT
+			&& this->GetState() != ON_SOMERSAULT_LEFT && this->GetState() != ON_SOMERSAULT_RIGHT)
+		{
+			this->SetState(LEFTING);
+		}
+	}
+	else
+	{
+		this->SetVelocityX(0);
+
+		if (this->GetVelocityXLast() < 0)
+		{
+			if (this->GetState() != ON_MORPH_LEFT && this->GetState() != ON_JUMP_LEFT && this->GetState() != ON_JUMP_RIGHT
+				&& this->GetState() != ON_JUMPING_SHOOTING_LEFT && this->GetState() != ON_JUMPING_SHOOTING_RIGHT
+				&& this->GetState() != ON_SOMERSAULT_LEFT && this->GetState() != ON_SOMERSAULT_RIGHT
+				&& this->GetState() != ON_JUMP_AIM_UP_LEFT && this->GetState() != APPEARANCE)
+			{
+				this->SetState(IDLE_LEFT);
+				this->ResetAllSprites();
+			}
+		}
+		else
+		{
+			if (this->GetState() != ON_MORPH_RIGHT && this->GetState() != ON_JUMP_LEFT && this->GetState() != ON_JUMP_RIGHT
+				&& this->GetState() != ON_JUMPING_SHOOTING_LEFT && this->GetState() != ON_JUMPING_SHOOTING_RIGHT
+				&& this->GetState() != ON_SOMERSAULT_LEFT && this->GetState() != ON_SOMERSAULT_RIGHT
+				&& this->GetState() != ON_JUMP_AIM_UP_RIGHT && this->GetState() != APPEARANCE)
+			{
+				this->SetState(IDLE_RIGHT);
+				this->ResetAllSprites();
+			}
+		}
+	}
+
+	if (metroid->IsKeyDown(DIK_UP))
+	{
+		if (this->GetState() == LEFTING)
+			this->SetState(AIMING_UP_LEFT);
+		if (this->GetState() == RIGHTING)
+			this->SetState(AIMING_UP_RIGHT);
+		if (this->GetState() == IDLE_LEFT)
+			this->SetState(IDLING_AIM_UP_LEFT);
+		if (this->GetState() == IDLE_RIGHT)
+			this->SetState(IDLING_AIM_UP_RIGHT);
+		if (this->GetState() == ON_JUMP_LEFT/* || this->GetState() == ON_JUMPING_SHOOTING_LEFT*/)
+		{
+			this->SetState(ON_JUMP_AIM_UP_LEFT);
+			Game::gameSound->playSound(JUMP);
+		}
+		if (this->GetState() == ON_JUMP_RIGHT/* || this->GetState() == ON_JUMPING_SHOOTING_RIGHT*/)
+		{
+			this->SetState(ON_JUMP_AIM_UP_RIGHT);
+			Game::gameSound->playSound(JUMP);
+		}
+		if (this->GetState() == ON_MORPH_LEFT)
+			this->SetState(IDLE_LEFT);
+		if (this->GetState() == ON_MORPH_RIGHT)
+			this->SetState(IDLE_RIGHT);
+	}
+
+	if (metroid->IsKeyDown(DIK_Z))
+	{
+		//Để mặc định đạn thường trước
+		Game::gameSound->playSound(SHOOT_BULLET);
+		//State Đứng bắn lên
+		if (this->GetState() == IDLING_AIM_UP_LEFT)
+		{
+			this->SetState(IDLING_SHOOTING_UP_LEFT);
+
+			_Shoot(ON_UP,metroid);
+		}
+		if (this->GetState() == IDLING_AIM_UP_RIGHT)
+		{
+			this->SetState(IDLING_SHOOTING_UP_RIGHT);
+
+			_Shoot(ON_UP,metroid);
+		}
+		//State Chạy bắn lên
+		if (this->GetState() == AIMING_UP_LEFT)
+		{
+			this->SetState(AIMING_UP_LEFT);
+			_Shoot(ON_UP,metroid);
+		}
+		if (this->GetState() == AIMING_UP_RIGHT)
+		{
+			this->SetState(AIMING_UP_RIGHT);
+			_Shoot(ON_UP,metroid);
+		}
+		//State Nhảy bắn lên => bug
+		if (this->GetState() == ON_JUMP_AIM_UP_LEFT)
+		{
+			this->SetState(ON_JUMP_SHOOTING_UP_LEFT);
+
+			_Shoot(ON_UP,metroid);
+		}
+		if (this->GetState() == ON_JUMP_AIM_UP_RIGHT)
+		{
+			this->SetState(ON_JUMP_SHOOTING_UP_RIGHT);
+
+			_Shoot(ON_UP,metroid);
+		}
+		//State nhảy bắn
+		if (this->GetState() == ON_JUMP_LEFT || this->GetState() == ON_SOMERSAULT_LEFT || this->GetState() == ON_JUMPING_SHOOTING_LEFT)
+		{
+			this->SetState(ON_JUMPING_SHOOTING_LEFT);
+
+			_Shoot(ON_LEFT,metroid);
+		}
+		if (this->GetState() == ON_JUMP_RIGHT || this->GetState() == ON_SOMERSAULT_RIGHT || this->GetState() == ON_JUMPING_SHOOTING_RIGHT)
+		{
+			this->SetState(ON_JUMPING_SHOOTING_RIGHT);
+
+			_Shoot(ON_RIGHT,metroid);
+		}
+		//State chạy bắn
+		if (this->GetState() == LEFTING)
+		{
+			this->SetState(ON_RUN_SHOOTING_LEFT);
+
+			_Shoot(ON_LEFT,metroid);
+		}
+		if (this->GetState() == RIGHTING)
+		{
+			this->SetState(ON_RUN_SHOOTING_RIGHT);
+
+			_Shoot(ON_RIGHT,metroid);
+		}
+		//State đứng bắn
+		if (this->GetState() == IDLE_LEFT)
+		{
+			this->SetState(IDLING_SHOOTING_LEFT);
+
+			_Shoot(ON_LEFT,metroid);
+		}
+		if (this->GetState() == IDLE_RIGHT)
+		{
+			this->SetState(IDLING_SHOOTING_RIGHT);
+
+			_Shoot(ON_RIGHT,metroid);
+		}
+
+		BulletObject ** list = this->getlistbullet();
+		int num = this->getNumBullet();
+		for (int i = 0; i < (metroid->GetWorld())->enemyGroup->size; i++)
+		{
+			for (int j = 0; j < num; j++)
+			{
+				float TimeScale = (metroid->GetWorld())->enemyGroup->objects[i]->SweptAABB(list[j], Delta);
+				if (TimeScale < 1.0f)
+				{
+					if ((metroid->GetWorld())->enemyGroup->objects[i]->IsActive())
+					{
+						float damge = DAMAGE_SAMUS_BULLET;
+						((Enemy*)((metroid->GetWorld())->enemyGroup->objects[i]))->DeathByShoot = true;
+						((Enemy*)((metroid->GetWorld())->enemyGroup->objects[i]))->TakeDamage(damge);
+						//list[j]->Reset();
+						break;
+					}
+				}
+
+			}
+		}
+	}
+
+	if (this->GetVelocityY() < 0)
+	{
+		//this->setNormaly(-1.0f);
+	}
+}
+
+void Samus::OnkeyDown(int KeyCode, Metroid * metroid ,int& screenMode)
+{
+	this->isOnAir = false;
+
+	if (this->isSamusOnAir() == false)
+	{
+		switch (KeyCode)
+		{
+		case DIK_X:
+			if (metroid->IsKeyDown(DIK_X))
+			{
+				Game::gameSound->playSound(JUMP);
+				this->isOnAir = true;
+				this->setNormaly(1.0f);
+				if (this->GetState() != ON_SOMERSAULT_RIGHT && metroid->IsKeyDown(DIK_RIGHT)/*&& samus->GetState() != ON_JUMP_AIM_UP_RIGHT*/)
+				{
+					metroid->SetStart_jump(GetTickCount());
+
+					this->SetState(ON_SOMERSAULT_RIGHT);
+					this->SetVelocityY(this->GetVelocityY() + JUMP_VELOCITY_BOOST_FIRST);
+
+					metroid->SetNow_jump(GetTickCount());
+					if ((metroid->GetNow_jump() - metroid->GetStart_jump()) <= 10 * metroid->GetTickPerFrame())
+					{
+						this->SetVelocityY(this->GetVelocityY() + JUMP_VELOCITY_BOOST);
+					}
+				}
+
+				if (this->GetState() != ON_SOMERSAULT_LEFT && metroid->IsKeyDown(DIK_LEFT)/*&& samus->GetState() != ON_JUMP_AIM_UP_LEFT*/)
+				{
+					metroid->SetStart_jump(GetTickCount());
+					metroid->SetNow_jump(GetTickCount());
+					this->SetState(ON_SOMERSAULT_LEFT);
+					this->SetVelocityY(this->GetVelocityY() + JUMP_VELOCITY_BOOST_FIRST);
+
+					//now_jump = GetTickCount();
+					if ((metroid->GetNow_jump() - metroid->GetStart_jump()) <= 10 * metroid->GetTickPerFrame())
+					{
+						this->SetVelocityY(this->GetVelocityY() + JUMP_VELOCITY_BOOST);
+					}
+				}
+
+				if (this->GetVelocityXLast() < 0)
+				{
+					if (this->GetState() != ON_JUMP_LEFT && this->GetState() != ON_SOMERSAULT_LEFT
+						&& this->GetState() != ON_JUMPING_SHOOTING_LEFT && this->GetState() != ON_JUMP_AIM_UP_LEFT)
+					{
+						metroid->SetStart_jump(GetTickCount());
+						metroid->SetNow_jump(GetTickCount());
+						if (this->GetState() == IDLING_AIM_UP_LEFT)
+							this->SetState(ON_JUMP_AIM_UP_LEFT);
+						else
+							this->SetState(ON_JUMP_LEFT);
+						this->SetVelocityY(this->GetVelocityY() + JUMP_VELOCITY_BOOST_FIRST);
+
+						/*now_jump = GetTickCount();*/
+						if ((metroid->GetNow_jump() - metroid->GetStart_jump()) <= 10 * metroid->GetTickPerFrame())
+						{
+							this->SetVelocityY(this->GetVelocityY() + JUMP_VELOCITY_BOOST);
+						}
+					}
+					//else
+					//{
+					//	now_jump = GetTickCount();
+					//	if ((now_jump - start_jump) <= 10 * tick_per_frame)
+					//	{
+					//		this->SetVelocityY(this->GetVelocityY() + JUMP_VELOCITY_BOOST);
+					//	}
+					//}
+				}
+				if (this->GetVelocityXLast() > 0)
+				{
+					if (this->GetState() != ON_JUMP_RIGHT && this->GetState() != ON_SOMERSAULT_RIGHT
+						&& this->GetState() != ON_JUMPING_SHOOTING_RIGHT && this->GetState() != ON_JUMP_AIM_UP_RIGHT)
+					{
+						metroid->SetStart_jump(GetTickCount());
+						metroid->SetNow_jump(GetTickCount());
+						if (this->GetState() == IDLING_AIM_UP_RIGHT)
+							this->SetState(ON_JUMP_AIM_UP_RIGHT);
+						else
+							this->SetState(ON_JUMP_RIGHT);
+						this->SetVelocityY(this->GetVelocityY() + JUMP_VELOCITY_BOOST_FIRST);
+
+						//now_jump = GetTickCount();
+						if ((metroid->GetNow_jump() - metroid->GetStart_jump()) <= 10 * metroid->GetTickPerFrame())
+						{
+							this->SetVelocityY(this->GetVelocityY() + JUMP_VELOCITY_BOOST);
+						}
+					}
+					//else
+					//{
+					//	now_jump = GetTickCount();
+					//	if ((now_jump - start_jump) <= 10 * tick_per_frame)
+					//	{
+					//		this->SetVelocityY(this->GetVelocityY() + JUMP_VELOCITY_BOOST);
+
+					//	}
+					//}
+				}
+			}
+		}
+	}
+
+	switch (screenMode)
+	{
+		// intro
+	case GAMEMODE_INTRO:
+	{
+		if (KeyCode == DIK_RETURN)
+		{
+			screenMode = GAMEMODE_START;
+		}
+		break;
+	}
+	// start screen
+	case GAMEMODE_START://------------------------------------------------
+	{
+		if (KeyCode == DIK_RETURN)
+		{
+			screenMode = GAMEMODE_GAMERUN;
+			Game::gameSound->stopSound(BACKGROUND_INTRO);
+			Game::gameSound->playSound(BACKGROUND_APPEARANCE);
+			metroid->isInGame = true;
+		}
+	}
+	break;
+	// game running
+	case GAMEMODE_GAMERUN:// -------------------------------------------------
+	{
+		switch (KeyCode)
+		{
+		case DIK_DOWN:
+			//if samus is idle then do morph
+			if (this->isSamusCrouch() == true)
+			{
+				if (this->GetState() == IDLE_LEFT)
+				{
+					this->SetVelocityX(0);
+					this->ResetAllSprites();
+					this->SetState(ON_MORPH_LEFT);
+					this->GetCollider()->SetCollider(0, 0, -MORPH_BALL_HEIGHT, MORPH_BALL_WIDTH);
+				}
+				else if (this->GetState() == IDLE_RIGHT)
+				{
+					this->SetVelocityX(0);
+					this->ResetAllSprites();
+					this->SetState(ON_MORPH_RIGHT);
+					this->GetCollider()->SetCollider(0, 0, -MORPH_BALL_HEIGHT, MORPH_BALL_WIDTH);
+				}
+				else if (this->GetState() == ON_MORPH_LEFT) //otherwise, reset to idle (left of right)
+				{
+					this->SetVelocityX(0);
+					this->ResetAllSprites();
+					this->SetState(IDLE_LEFT);
+					//this->setDirection(DirectCollision::RIGHT);
+					this->SetPosY(this->GetPosY() + this->GetHeight() + MORPH_BALL_HEIGHT);
+					this->GetCollider()->SetCollider(0, 0, -this->GetHeight(), 24);
+				}
+				else if (this->GetState() == ON_MORPH_RIGHT)
+				{
+					this->SetVelocityX(0);
+					this->ResetAllSprites();
+					this->SetState(IDLE_RIGHT);
+					this->SetPosY(this->GetPosY() + this->GetHeight() + MORPH_BALL_HEIGHT);
+					this->GetCollider()->SetCollider(0, 0, -this->GetHeight(), 24);
+					//this->setDirection(DirectCollision::LEFT);
+				}
+				break;
+			}
+			//case DIK_X:
+			//	//**********************************************************************************
+			//	// [CAUTION!!!] Vi pos_y chua chinh theo toa do World, code duoi day chi la tam thoi,
+			//	// se cap nhat lai sau
+			//	if (samus->GetPosY() >= GROUND_Y)
+			//	{
+			//		if (samus->GetVelocityXLast() < 0)
+			//		{
+			//			samus->SetState(ON_JUMP_LEFT);
+			//			samus->SetVelocityY(samus->GetVelocityY() - JUMP_VELOCITY_BOOST);
+			//		}
+			//		else if (samus->GetVelocityXLast() > 0)
+			//		{
+			//			samus->SetState(ON_JUMP_RIGHT);
+			//			samus->SetVelocityY(samus->GetVelocityY() - JUMP_VELOCITY_BOOST);
+			//		}
+			//	}
+			//	//***********************************************************************************
+			//	break;
+		case DIK_LEFT:
+			/*if (samus->GetState() == ON_JUMP_RIGHT)
+			samus->SetState(ON_JUMP_LEFT);*/
+			if (this->GetState() == ON_MORPH_RIGHT)
+				this->SetState(ON_MORPH_LEFT);
+			/*else if (samus->GetState() != ON_MORPH_LEFT && samus->GetState() != ON_JUMP_LEFT && samus->GetState() != ON_JUMP_RIGHT
+			&& samus->GetState() != ON_SOMERSAULT_RIGHT)
+			samus->SetState(LEFTING);*/
+			break;
+		case DIK_RIGHT:
+			/*if (samus->GetState() == ON_JUMP_LEFT)
+			samus->SetState(ON_JUMP_RIGHT);*/
+			if (this->GetState() == ON_MORPH_LEFT)
+				this->SetState(ON_MORPH_RIGHT);
+			/*else if (this->GetState() != ON_MORPH_RIGHT && this->GetState() != ON_JUMP_LEFT && this->GetState() != ON_JUMP_RIGHT
+			&& this->GetState() != ON_SOMERSAULT_LEFT)
+			this->SetState(RIGHTING);*/
+			break;
+
+		case DIK_C:
+			Game::gameSound->playSound(SHOOT_MISSILE);
+			if (this->GetState() == IDLING_AIM_UP_LEFT)
+			{
+				this->SetState(IDLING_SHOOTING_UP_LEFT);
+
+				_ShootMissile(ON_UP,metroid);
+			}
+			if (this->GetState() == IDLING_AIM_UP_RIGHT)
+			{
+				this->SetState(IDLING_SHOOTING_UP_RIGHT);
+
+				_ShootMissile(ON_UP,metroid);
+			}
+			//State Chạy bắn lên
+			if (this->GetState() == AIMING_UP_LEFT)
+			{
+				this->SetState(AIMING_UP_LEFT);
+				_ShootMissile(ON_UP,metroid);
+			}
+			if (this->GetState() == AIMING_UP_RIGHT)
+			{
+				this->SetState(AIMING_UP_RIGHT);
+				_ShootMissile(ON_UP,metroid);
+			}
+			//State Nhảy bắn lên => bug
+			if (this->GetState() == ON_JUMP_AIM_UP_LEFT)
+			{
+				this->SetState(ON_JUMP_SHOOTING_UP_LEFT);
+
+				_ShootMissile(ON_UP,metroid);
+			}
+			if (this->GetState() == ON_JUMP_AIM_UP_RIGHT)
+			{
+				this->SetState(ON_JUMP_SHOOTING_UP_RIGHT);
+
+				_ShootMissile(ON_UP,metroid);
+			}
+			//State nhảy bắn
+			if (this->GetState() == ON_JUMP_LEFT || this->GetState() == ON_SOMERSAULT_LEFT || this->GetState() == ON_JUMPING_SHOOTING_LEFT)
+			{
+				this->SetState(ON_JUMPING_SHOOTING_LEFT);
+
+				_ShootMissile(ON_LEFT,metroid);
+			}
+			if (this->GetState() == ON_JUMP_RIGHT || this->GetState() == ON_SOMERSAULT_RIGHT || this->GetState() == ON_JUMPING_SHOOTING_RIGHT)
+			{
+				this->SetState(ON_JUMPING_SHOOTING_RIGHT);
+
+				_ShootMissile(ON_RIGHT,metroid);
+			}
+			//State chạy bắn
+			if (this->GetState() == LEFTING)
+			{
+				this->SetState(ON_RUN_SHOOTING_LEFT);
+
+				_ShootMissile(ON_LEFT,metroid);
+			}
+			if (this->GetState() == RIGHTING)
+			{
+				this->SetState(ON_RUN_SHOOTING_RIGHT);
+
+				_ShootMissile(ON_RIGHT,metroid);
+			}
+			//State đứng bắn
+			if (this->GetState() == IDLE_LEFT)
+			{
+				this->SetState(IDLING_SHOOTING_LEFT);
+
+				_ShootMissile(ON_LEFT,metroid);
+			}
+			if (this->GetState() == IDLE_RIGHT)
+			{
+				this->SetState(IDLING_SHOOTING_RIGHT);
+
+				_ShootMissile(ON_RIGHT,metroid);
+
+			}
+			break;
+
+		}
+	}
+	// game over
+	case GAMEMODE_GAMEOVER://------------------------------------------------
+	{
+		if (KeyCode == DIK_RETURN)
+		{
+			screenMode = GAMEMODE_INTRO;
+			Game::gameSound->playSound(BACKGROUND_INTRO);
+			this->Reset(1275, 150);
+		}
+		break;
+	}
+	}
 }
 //----------------------------------

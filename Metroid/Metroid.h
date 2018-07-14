@@ -43,9 +43,6 @@ private:
 	DWORD start_shoot;
 	DWORD now_shoot;
 
-	void _Shoot(BULLET_DIRECTION dir);
-	void _ShootMissile(BULLET_DIRECTION dir);
-
 public:
 	Metroid(HINSTANCE hInstance, LPWSTR Name, int Mode, int IsFullScreen, int FrameRate);
 	~Metroid();
@@ -66,6 +63,23 @@ public:
 	virtual void OnKeyDown(int KeyCode);
 
 	DWORD GetTickPerFrame();
+	DWORD GetStart_jump();
+	DWORD GetNow_jump();
+
+	void SetStart_jump(DWORD startjump);
+	void SetNow_jump(DWORD nowjump);
+
+
+	DWORD GetStart_shoot();
+	DWORD GetNow_shoot();
+
+	void SetStart_shoot(DWORD);
+	void SetNow_shoot(DWORD);
+
+	World* GetWorld()
+	{
+		return this->world;
+	}
 
 	int screenMode;
 	bool isFreezing;

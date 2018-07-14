@@ -500,7 +500,6 @@ void Bedgehog::Destroy()
 // Phản xạ khi va chạm với ground
 void Bedgehog::ResponseGround(GameObject *target, const float &DeltaTime, const float &CollisionTimeScale)
 {
-
 	if (normaly > 0.1f) // trên xuống ()
 	{
 		this->pos_y = (target->GetPosY() + target->GetCollider()->GetTop() - this->collider->GetBottom()) + 0.1f;
@@ -522,7 +521,7 @@ void Bedgehog::ResponseGround(GameObject *target, const float &DeltaTime, const 
 		/*gravity = -FALLDOWN_VELOCITY_DECREASE + 0.02f;*/
 		vx = -BEDGEHOG_SPEED;
 		vy = 0.05f;
-
+		gravity = 0;
 		state = ON_BEDGEHOG_BOTTOM;
 
 		last_normaly = normaly;
@@ -544,20 +543,20 @@ void Bedgehog::ResponseGround(GameObject *target, const float &DeltaTime, const 
 		last_normalx = normalx;
 		last_normaly = 0;
 	}
-	//else if (normalx > 0.1f)	// tông bên phải gạch
-	//{
-	//	this->pos_x = (target->GetPosX() + target->GetCollider()->GetRight() - this->collider->GetLeft()) + 0.1f;
-	//	pos_x -= vx*DeltaTime;
+	/*else if (normalx > 0.1f)	// tông bên phải gạch
+	{
+		this->pos_x = (target->GetPosX() + target->GetCollider()->GetRight() - this->collider->GetLeft()) + 0.1f;
+		pos_x -= vx*DeltaTime;
 
-	//	gravity = 0;
-	//	vx = -0.001;
-	//	vy = -0.05f;
+		gravity = 0;
+		vx = -0.001;
+		vy = -0.05f;
 
-	//	state = ON_BEDGEHOG_RIGHT;
+		state = ON_BEDGEHOG_RIGHT;
 
-	//	last_normalx = normalx;
-	//}
-	return;
+		last_normalx = normalx;
+	}*/
+	//return;
 }
 void Bedgehog::ResponseGround2(GameObject * target, const float & DeltaTime, const float & CollisionTimeScale)
 {

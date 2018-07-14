@@ -52,7 +52,6 @@ protected:
 	void _InitKeyboard();
 
 	void _ProcessKeyBoard();
-	int IsKeyDown(int KeyCode);
 
 	// Render a single frame
 	void _RenderFrame();
@@ -94,6 +93,8 @@ public:
 
 	// Run game
 	void Run();
+
+	int IsKeyDown(int KeyCode);
 };
 
 #endif
