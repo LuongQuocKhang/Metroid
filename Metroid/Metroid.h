@@ -61,6 +61,7 @@ public:
 	// ---------------------------
 	virtual void ProcessInput(LPDIRECT3DDEVICE9 d3ddv, float Delta);
 	virtual void OnKeyDown(int KeyCode);
+	virtual void OnKeyUp(int KeyCode);
 
 	DWORD GetTickPerFrame();
 	DWORD GetStart_jump();

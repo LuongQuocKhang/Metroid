@@ -80,7 +80,7 @@ protected:
 public:
 	float health;	// Máu của Samus
 	bool isDeath;	// Trạng thái chết của Samus
-	bool isOnAir;	// Trạng thái trên không của Samus
+	bool isOnGround;	// Trạng thái trên không của Samus
 	Samus();
 	Samus(LPD3DXSPRITE spriteHandler, World * manager);
 	~Samus();
@@ -96,7 +96,7 @@ public:
 	void ResetAllSprites();
 	bool isSamusCrouch();
 	bool isSamusDeath();
-	bool isSamusOnAir();
+	bool isSamusOnGround();
 	bool GetStateActive();
 	void setListBullet(BulletObject ** listbullet)
 	{
@@ -129,7 +129,7 @@ public:
 
 	void ProcessInput(LPDIRECT3DDEVICE9 d3ddv, float Delta , Metroid*);
 	void OnkeyDown(int KeyCode , Metroid* ,int&);
-
+	void OnKeyUp(int KeyCode, Metroid* metroid);
 
 	void Response(GameObject *target, const float &DeltaTime, const float &CollisionTimeScale);
 	void SlideFromGround(GameObject *target, const float &DeltaTime, const float &CollisionTimeScale);

@@ -174,6 +174,8 @@ void Metroid::UpdateFrame(float Delta)
 {	
 	if (isInGame)
 	{
+		for (int i = 0; i < 4; i++)
+			world->hogs_yellow[i]->SetActive(false);
 		time_in_game -= Delta;
 		if (time_in_game <= 0)
 		{
@@ -289,4 +291,9 @@ void Metroid::ProcessInput(LPDIRECT3DDEVICE9 d3ddv, float Delta)
 void Metroid::OnKeyDown(int KeyCode)
 {
 	world->samus->OnkeyDown(KeyCode, this, screenMode);
+}
+
+void Metroid::OnKeyUp(int KeyCode)
+{
+	world->samus->OnKeyUp(KeyCode, this);
 }

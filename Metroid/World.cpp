@@ -12,7 +12,7 @@
 #include "PosInfo.h"
 #include "Energy.h"
 #include "Number.h"
-#include "Gate.h"
+#include "Gate.h"	
 
 using namespace std;
 
