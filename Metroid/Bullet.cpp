@@ -22,7 +22,7 @@ Bullet::Bullet(World * manager)
 
 	this->bulletType = STANDARD;
 	this->manager = manager;
-	collider = new Collider(0, 0, -BULLET_HEIGHT, BULLET_WIDTH);
+	collider = new Collider(BULLET_HEIGHT / 2, -BULLET_WIDTH / 2, -BULLET_HEIGHT / 2, BULLET_WIDTH / 2);
 }
 
 Bullet::Bullet(World * manager, int x_holder, int y_holder)
@@ -74,6 +74,8 @@ void Bullet::Update(float t)
 			if (timeScale < 1.0f)
 			{
 				manager->enemyGroup->objects[i]->isHit = true;
+				((Enemy*)manager->enemyGroup->objects[i])->TakeDamage(this->damage);
+				// lát xóa + test
 				switch (manager->enemyGroup->objects[i]->GetType())
 				{
 				case BEDGEHOG_YELLOW:
@@ -180,7 +182,7 @@ void Bullet::Update(float t)
 		}
 	}
 	
-
+	// kiểm tra lại hàm này
 	// Va chạm của Bird_bullet đối với samus
 	float TimeScale = SweptAABB(manager->samus, t);
 	if (TimeScale < 1.0f)

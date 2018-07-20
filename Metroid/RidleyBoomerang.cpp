@@ -17,7 +17,7 @@ RidleyBoomerang::RidleyBoomerang(World * manager)
 
 	this->bulletType = BOOMERANG;
 	//Set collider
-	collider = new Collider(0, 0, -RIDLEY_BOOMERANG_HEIGHT, RIDLEY_BOOMERANG_WIDTH);
+	collider = new Collider(RIDLEY_BOOMERANG_HEIGHT / 2, -RIDLEY_BOOMERANG_WIDTH / 2, -RIDLEY_BOOMERANG_HEIGHT / 2, RIDLEY_BOOMERANG_WIDTH / 2);
 }
 
 RidleyBoomerang::~RidleyBoomerang()

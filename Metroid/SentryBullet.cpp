@@ -23,7 +23,7 @@ SentryBullet::SentryBullet(World * manager)
 	this->bulletType = SENTRY_BULLET;
 
 	//Set collider
-	collider = new Collider(0, 0, -SENTRY_BULLET_HEIGHT, SENTRY_BULLET_WIDTH);
+	collider = new Collider(SENTRY_BULLET_HEIGHT / 2, -SENTRY_BULLET_WIDTH / 2, -SENTRY_BULLET_HEIGHT / 2, SENTRY_BULLET_WIDTH / 2);
 }
 
 SentryBullet::~SentryBullet()

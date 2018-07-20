@@ -56,10 +56,11 @@ class Energy;
 //================ END GAME SCENEE ====================
 
 //================== SAMUS ===================
-#define GROUND_Y 120
+#define GROUND_Y 100
 #define SHOOTING_SPEED 15
 #define SAMUS_SPEED 0.15f
 //#define SAMUS_SPEED 0.05f
+#define SAMUS_IMMORTAL_TIME 4000;
 
 #define SAMUS_SPRITES_PATH L"sprites\\samus\\samus_sprites.png"
 
@@ -515,10 +516,10 @@ enum EFFECT_TYPE
 #define HEALTH_GATE 1
 
 // SAMUS
-#define HEALTH_SAMUS 200
+#define HEALTH_SAMUS 999
 
 // BOSSES
-#define HEALTH_MOTHER_BRAIN 40
+#define HEALTH_MOTHER_BRAIN 60
 #define HEALTH_RIDLEY 40
 
 //================ END HEALTH ===============

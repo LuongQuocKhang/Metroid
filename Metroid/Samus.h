@@ -81,6 +81,12 @@ public:
 	float health;	// Máu của Samus
 	bool isDeath;	// Trạng thái chết của Samus
 	bool isOnGround;	// Trạng thái trên không của Samus
+
+	int missile_numbers;
+
+	int immortal_time;
+	bool isImmortal;
+
 	Samus();
 	Samus(LPD3DXSPRITE spriteHandler, World * manager);
 	~Samus();
@@ -126,6 +132,9 @@ public:
 
 	void _Shoot(BULLET_DIRECTION dir,Metroid*);
 	void _ShootMissile(BULLET_DIRECTION dir , Metroid*);
+	void SetMissileNumbers(int value);
+	int GetMissileNumbers();
+
 
 	void ProcessInput(LPDIRECT3DDEVICE9 d3ddv, float Delta , Metroid*);
 	void OnkeyDown(int KeyCode , Metroid* ,int&);

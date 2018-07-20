@@ -211,16 +211,16 @@ bool GameObject::IsInCamera()
 	if (collider == NULL)
 		return false;
 	// Kiềm tra bên trái
-	if (pos_x + collider->GetRight() < Camera::currentCamX)
+	if (pos_x + collider->GetRight() * 2 < Camera::currentCamX)
 		return false;
 	// Kiểm tra phía trên
 	if (pos_y + collider->GetBottom() > Camera::currentCamY)
 		return false;
 	// Kiểm tra bên phải
-	if (pos_x > Camera::currentCamX + Camera::width)
+	if (pos_x + collider->GetLeft()> Camera::currentCamX + Camera::width)
 		return false;
 	// Kiểm tra phía dưới
-	if (pos_y < Camera::currentCamY - Camera::height)
+	if (pos_y + collider->GetTop() < Camera::currentCamY - Camera::height)
 		return false;
 	return true;
 }

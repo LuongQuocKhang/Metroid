@@ -24,7 +24,7 @@
 #define SPRITE_PER_ROW 1
 
 #define SPEED 0.3f
-#define LIMIT_DISTANCE 200
+#define LIMIT_DISTANCE 100
 
 
 class Missile : public BulletObject

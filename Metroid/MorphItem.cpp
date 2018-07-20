@@ -6,7 +6,7 @@ MorphItem::MorphItem(LPD3DXSPRITE spriteHandler, World * manager) :Item(spriteHa
 {
 	item_type = MORPH_BALL_ITEM;
 	// Set collider
-	collider = new Collider(0, 0, -ITEM_MORPH_BALL_HEIGHT, ITEM_MORPH_BALL_WIDTH);
+	collider = new Collider(ITEM_MORPH_BALL_HEIGHT / 2, -ITEM_MORPH_BALL_WIDTH / 2, -ITEM_MORPH_BALL_HEIGHT / 2, ITEM_MORPH_BALL_WIDTH / 2);
 
 	isActive = true;
 }

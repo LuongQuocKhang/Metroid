@@ -154,6 +154,17 @@ void Samus::_Shoot(BULLET_DIRECTION dir, Metroid * metroid)
 void Samus::_ShootMissile(BULLET_DIRECTION dir, Metroid * metroid)
 {
 	(metroid->GetWorld())->missiles->Next(dir, this->GetPosX(), this->GetPosY());
+	this->missile_numbers--;
+}
+
+void Samus::SetMissileNumbers(int value)
+{
+	missile_numbers = num;
+}
+
+int Samus::GetMissileNumbers()
+{
+	return missile_numbers;
 }
 
 void Samus::SetHealth(float value)
@@ -177,6 +188,10 @@ Samus::Samus()
 	width = 28;
 	height = 64;
 
+	missile_numbers = 0;
+	immortal_time = SAMUS_IMMORTAL_TIME;
+	isImmortal = false;
+
 	collider = new Collider();
 	collider->SetCollider(0, 0, -this->height, this->width);
 	this->isActive = true;
@@ -199,6 +214,10 @@ Samus::Samus(LPD3DXSPRITE spriteHandler, World * manager)
 
 	width = 40;
 	height = 50;
+
+	missile_numbers = 0;
+	immortal_time = SAMUS_IMMORTAL_TIME;
+	isImmortal = false;
 
 	//Collider
 	this->collider = new Collider();
@@ -399,13 +418,25 @@ void Samus::Update(float t)
 		Enemy * enemy = (Enemy*)manager->enemyGroup->objects[i];
 		if (enemy->IsActive())
 		{
-			float timeScale = SweptAABB(enemy, t);
-			if (timeScale < 1.0f)
+			if (this->isImmortal == false)
 			{
-				//Xử lý khi va chạm với enemy
-				Deflect(enemy, t, timeScale);
-				// xong rồi tùy con mà takedamage
-				TakeDamage(enemy->damage);
+				float timeScale = SweptAABB(enemy, t);
+				if (timeScale < 1.0f)
+				{
+					//Xử lý khi va chạm với enemy
+					Deflect(enemy, t, timeScale);
+					TakeDamage(enemy->damage);
+					this->isImmortal = true;
+				}
+			}
+			else
+			{
+				immortal_time -= t;
+				if (immortal_time <= 0)
+				{
+					isImmortal = false;
+					immortal_time = SAMUS_IMMORTAL_TIME;
+				}
 			}
 		}
 	}
@@ -427,7 +458,7 @@ void Samus::Update(float t)
 		if (manager->missileItem->IsActive() == true)
 		{
 			Game::gameSound->playSound(SAMUS_HIT_LIFE_POINT);
-			//manager->missiles->setNum(manager->missile.getNum() +manager->missileItem->getNumberGain(); Chưa dùng được
+			this->missile_numbers += 1;
 			manager->missileItem->Destroy();
 		}
 
@@ -550,7 +581,10 @@ void Samus::Update(float t)
 					}
 				}
 				else
+				{
+					this->isOnGround = true;
 					SlideFromGround(brick, t, timeScale);
+				}
 			}
 		}
 	}
@@ -1015,7 +1049,7 @@ void Samus::ProcessInput(LPDIRECT3DDEVICE9 d3ddv, float Delta, Metroid* metroid)
 
 void Samus::OnkeyDown(int KeyCode, Metroid * metroid, int& screenMode)
 {
-	//this->isOnGround = true;
+	if (metroid->isFreezing == true) return;
 	if (this->isSamusOnGround() == true)
 	{
 		switch (KeyCode)
@@ -1220,84 +1254,87 @@ void Samus::OnkeyDown(int KeyCode, Metroid * metroid, int& screenMode)
 			break;
 
 		case DIK_C:
-			Game::gameSound->playSound(SHOOT_MISSILE);
-			if (this->GetState() == IDLING_AIM_UP_LEFT)
+			if (this->GetMissileNumbers() > 0)
 			{
-				this->SetState(IDLING_SHOOTING_UP_LEFT);
+				Game::gameSound->playSound(SHOOT_MISSILE);
+				if (this->GetState() == IDLING_AIM_UP_LEFT)
+				{
+					this->SetState(IDLING_SHOOTING_UP_LEFT);
 
-				_ShootMissile(ON_UP, metroid);
-			}
-			if (this->GetState() == IDLING_AIM_UP_RIGHT)
-			{
-				this->SetState(IDLING_SHOOTING_UP_RIGHT);
+					_ShootMissile(ON_UP, metroid);
+				}
+				if (this->GetState() == IDLING_AIM_UP_RIGHT)
+				{
+					this->SetState(IDLING_SHOOTING_UP_RIGHT);
 
-				_ShootMissile(ON_UP, metroid);
-			}
-			//State Chạy bắn lên
-			if (this->GetState() == AIMING_UP_LEFT)
-			{
-				this->SetState(AIMING_UP_LEFT);
-				_ShootMissile(ON_UP, metroid);
-			}
-			if (this->GetState() == AIMING_UP_RIGHT)
-			{
-				this->SetState(AIMING_UP_RIGHT);
-				_ShootMissile(ON_UP, metroid);
-			}
-			//State Nhảy bắn lên => bug
-			if (this->GetState() == ON_JUMP_AIM_UP_LEFT)
-			{
-				this->SetState(ON_JUMP_SHOOTING_UP_LEFT);
+					_ShootMissile(ON_UP, metroid);
+				}
+				//State Chạy bắn lên
+				if (this->GetState() == AIMING_UP_LEFT)
+				{
+					this->SetState(AIMING_UP_LEFT);
+					_ShootMissile(ON_UP, metroid);
+				}
+				if (this->GetState() == AIMING_UP_RIGHT)
+				{
+					this->SetState(AIMING_UP_RIGHT);
+					_ShootMissile(ON_UP, metroid);
+				}
+				//State Nhảy bắn lên => bug
+				if (this->GetState() == ON_JUMP_AIM_UP_LEFT)
+				{
+					this->SetState(ON_JUMP_SHOOTING_UP_LEFT);
 
-				_ShootMissile(ON_UP, metroid);
-			}
-			if (this->GetState() == ON_JUMP_AIM_UP_RIGHT)
-			{
-				this->SetState(ON_JUMP_SHOOTING_UP_RIGHT);
+					_ShootMissile(ON_UP, metroid);
+				}
+				if (this->GetState() == ON_JUMP_AIM_UP_RIGHT)
+				{
+					this->SetState(ON_JUMP_SHOOTING_UP_RIGHT);
 
-				_ShootMissile(ON_UP, metroid);
-			}
-			//State nhảy bắn
-			if (this->GetState() == ON_JUMP_LEFT || this->GetState() == ON_SOMERSAULT_LEFT || this->GetState() == ON_JUMPING_SHOOTING_LEFT)
-			{
-				this->SetState(ON_JUMPING_SHOOTING_LEFT);
+					_ShootMissile(ON_UP, metroid);
+				}
+				//State nhảy bắn
+				if (this->GetState() == ON_JUMP_LEFT || this->GetState() == ON_SOMERSAULT_LEFT || this->GetState() == ON_JUMPING_SHOOTING_LEFT)
+				{
+					this->SetState(ON_JUMPING_SHOOTING_LEFT);
 
-				_ShootMissile(ON_LEFT, metroid);
-			}
-			if (this->GetState() == ON_JUMP_RIGHT || this->GetState() == ON_SOMERSAULT_RIGHT || this->GetState() == ON_JUMPING_SHOOTING_RIGHT)
-			{
-				this->SetState(ON_JUMPING_SHOOTING_RIGHT);
+					_ShootMissile(ON_LEFT, metroid);
+				}
+				if (this->GetState() == ON_JUMP_RIGHT || this->GetState() == ON_SOMERSAULT_RIGHT || this->GetState() == ON_JUMPING_SHOOTING_RIGHT)
+				{
+					this->SetState(ON_JUMPING_SHOOTING_RIGHT);
 
-				_ShootMissile(ON_RIGHT, metroid);
-			}
-			//State chạy bắn
-			if (this->GetState() == LEFTING)
-			{
-				this->SetState(ON_RUN_SHOOTING_LEFT);
+					_ShootMissile(ON_RIGHT, metroid);
+				}
+				//State chạy bắn
+				if (this->GetState() == LEFTING)
+				{
+					this->SetState(ON_RUN_SHOOTING_LEFT);
 
-				_ShootMissile(ON_LEFT, metroid);
-			}
-			if (this->GetState() == RIGHTING)
-			{
-				this->SetState(ON_RUN_SHOOTING_RIGHT);
+					_ShootMissile(ON_LEFT, metroid);
+				}
+				if (this->GetState() == RIGHTING)
+				{
+					this->SetState(ON_RUN_SHOOTING_RIGHT);
 
-				_ShootMissile(ON_RIGHT, metroid);
-			}
-			//State đứng bắn
-			if (this->GetState() == IDLE_LEFT)
-			{
-				this->SetState(IDLING_SHOOTING_LEFT);
+					_ShootMissile(ON_RIGHT, metroid);
+				}
+				//State đứng bắn
+				if (this->GetState() == IDLE_LEFT)
+				{
+					this->SetState(IDLING_SHOOTING_LEFT);
 
-				_ShootMissile(ON_LEFT, metroid);
-			}
-			if (this->GetState() == IDLE_RIGHT)
-			{
-				this->SetState(IDLING_SHOOTING_RIGHT);
+					_ShootMissile(ON_LEFT, metroid);
+				}
+				if (this->GetState() == IDLE_RIGHT)
+				{
+					this->SetState(IDLING_SHOOTING_RIGHT);
 
-				_ShootMissile(ON_RIGHT, metroid);
+					_ShootMissile(ON_RIGHT, metroid);
 
+				}
+				break;
 			}
-			break;
 
 		}
 	}

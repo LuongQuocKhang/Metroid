@@ -31,7 +31,7 @@ Number::Number(LPD3DXSPRITE spriteHandler, World * manager, NUMBER_PATH_TYPE num
 	break;
 	case NUMBEROFMISSILE:
 	{
-		this->SetHealth(manager->missiles->getNum());
+		this->SetHealth(manager->samus->GetMissileNumbers());
 	}
 	break;
 	}
@@ -117,7 +117,7 @@ void Number::InitSprites()
 	break;
 	case NUMBEROFMISSILE:
 	{
-		if (this->GetHealth() < 0) //Nếu Health <0 thì giá trị Health là 00 (0<=Health<=99)
+		if (this->GetHealth() <= 0) //Nếu Health <0 thì giá trị Health là 00 (0<=Health<=99)
 		{
 			switch (numberpath)
 			{
@@ -214,7 +214,11 @@ void Number::Update(int t)
 	break;
 	case NUMBEROFMISSILE:
 	{
-
+		if (manager->samus->GetMissileNumbers() != this->GetHealth()) //Nếu Health của samus khác shealth hiện tại thì sẽ update số health
+		{
+			this->SetHealth(manager->samus->GetMissileNumbers());
+			this->InitSprites();
+		}
 		switch (numberpath)
 		{
 		case CHUC: //Trường hợp số chục

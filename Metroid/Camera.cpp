@@ -14,7 +14,7 @@ float Camera::max_y = 0;
 float Camera::min_y = 0;
 
 int Camera::width =  480;
-int Camera::height =  500;
+int Camera::height =  480;
 
 float Camera::speed = 0.2f;
 

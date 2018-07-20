@@ -15,7 +15,7 @@ MotherBrain::MotherBrain(LPD3DXSPRITE spriteHandler, World * manager)
 
 	//--TO DO: Khởi tạo collider cho Mother Brain
 	collider = new Collider();
-	collider->SetCollider(pos_x,pos_y, -MOTHER_BRAIN_HEIGHT, MOTHER_BRAIN_WIDTH);
+	collider->SetCollider(MOTHER_BRAIN_HEIGHT / 2, -MOTHER_BRAIN_WIDTH / 2, -MOTHER_BRAIN_HEIGHT / 2, MOTHER_BRAIN_WIDTH / 2);
 }
 
 MotherBrain::~MotherBrain()
@@ -38,7 +38,7 @@ void MotherBrain::Update(float t)
 	pos_x += vx * t;
 	pos_y += vy * t;
 
-	if (this->health <= HEALTH_MOTHER_BRAIN - 20)
+	if (this->health <= HEALTH_MOTHER_BRAIN - 30)
 		state = BROKEN;
 
 	DWORD now = GetTickCount();

@@ -18,14 +18,14 @@ Bee::Bee(LPD3DXSPRITE spriteHandler, World * manager, ENEMY_TYPE enemy_type) : E
 	damage = DAMAGE_BEE;
 
 	collider = new Collider();
-	collider->SetCollider(0, 0, -BEE_HEIGHT, BEE_WIDTH);
+	collider->SetCollider(BEE_HEIGHT / 2, -BEE_WIDTH / 2, -BEE_HEIGHT / 2, BEE_WIDTH / 2);
 
 	// collider dùng khi samus đi vào vùng va chạm thì BEE bắt đầu bay (Chưa làm)
 	collider_area = new Collider();
 	collider_area->SetCollider(0, -width, -480, width * 2);
 
-	vy = -0.1f;
-	vx = 0.04f;
+	vy = -0.15f;
+	vx = 0.06f;
 }
 
 

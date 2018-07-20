@@ -16,7 +16,7 @@ Ridley::Ridley(LPD3DXSPRITE spriteHandler, World * manager)
 
 	//--TO DO: Khởi tạo collider cho Ridley
 	collider = new Collider();
-	collider->SetCollider(0, 0, -RIDLEY_HEIGHT, RIDLEY_WIDTH);
+	collider->SetCollider(RIDLEY_HEIGHT / 2, -RIDLEY_WIDTH / 2, -RIDLEY_HEIGHT / 2 - 10, RIDLEY_WIDTH / 2);
 }
 
 Ridley::~Ridley()
