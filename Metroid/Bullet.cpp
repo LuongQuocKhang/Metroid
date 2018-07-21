@@ -181,16 +181,6 @@ void Bullet::Update(float t)
 			}
 		}
 	}
-	
-	// kiểm tra lại hàm này
-	// Va chạm của Bird_bullet đối với samus
-	float TimeScale = SweptAABB(manager->samus, t);
-	if (TimeScale < 1.0f)
-	{
-		manager->samus->TakeDamage(this->damage);
-		Reset();
-	}
-
 	//
 	// Update bullet status
 	//

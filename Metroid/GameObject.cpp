@@ -512,11 +512,6 @@ void GameObject::Deflect(GameObject *target, const float &DeltaTime, const float
 // Phản xạ khi va chạm với ground
 void GameObject::SlideFromGround(GameObject *target, const float &DeltaTime, const float &CollisionTimeScale)
 {
-	//ResponseFrom(target, _DeltaTime, collisionTimeScale);
-	// lỡ đụng 2,3 ground mà chạy cái này nhiều lần sẽ rất sai
-	// "góc lag" sẽ làm đi luôn vào trong tường
-
-
 	if (normalx > 0.1f)	// tông bên phải gạch
 	{
 		this->pos_x = (target->GetPosX() + target->collider->GetRight() - this->collider->GetLeft()) + 0.1f;
@@ -535,7 +530,8 @@ void GameObject::SlideFromGround(GameObject *target, const float &DeltaTime, con
 	{
 		this->pos_y = (target->pos_y + target->collider->GetTop() - this->collider->GetBottom()) + 0.1f;
 		pos_y -= vy*DeltaTime;
-		vy = 0;
+		//vy = 0;
+		vx = 0;
 	}
 	else if (normaly < -0.1f)	// tông ở dưới lên
 	{

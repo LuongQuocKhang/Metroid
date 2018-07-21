@@ -1041,9 +1041,12 @@ void Samus::ProcessInput(LPDIRECT3DDEVICE9 d3ddv, float Delta, Metroid* metroid)
 		}
 	}
 
-	if (this->GetVelocityY() < 0)
+	if (metroid->IsKeyDown(DIK_X))
 	{
-		//this->setNormaly(-1.0f);
+		if (this->pos_y < 160)
+		{
+			this->SetVelocityY(JUMP_VELOCITY_BOOST);
+		}
 	}
 }
 
@@ -1065,13 +1068,13 @@ void Samus::OnkeyDown(int KeyCode, Metroid * metroid, int& screenMode)
 					metroid->SetStart_jump(GetTickCount());
 
 					this->SetState(ON_SOMERSAULT_RIGHT);
-					this->SetVelocityY(this->GetVelocityY() + JUMP_VELOCITY_BOOST_FIRST);
+					this->SetVelocityY( JUMP_VELOCITY_BOOST_FIRST);
 
-					metroid->SetNow_jump(GetTickCount());
+					/*metroid->SetNow_jump(GetTickCount());
 					if ((metroid->GetNow_jump() - metroid->GetStart_jump()) <= 10 * metroid->GetTickPerFrame())
 					{
 						this->SetVelocityY(this->GetVelocityY() + JUMP_VELOCITY_BOOST);
-					}
+					}*/
 				}
 
 				if (this->GetState() != ON_SOMERSAULT_LEFT && metroid->IsKeyDown(DIK_LEFT)/*&& samus->GetState() != ON_JUMP_AIM_UP_LEFT*/)
@@ -1079,13 +1082,13 @@ void Samus::OnkeyDown(int KeyCode, Metroid * metroid, int& screenMode)
 					metroid->SetStart_jump(GetTickCount());
 					metroid->SetNow_jump(GetTickCount());
 					this->SetState(ON_SOMERSAULT_LEFT);
-					this->SetVelocityY(this->GetVelocityY() + JUMP_VELOCITY_BOOST_FIRST);
+					this->SetVelocityY(JUMP_VELOCITY_BOOST_FIRST);
 
 					//now_jump = GetTickCount();
-					if ((metroid->GetNow_jump() - metroid->GetStart_jump()) <= 10 * metroid->GetTickPerFrame())
+					/*if ((metroid->GetNow_jump() - metroid->GetStart_jump()) <= 10 * metroid->GetTickPerFrame())
 					{
 						this->SetVelocityY(this->GetVelocityY() + JUMP_VELOCITY_BOOST);
-					}
+					}*/
 				}
 
 				if (this->GetVelocityXLast() < 0)
@@ -1099,13 +1102,13 @@ void Samus::OnkeyDown(int KeyCode, Metroid * metroid, int& screenMode)
 							this->SetState(ON_JUMP_AIM_UP_LEFT);
 						else
 							this->SetState(ON_JUMP_LEFT);
-						this->SetVelocityY(this->GetVelocityY() + JUMP_VELOCITY_BOOST_FIRST);
+						this->SetVelocityY(JUMP_VELOCITY_BOOST_FIRST);
 
 						/*now_jump = GetTickCount();*/
-						if ((metroid->GetNow_jump() - metroid->GetStart_jump()) <= 10 * metroid->GetTickPerFrame())
+						/*if ((metroid->GetNow_jump() - metroid->GetStart_jump()) <= 10 * metroid->GetTickPerFrame())
 						{
 							this->SetVelocityY(this->GetVelocityY() + JUMP_VELOCITY_BOOST);
-						}
+						}*/
 					}
 					//else
 					//{
@@ -1127,13 +1130,13 @@ void Samus::OnkeyDown(int KeyCode, Metroid * metroid, int& screenMode)
 							this->SetState(ON_JUMP_AIM_UP_RIGHT);
 						else
 							this->SetState(ON_JUMP_RIGHT);
-						this->SetVelocityY(this->GetVelocityY() + JUMP_VELOCITY_BOOST_FIRST);
+						this->SetVelocityY(JUMP_VELOCITY_BOOST_FIRST);
 
 						//now_jump = GetTickCount();
-						if ((metroid->GetNow_jump() - metroid->GetStart_jump()) <= 10 * metroid->GetTickPerFrame())
+						/*if ((metroid->GetNow_jump() - metroid->GetStart_jump()) <= 10 * metroid->GetTickPerFrame())
 						{
 							this->SetVelocityY(this->GetVelocityY() + JUMP_VELOCITY_BOOST);
-						}
+						}*/
 					}
 					//else
 					//{
@@ -1215,25 +1218,6 @@ void Samus::OnkeyDown(int KeyCode, Metroid * metroid, int& screenMode)
 				}
 				break;
 			}
-			//case DIK_X:
-			//	//**********************************************************************************
-			//	// [CAUTION!!!] Vi pos_y chua chinh theo toa do World, code duoi day chi la tam thoi,
-			//	// se cap nhat lai sau
-			//	if (samus->GetPosY() >= GROUND_Y)
-			//	{
-			//		if (samus->GetVelocityXLast() < 0)
-			//		{
-			//			samus->SetState(ON_JUMP_LEFT);
-			//			samus->SetVelocityY(samus->GetVelocityY() - JUMP_VELOCITY_BOOST);
-			//		}
-			//		else if (samus->GetVelocityXLast() > 0)
-			//		{
-			//			samus->SetState(ON_JUMP_RIGHT);
-			//			samus->SetVelocityY(samus->GetVelocityY() - JUMP_VELOCITY_BOOST);
-			//		}
-			//	}
-			//	//***********************************************************************************
-			//	break;
 		case DIK_LEFT:
 			/*if (samus->GetState() == ON_JUMP_RIGHT)
 			samus->SetState(ON_JUMP_LEFT);*/
@@ -1353,6 +1337,12 @@ void Samus::OnkeyDown(int KeyCode, Metroid * metroid, int& screenMode)
 }
 void Samus::OnKeyUp(int KeyCode, Metroid * metroid)
 {
-	
+	if (KeyCode == DIK_X)
+	{
+		if (this->vy > JUMP_VELOCITY_BOOST_FIRST)
+		{
+			this->vy = JUMP_VELOCITY_BOOST_FIRST;
+		}
+	}
 }
 //----------------------------------

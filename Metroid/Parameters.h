@@ -142,8 +142,8 @@ class Energy;
 
 #define ANIMATE_RATE 20
 
-#define JUMP_VELOCITY_BOOST 0.2f
-#define JUMP_VELOCITY_BOOST_FIRST 0.47f
+#define JUMP_VELOCITY_BOOST 0.5f
+#define JUMP_VELOCITY_BOOST_FIRST 0.3f
 #define FALLDOWN_VELOCITY_DECREASE 0.02f
 #define GRAVITY_VELOCITY 0.005f
 //================== END SAMUS ====================
@@ -195,7 +195,6 @@ class Energy;
 #define BIRD_FLY_SPRITE_COUNT 3
 
 #define BIRD_FLY "sprites\\enemy\\BIRD_FLY.txt"
-
 #define BIRD_STANDARD_ANIMATE_RATE 7
 #define BIRD_BOOST_ANIMATE_RATE 30
 //================== END BIRD =================

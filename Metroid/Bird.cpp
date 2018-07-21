@@ -168,11 +168,18 @@ void Bird::Response(GameObject * target, const float & DeltaTime, const float & 
 
 }
 
-void Bird::Destroy()
+void Bird::Destroy(float t)
 {
 	// Effect explosion
-
-	// Destroy
+	/*if (TimeBeforeExplode <= 0)
+	{
+		manager->birdbullets->Next(ON_LEFT, this->pos_x, pos_y);
+		isActive = false;
+	}
+	else
+	{
+		TimeBeforeExplode -= t;
+	}*/
 	vx = 0;
 
 	manager->explsEffect->Init(this->pos_x, this->pos_y);	 // Xảy ra lỗi khi giết những mục tiêu to (Ridley, Mother Brain)
