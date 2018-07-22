@@ -86,7 +86,7 @@ public:
 
 	int immortal_time;
 	bool isImmortal;
-
+	float jumdistance;
 	Samus();
 	Samus(LPD3DXSPRITE spriteHandler, World * manager);
 	~Samus();

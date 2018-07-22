@@ -1043,9 +1043,12 @@ void Samus::ProcessInput(LPDIRECT3DDEVICE9 d3ddv, float Delta, Metroid* metroid)
 
 	if (metroid->IsKeyDown(DIK_X))
 	{
-		if (this->pos_y < 160)
+		if (this->pos_y < jumdistance + 80)
 		{
-			this->SetVelocityY(JUMP_VELOCITY_BOOST);
+			if (this->vy > 0)
+			{
+				this->SetVelocityY(JUMP_VELOCITY_BOOST);
+			}
 		}
 	}
 }
@@ -1058,6 +1061,7 @@ void Samus::OnkeyDown(int KeyCode, Metroid * metroid, int& screenMode)
 		switch (KeyCode)
 		{
 		case DIK_X:
+			jumdistance = this->pos_y;
 			if (metroid->IsKeyDown(DIK_X))
 			{
 				Game::gameSound->playSound(JUMP);
