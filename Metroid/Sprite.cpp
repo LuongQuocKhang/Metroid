@@ -125,7 +125,7 @@ Sprite::Sprite(LPD3DXSPRITE SpriteHandler, LPWSTR ImagePath, int posX, int posY,
 
 	LPDIRECT3DDEVICE9 d3ddv;
 	SpriteHandler->GetDevice(&d3ddv);
-
+	
 	result = D3DXCreateTextureFromFileEx(
 		d3ddv,
 		ImagePath,
@@ -150,6 +150,44 @@ Sprite::Sprite(LPD3DXSPRITE SpriteHandler, LPWSTR ImagePath, int posX, int posY,
 }
 
 
+Sprite::Sprite(LPD3DXSPRITE SpriteHandler,int posX, int posY, int Width, int Height)
+{
+	spriteInfo = new SpriteInfo[1];
+	spriteInfo->pos_x = posX;
+	spriteInfo->pos_y = posY;
+	//
+	//Init sprite with DirectX
+	//
+	HRESULT result;
+
+	_Image = NULL;
+	_SpriteHandler = SpriteHandler;
+	_Width = Width;
+	_Height = Height;
+	_Count = 1;
+	_Index = 0;
+
+
+	LPDIRECT3DDEVICE9 d3ddv;
+	SpriteHandler->GetDevice(&d3ddv);
+
+	result = D3DXCreateTexture(
+		d3ddv,
+		Width,
+		Height,
+		1,
+		D3DUSAGE_DYNAMIC,
+		D3DFMT_UNKNOWN,
+		D3DPOOL_DEFAULT,
+		&_Image);
+
+	if (result != D3D_OK)
+	{
+		trace(L"[ERROR] Failed to create texture");
+		return;
+	}
+}
+
 Sprite::~Sprite()
 {
 	delete(spriteInfo);
@@ -169,7 +207,6 @@ void Sprite::Reset()
 
 void Sprite::Render(int X, int Y)
 {
-
 	RECT rect;
 	rect.left = spriteInfo[_Index].pos_x;
 	rect.top = spriteInfo[_Index].pos_y;
@@ -185,7 +222,7 @@ void Sprite::Render(int X, int Y)
 	D3DXMATRIX mt;
 	D3DXMatrixIdentity(&mt);
 	mt._22 = -1.0f;
-	mt._41 = -Camera::currentCamX;;
+	mt._41 = -Camera::currentCamX;
 	mt._42 = Camera::currentCamY;	// --TO DO:  Fix lại chỗ này sau
 	D3DXVECTOR4 vp_pos;
 	D3DXVec3Transform(&vp_pos, &position, &mt);

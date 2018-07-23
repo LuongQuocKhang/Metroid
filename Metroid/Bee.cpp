@@ -71,25 +71,35 @@ void Bee::Update(float t)
 	//		vx = -0.05f;
 	//	}
 	//}
-	if (this->pos_y <= GROUND_Y + 50)
+	if (this->pos_y <= GROUND_Y)
 	{
 		vy *= (-1);
 	}
 	vy += gravity*t;
 
-	for (int i = 0; i < manager->quadtreeGroup->size; i++)
+	//for (int i = 0; i < manager->quadtreeGroup->size; i++)
+	//{
+	//	switch (manager->quadtreeGroup->objects[i]->GetType())
+	//	{
+	//	case BRICK:
+	//		float timeScale = SweptAABB(manager->quadtreeGroup->objects[i], t);
+	//		if (timeScale < 1.0f)
+	//		{
+	//			//SlideFromGround(manager->quadtreeGroup->objects[i], t, timeScale);
+	//			vy *= (-1);
+	//			//this->Destroy();
+	//		}
+	//		break;
+	//	}
+	//}
+
+	// collider mới cho ground
+	for (int i = 0; i < manager->colGroundBrick->size; i++)
 	{
-		switch (manager->quadtreeGroup->objects[i]->GetType())
+		float timeScale = SweptAABB(manager->colGroundBrick->objects[i], t);
+		if (timeScale < 1.0f)
 		{
-		case BRICK:
-			float timeScale = SweptAABB(manager->quadtreeGroup->objects[i], t);
-			if (timeScale < 1.0f)
-			{
-				SlideFromGround(manager->quadtreeGroup->objects[i], t, timeScale);
-				vy *= (-1);
-				//this->Destroy();
-			}
-			break;
+			vy *= (-1);
 		}
 	}
 

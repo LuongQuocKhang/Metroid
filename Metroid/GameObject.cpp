@@ -206,20 +206,25 @@ Collider * GameObject::GetCollider()
 	return collider;
 }
 
+BoundingBox * GameObject::GetBoundingBox()
+{
+	return boundingBox;
+}
+
 bool GameObject::IsInCamera()
 {
 	if (collider == NULL)
 		return false;
-	// Kiềm tra bên trái
+	// Kiềm tra từ bên phải sang trái
 	if (pos_x + collider->GetRight() * 2 < Camera::currentCamX)
 		return false;
-	// Kiểm tra phía trên
+	// Kiểm tra từ phía dưới lên trên
 	if (pos_y + collider->GetBottom() > Camera::currentCamY)
 		return false;
-	// Kiểm tra bên phải
-	if (pos_x + collider->GetLeft()> Camera::currentCamX + Camera::width)
+	// Kiểm tra từ bên trái sang phải
+	if (pos_x + collider->GetLeft() > Camera::currentCamX + Camera::width)
 		return false;
-	// Kiểm tra phía dưới
+	// Kiểm tra từ phía trên xuống dưới
 	if (pos_y + collider->GetTop() < Camera::currentCamY - Camera::height)
 		return false;
 	return true;
@@ -512,6 +517,11 @@ void GameObject::Deflect(GameObject *target, const float &DeltaTime, const float
 // Phản xạ khi va chạm với ground
 void GameObject::SlideFromGround(GameObject *target, const float &DeltaTime, const float &CollisionTimeScale)
 {
+	//ResponseFrom(target, _DeltaTime, collisionTimeScale);
+	// lỡ đụng 2,3 ground mà chạy cái này nhiều lần sẽ rất sai
+	// "góc lag" sẽ làm đi luôn vào trong tường
+
+
 	if (normalx > 0.1f)	// tông bên phải gạch
 	{
 		this->pos_x = (target->GetPosX() + target->collider->GetRight() - this->collider->GetLeft()) + 0.1f;
@@ -530,8 +540,7 @@ void GameObject::SlideFromGround(GameObject *target, const float &DeltaTime, con
 	{
 		this->pos_y = (target->pos_y + target->collider->GetTop() - this->collider->GetBottom()) + 0.1f;
 		pos_y -= vy*DeltaTime;
-		//vy = 0;
-		vx = 0;
+		vy = 0;
 	}
 	else if (normaly < -0.1f)	// tông ở dưới lên
 	{
@@ -540,4 +549,184 @@ void GameObject::SlideFromGround(GameObject *target, const float &DeltaTime, con
 		vy = 0;
 	}
 	return;
-}//----------------------------------
+}
+bool GameObject::IsInCamera_New()
+{
+	if (boundingBox == NULL)
+		return false;
+	// Kiềm tra bên trái
+	if (boundingBox->GetX() + boundingBox->GetWidth() < Camera::currentCamX)
+		return false;
+	// Kiểm tra phía trên
+	if (boundingBox->GetY() + boundingBox->GetHeight() > Camera::currentCamY)
+		return false;
+	// Kiểm tra bên phải
+	if (boundingBox->GetX() > Camera::currentCamX + Camera::width)
+		return false;
+	// Kiểm tra phía dưới
+	if (boundingBox->GetY() < Camera::currentCamY - Camera::height)
+		return false;
+	return true;
+}
+bool GameObject::IsCollide_New(GameObject * target)
+{
+	float left = target->GetBoundingBox()->GetX() - (boundingBox->GetX() + boundingBox->GetHeight());
+	float top = (target->GetBoundingBox()->GetY() + target->GetBoundingBox()->GetHeight()) - boundingBox->GetY();
+	float right = (target->GetBoundingBox()->GetX() + target->GetBoundingBox()->GetWidth()) - boundingBox->GetX();
+	float bottom = target->GetBoundingBox()->GetY() - (boundingBox->GetY() + boundingBox->GetHeight());
+
+	// mình xét ngược lại cho nhanh hơn
+	return !(left > 0 || right < 0 || top < 0 || bottom > 0);
+}
+
+bool GameObject::IsInside_New(GameObject * target)
+{
+	float left = target->GetBoundingBox()->GetX() - (boundingBox->GetX() + boundingBox->GetWidth());
+	float top = (target->GetBoundingBox()->GetY() + target->GetBoundingBox()->GetHeight()) - boundingBox->GetY();
+	float right = (target->GetBoundingBox()->GetX() + target->GetBoundingBox()->GetWidth()) - boundingBox->GetX();
+	float bottom = target->GetBoundingBox()->GetY() - (boundingBox->GetY() + boundingBox->GetHeight());
+
+	return false;
+}
+
+bool GameObject::IsCollide_New(BoundingBox target)
+{
+	float left = target.GetX() - (boundingBox->GetX() + boundingBox->GetHeight());
+	float top = (target.GetY() + target.GetHeight()) - boundingBox->GetY();
+	float right = (target.GetX() + target.GetWidth()) - boundingBox->GetX();
+	float bottom = target.GetY() - (boundingBox->GetY() + boundingBox->GetHeight());
+
+	// mình xét ngược lại cho nhanh hơn
+	return !(left > 0 || right < 0 || top < 0 || bottom > 0);
+}
+
+float GameObject::SweptAABB_New(GameObject * target)
+{
+	if (boundingBox == NULL || target->GetBoundingBox() == NULL)
+	{
+		normalx = 0.0f;
+		normaly = 0.0f;
+		return 1.0f;
+	}
+
+	// Broad phasing
+	BoundingBox rect = getSweptBroadphaseRect(target);
+	if (!IsCollide_New(rect))
+	{
+		normalx = 0;
+		normaly = 0;
+		return 1.0f;
+	}
+
+	float dxEntry, dxExit;
+	float dyEntry, dyExit;
+
+	// tìm khoảng cách các cạnh tương ứng
+	if (this->vx > 0.0f)
+	{
+		dxEntry = target->GetBoundingBox()->GetX() - (boundingBox->GetX() + boundingBox->GetWidth());
+		dxExit = (target->GetBoundingBox()->GetX() + target->GetBoundingBox()->GetWidth()) - boundingBox->GetX();
+	}
+	else
+	{
+		dxEntry = (target->GetBoundingBox()->GetX() + target->GetBoundingBox()->GetWidth()) - boundingBox->GetX();
+		dxExit = target->GetBoundingBox()->GetX() - (boundingBox->GetX() + boundingBox->GetWidth());
+	}
+
+	if (this->vy > 0.0f)
+	{
+		dyEntry = target->GetBoundingBox()->GetY() - (boundingBox->GetY() + boundingBox->GetHeight());
+		dyExit = (target->GetBoundingBox()->GetY() + height) - boundingBox->GetY();
+	}
+	else
+	{
+		dyEntry = (target->GetBoundingBox()->GetY() + target->GetBoundingBox()->GetHeight()) - boundingBox->GetY();
+		dyExit = target->GetBoundingBox()->GetY() - (boundingBox->GetY() + boundingBox->GetHeight());
+	}
+
+	// tính thời gian từ khoảng cách tính được và vận tốc của đối tượng
+	// vận tốc này là trong 1 frame hình nha
+	float txEntry, txExit;
+	if (this->vx == 0.0f)
+	{
+		// đang đứng yên thì bằng vô cực (chia cho  0)
+		txEntry = -std::numeric_limits<float>::infinity();
+		txExit = std::numeric_limits<float>::infinity();
+	}
+	else
+	{
+		txEntry = dxEntry / this->vx;
+		txExit = dxExit / this->vx;
+	}
+
+	float tyEntry, tyExit;
+	if (this->vy == 0.0f)
+	{
+		tyEntry = -std::numeric_limits<float>::infinity();
+		tyExit = std::numeric_limits<float>::infinity();
+	}
+	else
+	{
+		tyEntry = dyEntry / this->vy;
+		tyExit = dyExit / this->vy;
+	}
+
+	// thời gian va chạm là thời gian lớn nhất của 2 trục (2 trục phải cùng tiếp xúc thì mới va chạm)
+	float entryTime = max(txEntry, tyEntry);
+	// thời gian hết va chạm là thời gian của 2 trục, (1 cái ra khỏi là object hết va chạm)
+	float exitTime = min(txExit, tyExit);
+
+	// kiểm tra xem có thể va chạm không, mình xét ngược lại cho nhanh
+	if (entryTime > exitTime || (txEntry < 0.0f && tyEntry < 0.0f) || txEntry > 1.0f || tyEntry > 1.0f)
+	{
+		return 1.0f;
+	}
+
+	// lấy hướng va chạm
+	if (txEntry > tyEntry)
+	{
+		if (dxEntry > 0.0f)
+		{
+			//result = eDirection::RIGHT;
+			normalx = -1.0f;
+			normaly = 0.0f;
+		}
+		else
+		{
+			//result = eDirection::LEFT;
+			normalx = 1.0f;
+			normaly = 0.0f;
+		}
+	}
+	else
+	{
+		if (dyEntry > 0.0f)
+		{
+			//result = eDirection::UP;
+			normalx = 0.0f;
+			normaly = -1.0f;
+		}
+		else
+		{
+			//result = eDirection::DOWN;
+			normalx = 0.0f;
+			normaly = 1.0f;
+		}
+	}
+
+	// có thì lấy thời gian
+	return entryTime;
+}
+
+BoundingBox GameObject::getSweptBroadphaseRect(GameObject* target)
+{
+	float x = target->GetVelocityX() > 0 ? target->GetBoundingBox()->GetX() : target->GetBoundingBox()->GetX() + target->GetVelocityX();
+	float y = target->GetVelocityY() > 0 ? target->GetBoundingBox()->GetY() : target->GetBoundingBox()->GetY() + target->GetVelocityY();
+	float w = target->GetBoundingBox()->GetWidth() + abs(target->GetVelocityX());
+	float h = target->GetBoundingBox()->GetHeight() + abs(target->GetVelocityY());
+
+	return BoundingBox(x, y, w, h);
+}
+
+
+//----------------------------------

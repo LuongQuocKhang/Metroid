@@ -2,6 +2,8 @@
 #include "World.h"
 #include "GroupObject.h"
 #include "Parameters.h"
+#include "Metroid.h"
+#include "ColliderBrick.h"
 
 Bird::Bird()
 {
@@ -21,7 +23,6 @@ Bird::Bird(LPD3DXSPRITE spriteHandler, World * manager, ENEMY_TYPE enemy_type) :
 
 	//Khởi tạo sát thương
 	damage = DAMAGE_BIRD;
-	TimeBeforeExplode = TIMEBEFOREEXPLODE;
 
 	width = BIRD_WIDTH;
 	height = BIRD_HEIGHT;
@@ -71,7 +72,7 @@ void Bird::Update(float t)
 
 	if (this->IsCollide(manager->samus) == true)
 	{
-		vy = -0.2f;
+		vy = -0.28f;
 		animate_rate = BIRD_BOOST_ANIMATE_RATE;
 		if (pos_x < manager->samus->GetPosX())
 		{
@@ -83,7 +84,7 @@ void Bird::Update(float t)
 		}
 	}
 
-	for (int i = 0; i < manager->quadtreeGroup->size; i++)
+	/*for (int i = 0; i < manager->quadtreeGroup->size; i++)
 	{
 		switch (manager->quadtreeGroup->objects[i]->GetType())
 		{
@@ -104,6 +105,31 @@ void Bird::Update(float t)
 				}
 			}
 			break;
+		}
+	}*/
+
+
+	// collider mới cho ground
+	if (!(manager->metroid->isOnFloor))
+	{
+		for (int i = 0; i < manager->colGroundBrick->size; i++)
+		{
+			float timeScale = SweptAABB(manager->colGroundBrick->objects[i], t);
+			if (timeScale < 1.0f)
+			{
+				ColliderBrick * brick = (ColliderBrick*)manager->colGroundBrick->objects[i];
+				SlideFromGround(brick, t, timeScale);
+
+				DeathByShoot = false;
+				if (pos_y - height <= GROUND_Y && normalx == 0)
+				{
+					if (this->DeathByShoot == false)
+					{
+						manager->birdbullets->Next(ON_LEFT, this->pos_x, pos_y);
+						isActive = false;
+					}
+				}
+			}
 		}
 	}
 
@@ -168,18 +194,11 @@ void Bird::Response(GameObject * target, const float & DeltaTime, const float & 
 
 }
 
-void Bird::Destroy(float t)
+void Bird::Destroy()
 {
 	// Effect explosion
-	/*if (TimeBeforeExplode <= 0)
-	{
-		manager->birdbullets->Next(ON_LEFT, this->pos_x, pos_y);
-		isActive = false;
-	}
-	else
-	{
-		TimeBeforeExplode -= t;
-	}*/
+
+	// Destroy
 	vx = 0;
 
 	manager->explsEffect->Init(this->pos_x, this->pos_y);	 // Xảy ra lỗi khi giết những mục tiêu to (Ridley, Mother Brain)

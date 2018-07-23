@@ -19,7 +19,7 @@ void SoundManager::LoadSound(HWND _hWnd)
 	DSBuffer[BACKGROUND_APPEARANCE] = LoadWaveToSoundBuffer(L"Resources\\sound\\background\\Appearance.wav");
 	DSBuffer[BACKGROUND_MOTHER_BRAIN_BOSS] = LoadWaveToSoundBuffer(L"Resources\\sound\\background\\Brain Mother.wav");
 	DSBuffer[BACKGROUND_MAP] = LoadWaveToSoundBuffer(L"Resources\\sound\\background\\Map.wav");
-	DSBuffer[BACKGROUND_KRAID_LAIR] = LoadWaveToSoundBuffer(L"Resources\\sound\\background\\Kraid's Lair.wav");
+	//No-Use DSBuffer[BACKGROUND_KRAID_LAIR] = LoadWaveToSoundBuffer(L"Resources\\sound\\background\\Kraid's Lair.wav");
 	DSBuffer[BACKGROUND_RIDLEY_LAIR] = LoadWaveToSoundBuffer(L"Resources\\sound\\background\\Ridley's Lair.wav");
 	DSBuffer[BACKGROUND_ITEM_ACQUIRED] = LoadWaveToSoundBuffer(L"Resources\\sound\\background\\Item acquired.wav");
 	DSBuffer[BACKGROUND_SAMUS_DEATH] = LoadWaveToSoundBuffer(L"Resources\\sound\\background\\samus_death.wav");

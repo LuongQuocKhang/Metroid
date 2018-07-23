@@ -1,7 +1,7 @@
 ﻿#include "Bullet.h"
 #include "World.h"
 #include "GroupObject.h"
-
+#include "Metroid.h"
 
 void Bullet::Render()
 {
@@ -66,7 +66,7 @@ void Bullet::Update(float t)
 		return;
 
 	// Đạn samus va chạm với Enemy (Hiện chỉ có Missile của samus là tác dụng va chạm dc tới enemy)
-	for (int i = 0; i < manager->enemyGroup->size; i++)
+	/*for (int i = 0; i < manager->enemyGroup->size; i++)
 	{
 		if (manager->enemyGroup->objects[i]->IsActive())
 		{
@@ -74,8 +74,6 @@ void Bullet::Update(float t)
 			if (timeScale < 1.0f)
 			{
 				manager->enemyGroup->objects[i]->isHit = true;
-				((Enemy*)manager->enemyGroup->objects[i])->TakeDamage(this->damage);
-				// lát xóa + test
 				switch (manager->enemyGroup->objects[i]->GetType())
 				{
 				case BEDGEHOG_YELLOW:
@@ -141,27 +139,28 @@ void Bullet::Update(float t)
 			}
 		}
 	}
-
+*/
 	// Xử lý va chạm
-	for (int i = 0; i < manager->quadtreeGroup->size; i++)
+	if (!(manager->metroid->isOnFloor))
 	{
-		switch (manager->quadtreeGroup->objects[i]->GetType())
+		for (int i = 0; i < manager->colGroundBrick->size; i++)
 		{
-		case BRICK:
-			float timeScale = SweptAABB(manager->quadtreeGroup->objects[i], t);
+			float timeScale = SweptAABB(manager->colGroundBrick->objects[i], t);
 			if (timeScale < 1.0f)
 			{
 				Reset();
 			}
-			break;
 		}
 	}
 
-	for (int i = 0; i < manager->colBrick->size; i++)
+	if ((manager->metroid->isOnFloor))
 	{
-		float timeScale = SweptAABB(manager->colBrick->objects[i], t);
-		if (timeScale < 1.0f)
-			Reset();
+		for (int i = 0; i < manager->colFloorBrick->size; i++)
+		{
+			float timeScale = SweptAABB(manager->colFloorBrick->objects[i], t);
+			if (timeScale < 1.0f)
+				Reset();
+		}
 	}
 
 	//Xử lý va chạm với gate
@@ -181,6 +180,16 @@ void Bullet::Update(float t)
 			}
 		}
 	}
+	
+
+	// Va chạm của Bird_bullet đối với samus
+	float TimeScale = SweptAABB(manager->samus, t);
+	if (TimeScale < 1.0f)
+	{
+		manager->samus->TakeDamage(this->damage);
+		Reset();
+	}
+
 	//
 	// Update bullet status
 	//

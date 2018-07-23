@@ -13,7 +13,6 @@ protected:
 	Collider * collider_area;
 
 	int animate_rate;	// cần biến này vì khi dí theo Samus animate rate thay đổi
-	int TimeBeforeExplode;
 public:
 	Bird();
 	Bird(LPD3DXSPRITE spriteHandler, World * manager, ENEMY_TYPE enemy_type);
@@ -26,7 +25,7 @@ public:
 	//============== END OVERRIDE VIRTUAL METHOD ===============
 	bool IsCollide(GameObject* target);
 	void Response(GameObject *target, const float &DeltaTime, const float &CollisionTimeScale);
-	void Destroy(float);
+	void Destroy();
 };
 
 #endif // !_Bird_H_

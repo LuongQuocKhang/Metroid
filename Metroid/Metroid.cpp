@@ -2,7 +2,6 @@
 #include <time.h>
 #include "trace.h"
 #include "utils.h"
-#include "Collision.h"
 #include "BulletManager.h"
 #include "World.h"
 #include "Samus.h"
@@ -42,6 +41,7 @@ void Metroid::_InitPositions()
 	//world->morphItem->SetPosY(world->samus->GetPosX());
 	//bulletManager->InitPosition(world->samus->GetPosX(), world->samus->GetPosY());
 }
+
 
 DWORD Metroid::GetTickPerFrame()
 {
@@ -84,6 +84,25 @@ void Metroid::SetNow_shoot(DWORD nowshoot)
 {
 	this->now_shoot = nowshoot;
 }
+void Metroid::_Shoot(BULLET_DIRECTION dir)
+{
+	now_shoot = GetTickCount();
+	if (start_shoot <= 0) //if shooting is active
+	{
+		start_shoot = GetTickCount();
+		world->bullets->Next(dir, world->samus->GetPosX(), world->samus->GetPosY());
+	}
+	else if ((now_shoot - start_shoot) > SHOOTING_SPEED * tick_per_frame)
+	{
+		//Reset start_shoot
+		start_shoot = 0;
+	}
+}
+
+void Metroid::_ShootMissile(BULLET_DIRECTION dir)
+{
+	world->missiles->Next(dir, world->samus->GetPosX(), world->samus->GetPosY());
+}
 
 Metroid::Metroid(HINSTANCE hInstance, LPWSTR Name, int Mode, int IsFullScreen, int FrameRate):Game(hInstance, Name, Mode, IsFullScreen, FrameRate)
 {
@@ -110,7 +129,7 @@ Metroid::~Metroid()
 	//delete(bulletManager);
 
 	delete(first_room);
-	delete(second_room);
+	//delete(second_room);
 	delete(room);
 	delete(intro);
 }
@@ -131,9 +150,9 @@ void Metroid::LoadResources(LPDIRECT3DDEVICE9 d3ddv)
 	//room = new Loader(spriteHandler, 1, world);
 	first_room = new Loader(spriteHandler, 1, world);
 	//room->Load();
-	second_room = new Loader(spriteHandler, 2, world);
+	//second_room = new Loader(spriteHandler, 2, world);
 	first_room->Load();
-	second_room->Load();
+	//second_room->Load();
 
 	Game::gameSound->playSoundLoop(BACKGROUND_INTRO);
 }
@@ -262,10 +281,11 @@ void Metroid::RenderIntro(LPDIRECT3DDEVICE9 d3ddv)
 
 void Metroid::RenderFrame(LPDIRECT3DDEVICE9 d3ddv)
 {		
-	world->Render();
+	world->Render(d3ddv);
 
 	if (isOnFloor)
-		second_room->TestRenderMapGO();
+		//second_room->TestRenderMapGO();
+		first_room->TestRenderMapGO();
 	//room->TestRenderMapGO();
 	//first_room->TestRenderMapGO();
 	//bulletManager->Render();
@@ -285,7 +305,7 @@ void Metroid::RenderGameOver(LPDIRECT3DDEVICE9 d3ddv)
 
 void Metroid::ProcessInput(LPDIRECT3DDEVICE9 d3ddv, float Delta)
 {
-	world->samus->ProcessInput(d3ddv, Delta,this);
+	world->samus->ProcessInput(d3ddv, Delta, this);
 }
 
 void Metroid::OnKeyDown(int KeyCode)

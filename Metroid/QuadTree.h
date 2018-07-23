@@ -1,8 +1,12 @@
-#pragma once
+﻿#pragma once
 #include <map>
 #include "QNode.h"
 
 #define QUADTREE_FILE "quadtree\\map.txt";
+
+/*
+CLASS KHÔNG SỬ DỤNG
+*/
 
 using namespace std;
 class QuadTree

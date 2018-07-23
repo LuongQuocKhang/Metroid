@@ -30,6 +30,8 @@ public:
 	
 	//Constructor cho những GameObject chỉ có duy nhất 1 sprite (đỡ dài dòng)
 	Sprite(LPD3DXSPRITE SpriteHandler, LPWSTR ImagePath, int posX, int posY, int Width, int Height);
+
+	Sprite(LPD3DXSPRITE SpriteHandler, int posX, int posY, int Width, int Height);
 	~Sprite();
 
 	void Next();

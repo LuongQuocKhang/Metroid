@@ -23,7 +23,7 @@ protected:
 	BulletManager * bulletManager;
 
 	Loader* first_room;
-	Loader* second_room;
+	//Loader* second_room;
 	Loader* room;
 
 	float time_jump;
@@ -31,18 +31,17 @@ protected:
 	float time_in_game;
 	
 
-private:
-	void _InitBackground();
-	void _InitSprites(LPDIRECT3DDEVICE9 d3ddv);
-	void _InitPositions();
+	DWORD start_shoot;
+	DWORD now_shoot;
 
 	DWORD start_jump;
 	DWORD now_jump;
 	DWORD tick_per_frame;
 
-	DWORD start_shoot;
-	DWORD now_shoot;
-
+private:
+	void _InitBackground();
+	void _InitSprites(LPDIRECT3DDEVICE9 d3ddv);
+	void _InitPositions();
 public:
 	Metroid(HINSTANCE hInstance, LPWSTR Name, int Mode, int IsFullScreen, int FrameRate);
 	~Metroid();
@@ -64,24 +63,26 @@ public:
 	virtual void OnKeyUp(int KeyCode);
 
 	DWORD GetTickPerFrame();
-	DWORD GetStart_jump();
-	DWORD GetNow_jump();
 
-	void SetStart_jump(DWORD startjump);
-	void SetNow_jump(DWORD nowjump);
-
-
-	DWORD GetStart_shoot();
-	DWORD GetNow_shoot();
 
 	void SetStart_shoot(DWORD);
 	void SetNow_shoot(DWORD);
+	void _Shoot(BULLET_DIRECTION dir);
+	void _ShootMissile(BULLET_DIRECTION dir);
+
+	void SetStart_jump(DWORD startjump);
+	void SetNow_jump(DWORD nowjump);
 
 	World* GetWorld()
 	{
 		return this->world;
 	}
 
+	DWORD GetStart_jump();
+	DWORD GetNow_jump();
+
+	DWORD GetStart_shoot();
+	DWORD GetNow_shoot();
 	int screenMode;
 	bool isFreezing;
 	bool isOnFloor;

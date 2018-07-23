@@ -51,12 +51,12 @@ void Ridley::Update(float t)
 		}
 	}
 
-	for (int i = 0; i < manager->colBrick->size; i++)
+	for (int i = 0; i < manager->colFloorBrick->size; i++)
 	{
-		float timeScale = SweptAABB(manager->colBrick->objects[i], t);
+		float timeScale = SweptAABB(manager->colFloorBrick->objects[i], t);
 		if (timeScale < 1.0f)
 		{
-			SlideFromGround(manager->colBrick->objects[i], t, timeScale);
+			SlideFromGround(manager->colFloorBrick->objects[i], t, timeScale);
 			time_push = 300;
 			vy = 0;
 		}

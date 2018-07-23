@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Sprite.h"
-#include "Collision.h"
 #include "Parameters.h"
 #include "GameObject.h"
 #include "trace.h"

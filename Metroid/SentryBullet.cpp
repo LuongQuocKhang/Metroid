@@ -62,7 +62,7 @@ void SentryBullet::Update(float t)
 	}
 
 	// Xử lý va chạm
-	for (int i = 0; i < manager->quadtreeGroup->size; i++)
+	/*for (int i = 0; i < manager->quadtreeGroup->size; i++)
 	{
 		switch (manager->quadtreeGroup->objects[i]->GetType())
 		{
@@ -74,11 +74,11 @@ void SentryBullet::Update(float t)
 			}
 			break;
 		}
-	}
+	}*/
 
-	for (int i = 0; i < manager->colBrick->size; i++)
+	for (int i = 0; i < manager->colFloorBrick->size; i++)
 	{
-		float timeScale = SweptAABB(manager->colBrick->objects[i], t);
+		float timeScale = SweptAABB(manager->colFloorBrick->objects[i], t);
 		if (timeScale < 1.0f)
 			Reset();
 	}

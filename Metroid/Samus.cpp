@@ -14,7 +14,7 @@
 #include "MorphItem.h"
 
 void Samus::Render()
-{
+{	
 	// Nếu không active thì không render
 	if (!isActive)
 		return;
@@ -42,7 +42,7 @@ void Samus::Render()
 		idle_aim_up_left->Render(pos_x, pos_y);
 		break;
 	case IDLING_AIM_UP_RIGHT:
-		idle_aim_up_right->Render(pos_x, pos_y);
+		idle_aim_up_right-> Render(pos_x, pos_y);
 		break;
 	case IDLE_LEFT:
 		idle_left->Render(pos_x, pos_y);
@@ -105,7 +105,7 @@ void Samus::Render()
 		jump_shooting_up_right->Render(pos_x, pos_y);
 		break;
 	}
-
+	
 	spriteHandler->End();
 }
 
@@ -116,7 +116,7 @@ void Samus::Destroy()
 	Game::gameSound->stopSound(BACKGROUND_MAP);
 	Game::gameSound->playSound(BACKGROUND_SAMUS_DEATH);
 	manager->explsEffect->Init(pos_x, pos_y);
-
+	
 	isDeath = true;
 	//--TO DO: Đưa Samus ra khỏi viewport
 
@@ -136,37 +136,6 @@ void Samus::TakeDamage(float damage)
 		Destroy();
 }
 
-void Samus::_Shoot(BULLET_DIRECTION dir, Metroid * metroid)
-{
-	metroid->SetNow_shoot(GetTickCount());
-	if (metroid->GetStart_shoot() <= 0) //if shooting is active
-	{
-		metroid->SetStart_shoot(GetTickCount());
-		(metroid->GetWorld())->bullets->Next(dir, this->GetPosX(), this->GetPosY());
-	}
-	else if ((metroid->GetNow_shoot() - metroid->GetStart_shoot()) > SHOOTING_SPEED * metroid->GetTickPerFrame())
-	{
-		//Reset start_shoot
-		metroid->SetStart_shoot(0);
-	}
-}
-
-void Samus::_ShootMissile(BULLET_DIRECTION dir, Metroid * metroid)
-{
-	(metroid->GetWorld())->missiles->Next(dir, this->GetPosX(), this->GetPosY());
-	this->missile_numbers--;
-}
-
-void Samus::SetMissileNumbers(int value)
-{
-	missile_numbers = num;
-}
-
-int Samus::GetMissileNumbers()
-{
-	return missile_numbers;
-}
-
 void Samus::SetHealth(float value)
 {
 	health = value;
@@ -175,6 +144,16 @@ void Samus::SetHealth(float value)
 float Samus::GetHealth()
 {
 	return health;
+}
+
+int Samus::GetMissileNumbers()
+{
+	return missile_numbers;
+}
+
+void Samus::SetMissileNumbers(int num)
+{
+	missile_numbers = num;
 }
 
 Samus::Samus()
@@ -188,7 +167,6 @@ Samus::Samus()
 	width = 28;
 	height = 64;
 
-	missile_numbers = 0;
 	immortal_time = SAMUS_IMMORTAL_TIME;
 	isImmortal = false;
 
@@ -205,23 +183,23 @@ Samus::Samus(LPD3DXSPRITE spriteHandler, World * manager)
 	this->isActive = true;
 	this->isDeath = false;
 	this->isMorph = false;
-	this->isOnGround = false;
 	//Set type
 	this->type = SAMUS;
 
 	// Khởi tạo máu cho Samus
 	health = HEALTH_SAMUS;
 
-	width = 40;
+	width = 28;
 	height = 50;
 
-	missile_numbers = 0;
 	immortal_time = SAMUS_IMMORTAL_TIME;
 	isImmortal = false;
 
+	missile_numbers = 10; // set số lượng missile ban đầu
+
 	//Collider
 	this->collider = new Collider();
-	this->collider->SetCollider(0, 0, -this->height, this->width - 10);
+	this->collider->SetCollider(0, 0, -this->height, this->width);
 	state = APPEARANCE;
 	gravity = FALLDOWN_VELOCITY_DECREASE;
 }
@@ -268,7 +246,26 @@ Samus::~Samus()
 //	this->direction = direction;
 //}
 
+void Samus::_Shoot(BULLET_DIRECTION dir, Metroid * metroid)
+{
+	metroid->SetNow_shoot(GetTickCount());
+	if (metroid->GetStart_shoot() <= 0) //if shooting is active
+	{
+		metroid->SetStart_shoot(GetTickCount());
+		(metroid->GetWorld())->bullets->Next(dir, this->GetPosX(), this->GetPosY());
+	}
+	else if ((metroid->GetNow_shoot() - metroid->GetStart_shoot()) > SHOOTING_SPEED * metroid->GetTickPerFrame())
+	{
+		//Reset start_shoot
+		metroid->SetStart_shoot(0);
+	}
+}
 
+void Samus::_ShootMissile(BULLET_DIRECTION dir, Metroid * metroid)
+{
+	(metroid->GetWorld())->missiles->Next(dir, this->GetPosX(), this->GetPosY());
+	this->missile_numbers--;
+}
 void Samus::InitSprites(LPDIRECT3DDEVICE9 d3ddv)
 {
 	if (d3ddv == NULL) return;
@@ -377,11 +374,6 @@ bool Samus::isSamusCrouch()
 		return true;
 }
 
-bool Samus::isSamusOnGround()
-{
-	return isOnGround;
-}
-
 bool Samus::GetStateActive()
 {
 	return isActive;
@@ -398,7 +390,7 @@ void Samus::Reset(int x, int y)
 	this->pos_y = y;
 	isMorph = false;
 	isDeath = false;
-	manager->morphItem->Init(706, 196);
+	manager->morphItem->Init(704, 186);
 	Camera::currentCamX = 1000 - 240;
 	Camera::currentCamY = 480;
 	health = HEALTH_SAMUS;
@@ -412,21 +404,66 @@ void Samus::Update(float t)
 	//GameObject::Update(t);
 
 	vy -= gravity;
-
+	
+	//===========> Quan update - updating . . .
 	for (int i = 0; i < manager->enemyGroup->size; i++)
-	{
+	{	
 		Enemy * enemy = (Enemy*)manager->enemyGroup->objects[i];
 		if (enemy->IsActive())
 		{
-			if (this->isImmortal == false)
+			if (isImmortal == false)
 			{
 				float timeScale = SweptAABB(enemy, t);
 				if (timeScale < 1.0f)
 				{
 					//Xử lý khi va chạm với enemy
 					Deflect(enemy, t, timeScale);
-					TakeDamage(enemy->damage);
-					this->isImmortal = true;
+					isImmortal = true;
+
+					// xong rồi tùy con mà takedamage
+					switch (enemy->GetEnemyType())
+					{
+					case BEDGEHOG_YELLOW:
+					{// take damge cho samus, truyen vao dame cua con nay
+						// co the them thuoc tinh damage cho moi con enemy de truyen vao
+						// Vd: this->TakeDamage(float enemy_damage)
+						Bedgehog* hog_yellow = (Bedgehog*)manager->enemyGroup->objects[i];
+						TakeDamage(hog_yellow->damage);
+					}
+					break;
+					case BEDGEHOG_PINK:
+					{
+						Bedgehog * hog_pink = (Bedgehog*)manager->enemyGroup->objects[i];
+						TakeDamage(hog_pink->damage);
+					}
+					break;
+					case BIRD:
+					{
+						Bird * bird = (Bird*)manager->enemyGroup->objects[i];
+						TakeDamage(bird->damage);
+						pos_y = GROUND_Y; // Set giá trị vị trí cho samus khi va chạm bird, tránh bị bug xuyên đất
+					}
+					break;
+					case BLOCK:
+					{
+						Block * block = (Block*)manager->enemyGroup->objects[i];
+						TakeDamage(block->damage);
+					}
+					break;
+					case BEE:
+					{
+						Bee * bee = (Bee*)manager->enemyGroup->objects[i];
+						TakeDamage(bee->damage);
+					}
+					break;
+					case RIDLEY:
+					{
+						Ridley * ridley = (Ridley*)manager->enemyGroup->objects[i];
+						TakeDamage(ridley->damage);
+					}
+					break;
+					// ...
+					}
 				}
 			}
 			else
@@ -440,6 +477,7 @@ void Samus::Update(float t)
 			}
 		}
 	}
+
 	//<======================
 
 	// Xử lý va chạm với Item
@@ -458,7 +496,7 @@ void Samus::Update(float t)
 		if (manager->missileItem->IsActive() == true)
 		{
 			Game::gameSound->playSound(SAMUS_HIT_LIFE_POINT);
-			this->missile_numbers += 1;
+			manager->samus->SetMissileNumbers(manager->samus->GetMissileNumbers() + 1);
 			manager->missileItem->Destroy();
 		}
 
@@ -476,67 +514,125 @@ void Samus::Update(float t)
 		}
 	}
 	//----------------------------
-
+	
 	//Xử lý va chạm với ground
-	for (int i = 0; i < manager->quadtreeGroup->size; i++)
+	//for (int i = 0; i < manager->quadtreeGroup->size; i++)
+	//{
+	//	switch (manager->quadtreeGroup->objects[i]->GetType())
+	//	{
+	//	case BRICK:
+	//		Brick * brick = (Brick*)(manager->quadtreeGroup->objects[i]);
+	//		float timeScale = SweptAABB(manager->quadtreeGroup->objects[i], t);
+	//		if (timeScale < 1.0f)
+	//		{
+	//			if (brick->IsPassable())
+	//			{
+	//				if (this->vx > 0)
+	//				{
+	//					Camera::moveRight = true;
+	//					
+	//					if (manager->posManager->GetIndexRoom() <= 1)
+	//						manager->posManager->Next();	// tăng index pooling đến room kế tiếp
+	//					else if (manager->posManager->GetIndexRoom() == 2)
+	//					{
+	//						manager->posManager->Next();
+	//						manager->metroid->isOnFloor = true;
+	//					}
+	//					else if (manager->posManager->GetIndexRoom() == 4)
+	//						manager->posManager->Back();
+
+	//					this->pos_x += 65;
+	//				}
+	//				else if (this->vx < 0)
+	//				{
+	//					Camera::moveLeft = true;
+
+	//					if (manager->posManager->GetIndexRoom() < 3)
+	//						manager->posManager->Back();	// giảm index pooling đến room phía sau
+	//					else if (manager->posManager->GetIndexRoom() == 3)
+	//						manager->posManager->Next();	// vào room boss
+	//					
+	//					this->pos_x -= 65;
+	//				}
+	//			}
+	//			else
+	//			{
+	//				SlideFromGround(manager->quadtreeGroup->objects[i], t, timeScale);
+	//				manager->samus->isOnAir = false;
+	//			}
+	//			//Response(manager->quadtreeGroup->objects[i], t, timeScale);
+	//		}
+	//		break;
+	//	}
+	//	
+	//}
+
+	for (int i = 0; i < manager->colGroundBrick->size; i++)
 	{
-		switch (manager->quadtreeGroup->objects[i]->GetType())
+		float timeScale = SweptAABB(manager->colGroundBrick->objects[i], t);
+		if (timeScale < 1.0f)
 		{
-		case BRICK:
-			Brick * brick = (Brick*)(manager->quadtreeGroup->objects[i]);
-			float timeScale = SweptAABB(manager->quadtreeGroup->objects[i], t);
-			if (timeScale < 1.0f)
+			ColliderBrick * brick = (ColliderBrick*)manager->colGroundBrick->objects[i];
+			if (brick->isPassable == true)
 			{
-				if (brick->IsPassable())
+				if (this->vx > 0)
 				{
-					if (this->vx > 0)
+					Camera::moveRight = true;
+
+					if (manager->posManager->GetIndexRoom() <= 1)
+						manager->posManager->Next();	// tăng index pooling đến room kế tiếp
+					else if (manager->posManager->GetIndexRoom() == 2)
 					{
-						Camera::moveRight = true;
-
-						if (manager->posManager->GetIndexRoom() <= 1)
-							manager->posManager->Next();	// tăng index pooling đến room kế tiếp
-						else if (manager->posManager->GetIndexRoom() == 2)
-						{
-							manager->posManager->Next();
-							manager->metroid->isOnFloor = true;
-						}
-						else if (manager->posManager->GetIndexRoom() == 4)
-							manager->posManager->Back();
-
-						this->pos_x += 65;
+						manager->posManager->Next();
+						manager->metroid->isOnFloor = true;
 					}
-					else if (this->vx < 0)
+					else if (manager->posManager->GetIndexRoom() == 4)	// ra khỏi phòng boss
 					{
-						Camera::moveLeft = true;
+						manager->posManager->Back();
 
-						if (manager->posManager->GetIndexRoom() < 3)
-							manager->posManager->Back();	// giảm index pooling đến room phía sau
-						else if (manager->posManager->GetIndexRoom() == 3)
-							manager->posManager->Next();	// vào room boss
-
-						this->pos_x -= 65;
+						//Tắt nhạc phòng boss và bật nhạc nền ở đây
+						Game::gameSound->stopSound(BACKGROUND_MOTHER_BRAIN_BOSS);
+						Game::gameSound->playSoundLoop(BACKGROUND_MAP);
 					}
+
+					this->pos_x += 65;
 				}
-				else
+				else if (this->vx < 0)
 				{
-					this->isOnGround = true;
-					SlideFromGround(manager->quadtreeGroup->objects[i], t, timeScale);
-					//Response(manager->quadtreeGroup->objects[i], t, timeScale);
+					Camera::moveLeft = true;
+
+					if (manager->posManager->GetIndexRoom() < 3)
+						manager->posManager->Back();	// giảm index pooling đến room phía sau
+					else if (manager->posManager->GetIndexRoom() == 3)
+					{
+						manager->posManager->Next();	// vào room boss
+
+														//tắt nhạc nền và thêm nhạc phòng boss ở đây
+						Game::gameSound->playSoundLoop(BACKGROUND_MOTHER_BRAIN_BOSS);
+						Game::gameSound->stopSound(BACKGROUND_MAP);
+					}
+
+					this->pos_x -= 65;
+
 				}
 			}
-			break;
+			else
+			{
+				SlideFromGround(brick, t, timeScale);
+				this->isOnGround = true;
+			}
 		}
 	}
 
 	//Xử lý va chạm với colBrick khi đang ở floor
 	if (manager->metroid->isOnFloor)
 	{
-		for (int i = 0; i < manager->colBrick->size; i++)
+		for (int i = 0; i < manager->colFloorBrick->size; i++)
 		{
-			float timeScale = SweptAABB(manager->colBrick->objects[i], t);
+			float timeScale = SweptAABB(manager->colFloorBrick->objects[i], t);
 			if (timeScale < 1.0f)
 			{
-				ColliderBrick * brick = (ColliderBrick*)manager->colBrick->objects[i];
+				ColliderBrick * brick = (ColliderBrick*)manager->colFloorBrick->objects[i];
 				if (brick->isPassable == true)
 				{
 					if (this->vx > 0)
@@ -570,7 +666,7 @@ void Samus::Update(float t)
 						else if (manager->posManager->GetIndexRoom() == 3)
 						{
 							manager->posManager->Next();	// vào room boss
-
+							
 							//tắt nhạc nền và thêm nhạc phòng boss ở đây
 							Game::gameSound->playSoundLoop(BACKGROUND_MOTHER_BRAIN_BOSS);
 							Game::gameSound->stopSound(BACKGROUND_MAP);
@@ -582,8 +678,8 @@ void Samus::Update(float t)
 				}
 				else
 				{
-					this->isOnGround = true;
 					SlideFromGround(brick, t, timeScale);
+					this->isOnGround = true;
 				}
 			}
 		}
@@ -607,8 +703,27 @@ void Samus::Update(float t)
 		}
 	}
 
-	pos_x += vx * t;
-	pos_y += vy * t;
+
+	//float collisiontime = SweptAABB(manager->gateleft, t);
+	//	if (collisiontime < 1.0f)
+	//	{
+	//		if (manager->gateleft->IsActive())
+	//		{
+	//			this->SlideFromGround(manager->gateleft, t, collisiontime);
+	//		}
+	//	}
+
+	//	float collisiontime1 = SweptAABB(manager->gateright, t);
+	//	if (collisiontime1 < 1.0f)
+	//	{
+	//		if (manager->gateright->IsActive())
+	//		{
+	//			this->SlideFromGround(manager->gateright, t, collisiontime1);
+	//		}
+	//	}
+	
+	pos_x += vx*t;
+	pos_y += vy*t;
 
 	Camera::SetCameraX(pos_x, t);
 	Camera::SetCameraY(pos_y, t);
@@ -666,7 +781,7 @@ void Samus::Update(float t)
 			somersault_right->Next();
 			break;
 		case ON_JUMPING_SHOOTING_LEFT:
-			jumping_shooting_left->Next();
+			jumping_shooting_left->Next();	
 			break;
 		case ON_JUMPING_SHOOTING_RIGHT:
 			jumping_shooting_right->Next();
@@ -698,26 +813,32 @@ void Samus::Update(float t)
 
 		}
 		last_time = now;
+	}	
+
+	//Check if samus is on ground or not
+	/*if (pos_y > GROUND_Y)
+	{
+		vy -= gravity;
 	}
-	//if (pos_y > GROUND_Y)
-	//{
-	//	vy -= gravity;
-	//}
-	//else
-	//{
-	//	pos_y = GROUND_Y;
-	//	//vy = 0;
-	//	this->isOnGround = true;
-	//	if (state == ON_JUMP_LEFT || state == ON_JUMPING_SHOOTING_LEFT || state == ON_SOMERSAULT_LEFT || state == ON_JUMP_AIM_UP_LEFT)
-	//	{
-	//		state = IDLE_LEFT;
-	//	}
-	//	else if (state == ON_JUMP_RIGHT || state == ON_JUMPING_SHOOTING_RIGHT || state == ON_SOMERSAULT_RIGHT || state == ON_JUMP_AIM_UP_RIGHT)
-	//	{
-	//		state = IDLE_RIGHT;
-	//	}
-	//}
+	else
+	{
+		pos_y = GROUND_Y;
+		vy = 0;
+		if (state == ON_JUMP_LEFT || state == ON_JUMPING_SHOOTING_LEFT || state == ON_SOMERSAULT_LEFT || state == ON_JUMP_AIM_UP_LEFT)
+		{
+			state = IDLE_LEFT;
+		}
+		else if (state == ON_JUMP_RIGHT || state == ON_JUMPING_SHOOTING_RIGHT || state == ON_SOMERSAULT_RIGHT || state == ON_JUMP_AIM_UP_RIGHT)
+		{
+			state = IDLE_RIGHT;
+		}
+	}*/
+
+	//Render
+	//Render();
+
 }
+
 void Samus::Response(GameObject *target, const float &DeltaTime, const float &CollisionTimeScale)
 {
 
@@ -837,13 +958,6 @@ void Samus::Deflect(GameObject *target, const float &DeltaTime, const float &Col
 		pos_y += vy * (CollisionTimeScale)* DeltaTime + 15.0f*normaly;
 	}
 }
-void Samus::Slide(GameObject *target, float remainingtime)
-{
-	float dotprod = (this->GetVelocityX() * normaly + this->GetVelocityY() * normalx) * remainingtime;
-	this->SetVelocityX(dotprod * normalx);
-	this->SetVelocityY(dotprod * normaly);
-}
-
 void Samus::ProcessInput(LPDIRECT3DDEVICE9 d3ddv, float Delta, Metroid* metroid)
 {
 	if (metroid->isInGame)
@@ -1052,7 +1166,6 @@ void Samus::ProcessInput(LPDIRECT3DDEVICE9 d3ddv, float Delta, Metroid* metroid)
 		}
 	}
 }
-
 void Samus::OnkeyDown(int KeyCode, Metroid * metroid, int& screenMode)
 {
 	if (metroid->isFreezing == true) return;
@@ -1072,12 +1185,12 @@ void Samus::OnkeyDown(int KeyCode, Metroid * metroid, int& screenMode)
 					metroid->SetStart_jump(GetTickCount());
 
 					this->SetState(ON_SOMERSAULT_RIGHT);
-					this->SetVelocityY( JUMP_VELOCITY_BOOST_FIRST);
+					this->SetVelocityY(JUMP_VELOCITY_BOOST_FIRST);
 
 					/*metroid->SetNow_jump(GetTickCount());
 					if ((metroid->GetNow_jump() - metroid->GetStart_jump()) <= 10 * metroid->GetTickPerFrame())
 					{
-						this->SetVelocityY(this->GetVelocityY() + JUMP_VELOCITY_BOOST);
+					this->SetVelocityY(this->GetVelocityY() + JUMP_VELOCITY_BOOST);
 					}*/
 				}
 
@@ -1091,7 +1204,7 @@ void Samus::OnkeyDown(int KeyCode, Metroid * metroid, int& screenMode)
 					//now_jump = GetTickCount();
 					/*if ((metroid->GetNow_jump() - metroid->GetStart_jump()) <= 10 * metroid->GetTickPerFrame())
 					{
-						this->SetVelocityY(this->GetVelocityY() + JUMP_VELOCITY_BOOST);
+					this->SetVelocityY(this->GetVelocityY() + JUMP_VELOCITY_BOOST);
 					}*/
 				}
 
@@ -1111,7 +1224,7 @@ void Samus::OnkeyDown(int KeyCode, Metroid * metroid, int& screenMode)
 						/*now_jump = GetTickCount();*/
 						/*if ((metroid->GetNow_jump() - metroid->GetStart_jump()) <= 10 * metroid->GetTickPerFrame())
 						{
-							this->SetVelocityY(this->GetVelocityY() + JUMP_VELOCITY_BOOST);
+						this->SetVelocityY(this->GetVelocityY() + JUMP_VELOCITY_BOOST);
 						}*/
 					}
 					//else
@@ -1139,7 +1252,7 @@ void Samus::OnkeyDown(int KeyCode, Metroid * metroid, int& screenMode)
 						//now_jump = GetTickCount();
 						/*if ((metroid->GetNow_jump() - metroid->GetStart_jump()) <= 10 * metroid->GetTickPerFrame())
 						{
-							this->SetVelocityY(this->GetVelocityY() + JUMP_VELOCITY_BOOST);
+						this->SetVelocityY(this->GetVelocityY() + JUMP_VELOCITY_BOOST);
 						}*/
 					}
 					//else

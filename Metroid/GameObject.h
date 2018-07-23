@@ -6,6 +6,7 @@
 #include <d3dx9.h>
 #include "Sprite.h"
 #include "Collider.h"
+#include "BoundingBox.h"
 #include "Parameters.h"
 class GameObject
 {
@@ -37,6 +38,12 @@ protected:
 	//
 	Collider * collider;
 	Collider * broadPhaseBox;
+
+	//
+	//Các thuộc tính Collision (mới)
+	//
+	BoundingBox * boundingBox;
+	BoundingBox * broadPhaseBoundingBox;
 
 	float collisionTimeScale; // thời gian va chạm
 
@@ -95,6 +102,7 @@ public:
 
 
 	Collider * GetCollider();
+	BoundingBox * GetBoundingBox();
 	//===============================END GET - SET METHOD============================
 
 	//=============================== VIRTUAL METHOD FOR INHERITANCE ================
@@ -133,5 +141,16 @@ public:
 	//void Slide(GameObject *target, const float &DeltaTime, const float &CollisionTimeScale);
 	virtual void SlideFromGround(GameObject *target, const float &DeltaTime, const float &CollisionTimeScale);
 	// ============================== END COLLISTION METHOD ==========================
+
+	// ============================== NEW COLLISION METHOD ============================
+	bool IsInCamera_New();
+	bool IsCollide_New(GameObject* target);
+	bool IsInside_New(GameObject* target);
+	bool IsCollide_New(BoundingBox target);
+	float SweptAABB_New(GameObject* target);
+	BoundingBox getSweptBroadphaseRect(GameObject* target);
+
+	float Deflect_New(GameObject* target, const float &deltaTime, const float &collisionTime);
+	// ============================= END NEW COLLISION METHOD =========================
 };
 #endif // !_GAME_OBJECT_

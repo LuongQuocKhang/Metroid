@@ -56,10 +56,9 @@ class Energy;
 //================ END GAME SCENEE ====================
 
 //================== SAMUS ===================
-#define GROUND_Y 100
+#define GROUND_Y 120
 #define SHOOTING_SPEED 15
 #define SAMUS_SPEED 0.15f
-//#define SAMUS_SPEED 0.05f
 #define SAMUS_IMMORTAL_TIME 4000;
 
 #define SAMUS_SPRITES_PATH L"sprites\\samus\\samus_sprites.png"
@@ -191,10 +190,11 @@ class Energy;
 
 #define BIRD_WIDTH 36
 #define BIRD_HEIGHT 52
-#define TIMEBEFOREEXPLODE 3000
+
 #define BIRD_FLY_SPRITE_COUNT 3
 
 #define BIRD_FLY "sprites\\enemy\\BIRD_FLY.txt"
+
 #define BIRD_STANDARD_ANIMATE_RATE 7
 #define BIRD_BOOST_ANIMATE_RATE 30
 //================== END BIRD =================

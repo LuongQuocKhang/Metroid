@@ -2,14 +2,11 @@
 #ifndef _SAMUS_H
 #define _SAMUS_H_
 #include "Sprite.h"
-#include "Collision.h"
 #include "Parameters.h"
-#include "Collision.h"
 #include "GameObject.h"
 #include "trace.h"
 #include "Camera.h"
 #include "BulletObject.h"
-#include "Game.h"
 
 enum SAMUS_STATE {
 	APPEARANCE,
@@ -76,17 +73,17 @@ protected:
 	BulletObject ** listBullet;
 	int num;
 	bool isMorph;	// Kiểm tra xem Samus đã nhặt Morph ball Item chưa để có thể crouch
+	int missile_numbers;		//số lượng missile ban đầu
 	//DirectCollision direction;
 public:
 	float health;	// Máu của Samus
 	bool isDeath;	// Trạng thái chết của Samus
-	bool isOnGround;	// Trạng thái trên không của Samus
-
-	int missile_numbers;
 
 	int immortal_time;
 	bool isImmortal;
 	float jumdistance;
+	bool isOnGround;
+
 	Samus();
 	Samus(LPD3DXSPRITE spriteHandler, World * manager);
 	~Samus();
@@ -102,7 +99,6 @@ public:
 	void ResetAllSprites();
 	bool isSamusCrouch();
 	bool isSamusDeath();
-	bool isSamusOnGround();
 	bool GetStateActive();
 	void setListBullet(BulletObject ** listbullet)
 	{
@@ -121,6 +117,17 @@ public:
 		this->num = num;
 	}
 
+	bool Samus::isSamusOnGround()
+	{
+		return isOnGround;
+	}
+
+
+	void _Shoot(BULLET_DIRECTION dir, Metroid*);
+	void _ShootMissile(BULLET_DIRECTION dir, Metroid*);
+	void SetMissileNumbers(int value);
+	int GetMissileNumbers();
+
 	//================ OVERRIDE VIRTUAL METHOD ==================
 	void Reset(int  x, int y);
 	void Update(float t);
@@ -130,19 +137,12 @@ public:
 	float GetHealth();
 	void TakeDamage(float damage);
 
-	void _Shoot(BULLET_DIRECTION dir,Metroid*);
-	void _ShootMissile(BULLET_DIRECTION dir , Metroid*);
-	void SetMissileNumbers(int value);
-	int GetMissileNumbers();
-
-
-	void ProcessInput(LPDIRECT3DDEVICE9 d3ddv, float Delta , Metroid*);
-	void OnkeyDown(int KeyCode , Metroid* ,int&);
+	void ProcessInput(LPDIRECT3DDEVICE9 d3ddv, float Delta, Metroid*);
+	void OnkeyDown(int KeyCode, Metroid*, int&);
 	void OnKeyUp(int KeyCode, Metroid* metroid);
 
 	void Response(GameObject *target, const float &DeltaTime, const float &CollisionTimeScale);
 	void SlideFromGround(GameObject *target, const float &DeltaTime, const float &CollisionTimeScale);
-	void Samus::Slide(GameObject *target , float remainingtime);
 	void Deflect(GameObject *target, const float &DeltaTime, const float &CollisionTimeScale);
 	//================= END OVERRIDE VIRTUAL METHOD =============
 };

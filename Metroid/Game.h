@@ -93,7 +93,6 @@ public:
 
 	// Run game
 	void Run();
-
 	int IsKeyDown(int KeyCode);
 };
 

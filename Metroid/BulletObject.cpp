@@ -1,7 +1,7 @@
 ﻿#include "BulletObject.h"
 #include "World.h"
 #include "GroupObject.h"
-
+#include "Metroid.h"
 
 BulletObject::BulletObject()
 {
@@ -71,7 +71,8 @@ void BulletObject::Update(float t)
 	//// Đạn va chạm với samus	====>	Không dùng được ========> Xét từng TH riêng cho mỗi loại đạn trong class con
 	//if (manager->samus->GetStateActive())
 	//{
-	//	float timeScale = SweptAABB(manager->samus, t);
+	//	float timeScale = 
+	(manager->samus, t);
 	//	if (timeScale < 1.0f)
 	//	{
 	//		switch (getBulletType())
@@ -168,25 +169,26 @@ void BulletObject::Update(float t)
 	//<======================
 
 	// Xử lý va chạm
-	for (int i = 0; i < manager->quadtreeGroup->size; i++)
+	if (!manager->metroid->isOnFloor)
 	{
-		switch (manager->quadtreeGroup->objects[i]->GetType())
+		for (int i = 0; i < manager->colGroundBrick->size; i++)
 		{
-		case BRICK:
-			float timeScale = SweptAABB(manager->quadtreeGroup->objects[i], t);
+			float timeScale = SweptAABB(manager->colGroundBrick->objects[i], t);
 			if (timeScale < 1.0f)
 			{
 				Reset();
 			}
-			break;
 		}
 	}
 
-	for (int i = 0; i < manager->colBrick->size; i++)
+	if (manager->metroid->isOnFloor)
 	{
-		float timeScale = SweptAABB(manager->colBrick->objects[i], t);
-		if (timeScale < 1.0f)
-			Reset();
+		for (int i = 0; i < manager->colFloorBrick->size; i++)
+		{
+			float timeScale = SweptAABB(manager->colFloorBrick->objects[i], t);
+			if (timeScale < 1.0f)
+				Reset();
+		}
 	}
 
 	//

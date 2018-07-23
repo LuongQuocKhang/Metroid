@@ -12,7 +12,7 @@
 #include "PosInfo.h"
 #include "Energy.h"
 #include "Number.h"
-#include "Gate.h"	
+#include "Gate.h"
 
 using namespace std;
 
@@ -122,7 +122,8 @@ World::World(LPD3DXSPRITE spriteHandler, Metroid * metroid)
 	posManager = new PositionManager(this);
 	posManager->ImportPositionFromFile();
 
-	colBrick = new GroupObject(this);
+	colFloorBrick = new GroupObject(this);
+	colGroundBrick = new GroupObject(this);
 
 	energy = new Energy(spriteHandler, this, ENERGYINFO);
 	missileinfo = new Energy(spriteHandler, this, MISSILEINFO);
@@ -168,7 +169,7 @@ void World::Update(float t)
 
 	bullets->Update(t);
 	missiles->Update(t);
-	sentrybullets->Update(t);
+	
 	birdbullets->Update(t);
 	ridleyBoomerang->Update(t);
 
@@ -201,6 +202,7 @@ void World::Update(float t)
 	sentryLeft->Update(t);
 	sentryTop->Update(t);
 	sentryRight->Update(t);
+	sentrybullets->Update(t);
 
 	energy->Update(t);
 	missileinfo->Update(t);
@@ -223,13 +225,13 @@ void World::Update(float t)
 	//gateright->Update(t);
 }
 
-void World::Render()
+void World::Render(LPDIRECT3DDEVICE9 d3ddv)
 {
 	samus->Render();
 	//zoomer->Render();
 	bullets->Render();
 	missiles->Render();
-	sentrybullets->Render();
+	
 	birdbullets->Render();
 	ridleyBoomerang->Render();
 
@@ -253,6 +255,7 @@ void World::Render()
 	sentryLeft->Render();
 	sentryTop->Render();
 	sentryRight->Render();
+	sentrybullets->Render();
 	//motherBrain->Render();
 	//ridley->Render();
 	energy->Render();
@@ -270,6 +273,8 @@ void World::Render()
 	otherGO->Render();
 
 	gate->Render();
+
+	colGroundBrick->Render();
 }
 
 void World::InitSprites(LPDIRECT3DDEVICE9 d3ddv)

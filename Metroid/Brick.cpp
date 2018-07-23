@@ -47,7 +47,7 @@ Brick::Brick(LPD3DXSPRITE spriteHandler, World * manager, BRICK_TYPE type, int i
 	//--TO DO: Set collider cho brick
 
 	collider = new Collider();
-	collider->SetCollider(0, 0, -BRICK_HEIGHT, BRICK_WIDTH);
+	//collider->SetCollider(0, 0, -BRICK_HEIGHT, BRICK_WIDTH);
 }
 
 

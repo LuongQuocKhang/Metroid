@@ -2,9 +2,9 @@
 #ifndef _WORLD_H_
 #define _WORLD_H_
 
-#define BEDGEHOG_YELLOW_COUNT 1
-#define BEDGEHOG_PINK_COUNT 1
-#define BIRD_COUNT 1
+#define BEDGEHOG_YELLOW_COUNT 3
+#define BEDGEHOG_PINK_COUNT 3
+#define BIRD_COUNT 3
 #define BLOCK_COUNT 3
 #define BEE_COUNT 2
 
@@ -43,7 +43,8 @@ public:
 	QNode * rootQNode2;
 	GroupObject * quadtreeGroup;
 	GroupObject * qtreeGroup;
-	GroupObject * colBrick;
+	GroupObject * colFloorBrick;
+	GroupObject * colGroundBrick;
 	GroupObject * otherGO;	// hiện đang chứa sentry
 
 	//Enemy
@@ -101,7 +102,7 @@ public:
 
 	//void Init();
 	void Update(float t);
-	void Render();
+	void Render(LPDIRECT3DDEVICE9 d3ddv);
 	void InitSprites(LPDIRECT3DDEVICE9 d3ddv);
 	//void Destroy();
 

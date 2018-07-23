@@ -1,6 +1,7 @@
 ﻿#include "Item.h"
 #include "World.h"
 #include "GroupObject.h"
+#include "ColliderBrick.h"
 
 Item::Item(LPD3DXSPRITE sprietHandler, World * manager)
 {
@@ -56,20 +57,34 @@ void Item::Update(int t)
 	
 
 	// Xét va chạm với ground
-	for (int i = 0; i < manager->quadtreeGroup->size; i++)
-	{
-		switch (manager->quadtreeGroup->objects[i]->GetType())
-		{
-		case BRICK:
-			float timeScale = SweptAABB(manager->quadtreeGroup->objects[i], t);
+	//for (int i = 0; i < manager->quadtreeGroup->size; i++)
+	//{
+	//	switch (manager->quadtreeGroup->objects[i]->GetType())
+	//	{
+	//	case BRICK:
+	//		float timeScale = 
+	//			(manager->quadtreeGroup->objects[i], t);
 
-			// Chỉ cần xét va chạm phía trên cục gạch thôi
-			if (timeScale < 1.0f && normaly > 0.1f)
-			{
-				this->pos_y = (manager->quadtreeGroup->objects[i]->GetPosY() + manager->quadtreeGroup->objects[i]->GetCollider()->GetTop() - this->collider->GetBottom()) + 0.1f;
-				pos_y -= vy*t;
-			}
-			break;
+	//		// Chỉ cần xét va chạm phía trên cục gạch thôi
+	//		if (timeScale < 1.0f && normaly > 0.1f)
+	//		{
+	//			this->pos_y = (manager->quadtreeGroup->objects[i]->GetPosY() + manager->quadtreeGroup->objects[i]->GetCollider()->GetTop() - this->collider->GetBottom()) + 0.1f;
+	//			pos_y -= vy*t;
+	//		}
+	//		break;
+	//	}
+	//}
+
+	// collider mới cho ground
+	for (int i = 0; i < manager->colGroundBrick->size; i++)
+	{
+		float timeScale = SweptAABB(manager->colGroundBrick->objects[i], t);
+		// Chỉ cần xét va chạm phía trên cục gạch thôi
+		if (timeScale < 1.0f && normaly > 0.1f)
+		{
+			ColliderBrick * brick = (ColliderBrick*)manager->colGroundBrick->objects[i];
+			this->pos_y = (brick->GetPosY() + brick->GetCollider()->GetTop() - this->collider->GetBottom()) + 0.1f;
+			pos_y -= vy * t;
 		}
 	}
 

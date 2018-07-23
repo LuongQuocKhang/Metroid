@@ -70,9 +70,9 @@ void RidleyBoomerang::Update(float t)
 		}
 	}
 
-	for (int i = 0; i < manager->colBrick->size; i++)
+	for (int i = 0; i < manager->colFloorBrick->size; i++)
 	{
-		float timeScale = SweptAABB(manager->colBrick->objects[i], t);
+		float timeScale = SweptAABB(manager->colFloorBrick->objects[i], t);
 		if (timeScale < 1.0f)
 			Reset();
 	}

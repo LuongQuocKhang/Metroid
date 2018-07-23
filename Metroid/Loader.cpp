@@ -22,40 +22,57 @@ Loader::Loader(LPD3DXSPRITE spriteHandler, int room_number, World * manager)
 	this->room_number = room_number;
 	this->manager = manager;
 	// Build đường dẫn đến matrix dựa vào room
-	this->matrix_path = "map\\matrix_room_" + std::to_string(room_number) + ".txt";
+	this->matrix_path_1 = "map\\matrix_room_1.txt";
 	//this->matrix_path = "map\\matrix_room.txt";
 
 	// Build đường dẫn đến quadtree dựa vào room
-	this->quadtree_path = "map\\quadtree_room_" + std::to_string(room_number) + ".txt";
+	this->quadtree_path_1 = "map\\quadtree_room_1.txt";
 	//this->quadtree_path = "map\\quadtree_room.txt";
+
+	// Build đường dẫn đến matrix dựa vào room
+	this->matrix_path_2 = "map\\matrix_room_2.txt";
+
+	// Build đường dẫn đến quadtree dựa vào room
+	this->quadtree_path_2 = "map\\quadtree_room_2.txt";
 
 	// Build đường dẩn đến file info dựa vào room
 	//this->info_path = "map\\info_room_" + std::to_string(room_number) + ".txt";
 	this->info_path = "map\\info_room.txt";
 
 	// Đọc file matrix
-	this->ReadMatrixFromFile(matrix_path.c_str());
-
+	this->ReadMatrixFromFile(matrix_path_1.c_str(), 1);
 	// Đọc file quadtree
-	this->ReadQuadTreeFromFile(quadtree_path.c_str());
+	this->ReadQuadTreeFromFile(quadtree_path_1.c_str(), 1);
+	this->LinkNodes_1();
+	this->mapGameObjects.clear();
+	this->mapQNodes.clear();
 
+	// Đọc file matrix
+	this->ReadMatrixFromFile(matrix_path_2.c_str(), 2);
+	// Đọc file quadtree
+	//this->ReadQuadTreeFromFile(quadtree_path_2.c_str(), 2);
+	//this->LinkNodes_2();
+	//this->mapGameObjects.clear();
+	//this->mapQNodes.clear();
 
-	// Link các node lại
-	this->LinkNodes();
-
-	this->ReadColliderFile("map\\floor_pooling_full.txt");
+	//this->ReadColliderFile("map\\floor_pooling_full.txt");
+	this->ReadFloorColliderFile("map\\floor_pooling_full.txt");
+	this->ReadGroundColliderFile("map\\ground_collider.txt");
 
 	this->ReadOtherGO("map\\otherobject.txt");
 
+	manager->rootQNode1 = this->rootQNode_1;
+	manager->rootQNode2 = this->rootQNode_2;
+
 	// rootGONode tại manager sẽ do ở đây quản lý
-	switch (room_number)
+	/*switch (room_number)
 	{
 	case 1:
 		manager->rootQNode1 = this->rootQNode;
 		break;
 	case 2:
 		manager->rootQNode2 = this->rootQNode;
-	}
+	}*/
 	
 }
 
@@ -65,7 +82,7 @@ Loader::~Loader()
 }
 
 // Tạo các GameObject dựa theo id
-void Loader::ReadMatrixFromFile(const char* path)
+void Loader::ReadMatrixFromFile(const char* path, int room)
 {
 	int row_count = 0;		// index của dòng đang đọc
 	int width = 0;			// width của room
@@ -144,13 +161,13 @@ void Loader::ReadMatrixFromFile(const char* path)
 			int id = stoi(pos[i]);
 			// Xét xem id là loại gì
 			// Nếu id là 9 thì bỏ qua (ô trống trong room 1)
-			if (room_number == 1 && id == 9)
+			if (room == 1 && id == 9)
 			{
 				counter++;
 				continue;
 			}
 			// Nếu id là 0 thì bỏ qua (ô trống trong room 2)
-			if (room_number == 2 && id == 0)
+			if (room == 2 && id == 0)
 			{
 				counter++;
 				continue;
@@ -160,12 +177,12 @@ void Loader::ReadMatrixFromFile(const char* path)
 
 			
 			// Tính pos_x và pos_y cho Brick
-			if (room_number == 1)
+			if (room == 1)
 			{
 
 				int pos_x = i * 32;
 				int pos_y = (97) * 32 - (((row_count - 3) + 97 - 15) * 32);	// trừ đi 3 dòng đầu không tính	-- 97 là số height của map 2
-				if (id == 99)
+				if (id == 99)	// LEFT GATE
 				{
 					Gate * gate = new Gate(spriteHandler, manager, GATE_TYPE::LEFT);
 					gate->SetPosX(pos_x);
@@ -174,7 +191,7 @@ void Loader::ReadMatrixFromFile(const char* path)
 					pair<int, GameObject*> pair_to_add(counter, gate);
 					mapGameObjects.insert(pair_to_add);
 				}
-				else if (id == 98)
+				else if (id == 98)  // RIGHT GATE
 				{
 					Gate * gate = new Gate(spriteHandler, manager, GATE_TYPE::RIGHT);
 					gate->SetPosX(pos_x);
@@ -183,7 +200,7 @@ void Loader::ReadMatrixFromFile(const char* path)
 					pair<int, GameObject*> pair_to_add(counter, gate);
 					mapGameObjects.insert(pair_to_add);
 				}
-				else
+				else   // BRICK
 				{
 					Brick * brick = new Brick(spriteHandler, manager, GROUND, id, pos_x, pos_y);
 					// Nếu gạch ngay cổng thì cho phép băng qua
@@ -194,7 +211,7 @@ void Loader::ReadMatrixFromFile(const char* path)
 					mapGameObjects.insert(pair_to_add);
 				}
 			}
-			else if (room_number == 2)
+			else if (room == 2)
 			{
 				int pos_x = (i + 160 - 33) * 32;
 				int pos_y = 97 * 32 - ((row_count - 3) * 32) -(15 * 32);
@@ -217,7 +234,7 @@ void Loader::ReadMatrixFromFile(const char* path)
 	f.close();
 }
 
-void Loader::ReadFullMatrixFromFile(const char * path)
+void Loader::ReadFullMatrixFromFile(const char * path)	// chưa xài!!!
 {
 	int row_count = 0;		// index của dòng đang đọc
 	int width = 0;			// width của room
@@ -322,7 +339,7 @@ void Loader::ReadFullMatrixFromFile(const char * path)
 }
 
 //Gọi hàm này sau khi gọi hàm ReadMatrixFromFile !!!
-void Loader::ReadQuadTreeFromFile(const char* path)
+void Loader::ReadQuadTreeFromFile(const char* path, int room)
 {
 	int row_count = 0;
 	//Read file info of file
@@ -514,7 +531,7 @@ void Loader::ReadInfoFromFile(const char * path)
 	f.close();
 }
 
-void Loader::ReadColliderFile(const char * path)
+void Loader::ReadFloorColliderFile(const char * path)
 {
 
 	int row_count = 0;
@@ -574,20 +591,94 @@ void Loader::ReadColliderFile(const char * path)
 			float y = (97 * 32) - stoi(pos[1]) -(15 * 32);
 			float w = stoi(pos[2]);
 			float h = stoi(pos[3]);
-			ColliderBrick *cbrick = new ColliderBrick(this->manager, x, y, w, h);
+			ColliderBrick *cbrick = new ColliderBrick(spriteHandler, this->manager, x, y, w, h);
 			
 			//Cổng
 			if (row_count >= 60 && row_count <= 62)
 			{
 				cbrick->isPassable = true;
 			}
-			manager->colBrick->AddGameObject(cbrick);
+			manager->colFloorBrick->AddGameObject(cbrick);
 			
 		//}
 		row_count++;
 	}
 	f.close();
 
+}
+
+void Loader::ReadGroundColliderFile(const char * path)
+{
+	int row_count = 0;
+	ifstream f;
+	try
+	{
+		f.open(path);
+	}
+	catch (std::fstream::failure e)
+	{
+		return;
+	}
+	string line;
+	while (!f.eof())
+	{
+		vector<string> pos;		// vector dùng để chứa dữ liệu từng dòng
+		int size = 0;				// size của vector
+		string split;			// chuỗi sau khi đã tách ra
+		getline(f, line);
+
+		istringstream iss(line);
+
+		// Nếu là dòng đầu tiên cũng bỏ qua, vì dòng đầu bị lỗi
+		/*if (row_count == 0)
+		{
+		row_count++;
+		continue;
+		}*/
+
+
+		// tách từng dòng ra thành các chuỗi dựa vào \t
+		while (getline(iss, split, '\t'))
+		{
+			// gán từng chuỗi trong dòng vào vector
+			pos.push_back(split);
+			size++;
+		}
+
+		// Nếu dòng không có gì thì push vào vector và tiếp tục
+		if (size == 0)
+		{
+			row_count++;
+			continue;
+		}
+
+		// Gặp END thì không đọc nữa
+		if (pos[0] == "END")
+			break;
+
+		// Đọc info
+		//for (int i = 0; i < size; i++)
+		//{
+		//int pos_x = (i + 160 - 33) * 32;
+		//int pos_y = 97 * 32 - ((row_count - 3) * 32) - (15 * 32);
+
+		float x = stoi(pos[0]);
+		float y = (15 * 32) - stoi(pos[1]);
+		float w = stoi(pos[2]);
+		float h = stoi(pos[3]);
+		ColliderBrick *cbrick = new ColliderBrick(spriteHandler, this->manager, x, y, w, h);
+
+		//Cổng
+		if (row_count >= 0 && row_count <= 2)
+		{
+			cbrick->isPassable = true;
+		}
+		manager->colGroundBrick->AddGameObject(cbrick);
+
+		//}
+		row_count++;
+	}
+	f.close();
 }
 
 void Loader::ReadOtherGO(const char * path)
@@ -670,7 +761,7 @@ void Loader::ReadOtherGO(const char * path)
 	f.close();
 }
 
-void Loader::LinkNodes()
+void Loader::LinkNodes_1()
 {
 	map<int, QNode*>::iterator it;
 	for (it = mapQNodes.begin(); it != mapQNodes.end(); it++)
@@ -680,7 +771,44 @@ void Loader::LinkNodes()
 		// Nếu là node Gốc thì gán vào rootQNode
 		if (it->first == 1)
 		{
-			rootQNode = it->second;
+			rootQNode_1 = it->second;
+			continue;
+		}
+
+		// Tính id của node cha và offset của node hiện tại
+		const int parent_id = it->second->GetParentID();
+		const int offset = it->second->GetOffsetID();
+
+		// Xét offset rồi lấy node cha trỏ vào
+		switch (offset)
+		{
+		case 1:
+			mapQNodes[parent_id]->tl = it->second;
+			break;
+		case 2:
+			mapQNodes[parent_id]->tr = it->second;
+			break;
+		case 3:
+			mapQNodes[parent_id]->bl = it->second;
+			break;
+		case 4:
+			mapQNodes[parent_id]->br = it->second;
+			break;
+		}
+	}
+}
+
+void Loader::LinkNodes_2()
+{
+	map<int, QNode*>::iterator it;
+	for (it = mapQNodes.begin(); it != mapQNodes.end(); it++)
+	{
+		// Trong map được sắp xếp tăng dần theo nodeID nên khỏi cần lo
+
+		// Nếu là node Gốc thì gán vào rootQNode
+		if (it->first == 1)
+		{
+			rootQNode_2 = it->second;
 			continue;
 		}
 

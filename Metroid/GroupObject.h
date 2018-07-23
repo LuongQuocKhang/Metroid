@@ -53,7 +53,7 @@ public:
 	void GetCollisionObjects();
 
 	//Set active enemy
-	void SetEnemyActive(int object_type, int detail_type, float posX, float posY);
+	void SetEnemyActive(int object_type, int detail_type, float posX, float posY);	// chưa xài !!!
 
 	//void SetObjectActive()
 

@@ -132,7 +132,7 @@ void Sentry::Update(float t)
 	pos_y += vy * t;
 
 	DWORD now = GetTickCount();
-	if (now - last_time > 1000 / 1)
+	if (now - last_time > 2000 / 1)
 	{
 		switch (sentry_type)
 		{

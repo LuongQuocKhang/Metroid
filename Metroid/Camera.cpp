@@ -39,8 +39,7 @@ void Camera::SetCameraX(float pos_x, float t)
 		currentCamX += speed * t;
 		// Nếu current đã chạy đến vị trí max
 		if (currentCamX >= list[index + 1].min_x)
-		{
-			
+		{		
 			moveRight = false;	//Ngừng hiệu ứng chuyển camera
 			index++;
 			//min_x = max_x;		//Gán min bằng max, rồi max gán mức tiếp theo

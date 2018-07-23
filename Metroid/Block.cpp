@@ -81,9 +81,9 @@ void Block::Update(float t)
 		
 	}
 
-	for (int i = 0; i < manager->colBrick->objects.size(); i++)
+	for (int i = 0; i < manager->colFloorBrick->objects.size(); i++)
 	{
-		float timeScale = SweptAABB(manager->colBrick->objects[i], t);
+		float timeScale = SweptAABB(manager->colFloorBrick->objects[i], t);
 		// Nếu có va chạm
 		if (timeScale < 1.0f)
 		{

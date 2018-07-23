@@ -13,12 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\Map">
-      <UniqueIdentifier>{953ad852-c598-4ad9-8d9e-c57b7ab4cfd8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Map">
-      <UniqueIdentifier>{c60467c3-2bf9-430a-a20b-7e137b35f162}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Quadtree">
       <UniqueIdentifier>{6f49b3df-d6c1-4098-8f46-14ea402991b2}</UniqueIdentifier>
     </Filter>
@@ -90,14 +84,8 @@
     <ClCompile Include="trace.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Collision.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="utils.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Tiles.cpp">
-      <Filter>Source Files\Map</Filter>
     </ClCompile>
     <ClCompile Include="QNode.cpp">
       <Filter>Source Files\Quadtree</Filter>
@@ -107,9 +95,6 @@
     </ClCompile>
     <ClCompile Include="QuadTree.cpp">
       <Filter>Source Files\Quadtree</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObjectManager.cpp">
-      <Filter>Source Files\Manager</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files</Filter>
@@ -234,6 +219,9 @@
     <ClCompile Include="Gate.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BoundingBox.cpp">
+      <Filter>Source Files\Collision</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sprite.h">
@@ -242,14 +230,8 @@
     <ClInclude Include="trace.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Collision.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="utils.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Tiles.h">
-      <Filter>Header Files\Map</Filter>
     </ClInclude>
     <ClInclude Include="QNode.h">
       <Filter>Header Files\Quadtree</Filter>
@@ -259,9 +241,6 @@
     </ClInclude>
     <ClInclude Include="QuadTree.h">
       <Filter>Header Files\Quadtree</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObjectManager.h">
-      <Filter>Header Files\Manager</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Header Files</Filter>
@@ -388,6 +367,9 @@
     </ClInclude>
     <ClInclude Include="Gate.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BoundingBox.h">
+      <Filter>Header Files\Collision</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

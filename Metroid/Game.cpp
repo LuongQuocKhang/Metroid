@@ -374,3 +374,8 @@ void Game::OnKeyDown(int KeyCode)
 void Game::OnKeyUp(int KeyCode)
 {
 }
+
+LPDIRECT3DDEVICE9 Game::GetDevice()
+{
+	return _d3ddv;
+}
