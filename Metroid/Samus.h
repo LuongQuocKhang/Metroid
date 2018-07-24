@@ -136,6 +136,8 @@ public:
 	void Reset(int  x, int y);
 	void Update(float t);
 	void Render();
+	//void RenderDebug(LPDIRECT3DDEVICE9 d3ddv);
+
 	void Destroy();
 	void SetHealth(float value);
 	float GetHealth();

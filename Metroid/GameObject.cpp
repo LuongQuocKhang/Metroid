@@ -2,7 +2,7 @@
 #include <limits>
 #include "Camera.h"
 #include "Enemy.h"
-
+#include "utils.h"
 GameObject::GameObject()
 {
 }
@@ -42,6 +42,11 @@ void GameObject::Render()
 {
 }
 
+void GameObject::RenderDebug(LPDIRECT3DDEVICE9 d3ddv, D3DCOLOR color)
+{
+	Render();
+	DrawCollider(d3ddv, this->pos_x, this->pos_y, this->collider, color);
+}
 //void GameObject::Reset(int x, int y)
 //{
 //	isActive = true;

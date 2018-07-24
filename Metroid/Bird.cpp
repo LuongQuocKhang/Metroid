@@ -29,7 +29,8 @@ Bird::Bird(LPD3DXSPRITE spriteHandler, World * manager, ENEMY_TYPE enemy_type) :
 	timealive = TIMEALIVE;
 	//Set animate rate ban đầu
 	animate_rate = BIRD_STANDARD_ANIMATE_RATE;
-
+	this->vy = 0;
+	this->vx = 0;
 	//Set collider
 	collider = new Collider();
 	collider->SetCollider(BIRD_HEIGHT / 2, -BIRD_WIDTH / 2, -BIRD_HEIGHT / 2, BIRD_WIDTH / 2);

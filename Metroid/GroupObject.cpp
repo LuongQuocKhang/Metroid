@@ -70,6 +70,14 @@ void GroupObject::Render()
 	}
 }
 
+void GroupObject::RenderDebug(LPDIRECT3DDEVICE9 d3ddv, D3DCOLOR color)
+{
+	for (int i = 0; i < objects.size(); i++)
+	{
+		objects[i]->RenderDebug(d3ddv, color);
+	}
+}
+
 void GroupObject::GetGroupObjectFrom(GroupObject * group)
 {
 	int group_size = group->size;

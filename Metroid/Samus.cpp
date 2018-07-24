@@ -209,6 +209,11 @@ void Samus::Render()
 	spriteHandler->End();
 }
 
+//void Samus::RenderDebug(LPDIRECT3DDEVICE9 d3ddv)
+//{
+//	Render();
+//	DrawCollider(d3ddv, this->pos_x, this->pos_y, this->collider, D3DCOLOR_ARGB(0, 255, 0, 0));
+//}
 void Samus::Destroy()
 {
 	//Ngưng active
@@ -216,7 +221,7 @@ void Samus::Destroy()
 	Game::gameSound->stopSound(BACKGROUND_MAP);
 	Game::gameSound->playSound(BACKGROUND_SAMUS_DEATH);
 	manager->explsEffect->Init(pos_x, pos_y);
-	
+
 	isDeath = true;
 	//--TO DO: Đưa Samus ra khỏi viewport
 
@@ -521,10 +526,10 @@ void Samus::Update(float t)
 	//GameObject::Update(t);
 
 	vy -= gravity;
-	
+
 	//===========> Quan update - updating . . .
 	for (int i = 0; i < manager->enemyGroup->size; i++)
-	{	
+	{
 		Enemy * enemy = (Enemy*)manager->enemyGroup->objects[i];
 		if (enemy->IsActive())
 		{
@@ -632,58 +637,58 @@ void Samus::Update(float t)
 		}
 	}
 	//----------------------------
-	
-	//Xử lý va chạm với ground
-	//for (int i = 0; i < manager->quadtreeGroup->size; i++)
-	//{
-	//	switch (manager->quadtreeGroup->objects[i]->GetType())
-	//	{
-	//	case BRICK:
-	//		Brick * brick = (Brick*)(manager->quadtreeGroup->objects[i]);
-	//		float timeScale = SweptAABB(manager->quadtreeGroup->objects[i], t);
-	//		if (timeScale < 1.0f)
-	//		{
-	//			if (brick->IsPassable())
-	//			{
-	//				if (this->vx > 0)
-	//				{
-	//					Camera::moveRight = true;
-	//					
-	//					if (manager->posManager->GetIndexRoom() <= 1)
-	//						manager->posManager->Next();	// tăng index pooling đến room kế tiếp
-	//					else if (manager->posManager->GetIndexRoom() == 2)
-	//					{
-	//						manager->posManager->Next();
-	//						manager->metroid->isOnFloor = true;
-	//					}
-	//					else if (manager->posManager->GetIndexRoom() == 4)
-	//						manager->posManager->Back();
 
-	//					this->pos_x += 65;
-	//				}
-	//				else if (this->vx < 0)
-	//				{
-	//					Camera::moveLeft = true;
+	/*Xử lý va chạm với ground
+	for (int i = 0; i < manager->quadtreeGroup->size; i++)
+	{
+		switch (manager->quadtreeGroup->objects[i]->GetType())
+		{
+		case BRICK:
+			Brick * brick = (Brick*)(manager->quadtreeGroup->objects[i]);
+			float timeScale = SweptAABB(manager->quadtreeGroup->objects[i], t);
+			if (timeScale < 1.0f)
+			{
+				if (brick->IsPassable())
+				{
+					if (this->vx > 0)
+					{
+						Camera::moveRight = true;
 
-	//					if (manager->posManager->GetIndexRoom() < 3)
-	//						manager->posManager->Back();	// giảm index pooling đến room phía sau
-	//					else if (manager->posManager->GetIndexRoom() == 3)
-	//						manager->posManager->Next();	// vào room boss
-	//					
-	//					this->pos_x -= 65;
-	//				}
-	//			}
-	//			else
-	//			{
-	//				SlideFromGround(manager->quadtreeGroup->objects[i], t, timeScale);
-	//				manager->samus->isOnAir = false;
-	//			}
-	//			//Response(manager->quadtreeGroup->objects[i], t, timeScale);
-	//		}
-	//		break;
-	//	}
-	//	
-	//}
+						if (manager->posManager->GetIndexRoom() <= 1)
+							manager->posManager->Next();	// tăng index pooling đến room kế tiếp
+						else if (manager->posManager->GetIndexRoom() == 2)
+						{
+							manager->posManager->Next();
+							manager->metroid->isOnFloor = true;
+						}
+						else if (manager->posManager->GetIndexRoom() == 4)
+							manager->posManager->Back();
+
+						this->pos_x += 65;
+					}
+					else if (this->vx < 0)
+					{
+						Camera::moveLeft = true;
+
+						if (manager->posManager->GetIndexRoom() < 3)
+							manager->posManager->Back();	// giảm index pooling đến room phía sau
+						else if (manager->posManager->GetIndexRoom() == 3)
+							manager->posManager->Next();	// vào room boss
+
+						this->pos_x -= 65;
+					}
+				}
+				else
+				{
+					SlideFromGround(manager->quadtreeGroup->objects[i], t, timeScale);
+					manager->samus->isOnAir = false;
+				}
+				//Response(manager->quadtreeGroup->objects[i], t, timeScale);
+			}
+			break;
+		}
+
+	}*/
 
 	for (int i = 0; i < manager->colGroundBrick->size; i++)
 	{
@@ -737,7 +742,10 @@ void Samus::Update(float t)
 			else
 			{
 				SlideFromGround(brick, t, timeScale);
-				this->isOnGround = true;
+				if (this->vy == 0)
+				{
+					this->isOnGround = true;
+				}
 			}
 		}
 	}
@@ -784,7 +792,7 @@ void Samus::Update(float t)
 						else if (manager->posManager->GetIndexRoom() == 3)
 						{
 							manager->posManager->Next();	// vào room boss
-							
+
 							//tắt nhạc nền và thêm nhạc phòng boss ở đây
 							Game::gameSound->playSoundLoop(BACKGROUND_MOTHER_BRAIN_BOSS);
 							Game::gameSound->stopSound(BACKGROUND_MAP);
@@ -797,7 +805,10 @@ void Samus::Update(float t)
 				else
 				{
 					SlideFromGround(brick, t, timeScale);
-					this->isOnGround = true;
+					if (this->vy == 0)
+					{
+						this->isOnGround = true;
+					}
 				}
 			}
 		}
@@ -839,9 +850,9 @@ void Samus::Update(float t)
 	//			this->SlideFromGround(manager->gateright, t, collisiontime1);
 	//		}
 	//	}
-	
-	pos_x += vx*t;
-	pos_y += vy*t;
+
+	pos_x += vx * t;
+	pos_y += vy * t;
 
 	Camera::SetCameraX(pos_x, t);
 	Camera::SetCameraY(pos_y, t);
@@ -899,7 +910,7 @@ void Samus::Update(float t)
 			somersault_right->Next();
 			break;
 		case ON_JUMPING_SHOOTING_LEFT:
-			jumping_shooting_left->Next();	
+			jumping_shooting_left->Next();
 			break;
 		case ON_JUMPING_SHOOTING_RIGHT:
 			jumping_shooting_right->Next();
@@ -931,7 +942,7 @@ void Samus::Update(float t)
 
 		}
 		last_time = now;
-	}	
+	}
 
 	//Check if samus is on ground or not
 	/*if (pos_y > GROUND_Y)

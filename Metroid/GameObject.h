@@ -109,7 +109,7 @@ public:
 	virtual ~GameObject();
 	virtual void Update(float t);
 	virtual void Render();
-
+	virtual void RenderDebug(LPDIRECT3DDEVICE9 d3ddv, D3DCOLOR color = D3DCOLOR_XRGB(255, 255, 0));
 	
 	//virtual void Reset(int x, int y);	
 

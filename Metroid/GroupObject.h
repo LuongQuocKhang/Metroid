@@ -41,7 +41,7 @@ public:
 
 	// Hàm render các GameObject có trong vector (dùng cho SpecialCollision và QuadtreeCollision)
 	void Render();
-
+	virtual void RenderDebug(LPDIRECT3DDEVICE9 d3ddv, D3DCOLOR color = D3DCOLOR_XRGB(255, 255, 0));
 	
 	// Lấy GroupGameObject khác bỏ vào vector này
 	void GetGroupObjectFrom(GroupObject* group);

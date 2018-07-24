@@ -245,7 +245,7 @@ void Sentry::Render()
 		a5->Render(pos_x, pos_y);
 		break;
 	}
-
+	spriteHandler->End();
 	DWORD statenow = GetTickCount();
 	
 	if (statenow - state_last_time > 2000 / 1)
@@ -270,6 +270,4 @@ void Sentry::Render()
 		}
 		state_last_time = statenow;
 	}
-
-	spriteHandler->End();
 }

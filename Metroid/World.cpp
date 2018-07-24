@@ -13,6 +13,7 @@
 #include "Energy.h"
 #include "Number.h"
 #include "Gate.h"
+#include "utils.h"
 
 using namespace std;
 
@@ -78,7 +79,7 @@ World::World(LPD3DXSPRITE spriteHandler, Metroid * metroid)
 	for (int i = 0; i < BEDGEHOG_YELLOW_COUNT; i++)
 	{
 		hogs_yellow[i] = new Bedgehog(spriteHandler, this, BEDGEHOG_YELLOW);
-		hogs_yellow[i]->SetActive(false);
+		hogs_yellow[i]->SetActive(true);
 		enemyGroup->AddGameObject(hogs_yellow[i]);
 	}
 
@@ -86,7 +87,7 @@ World::World(LPD3DXSPRITE spriteHandler, Metroid * metroid)
 	for (int i = 0; i < BEDGEHOG_PINK_COUNT; i++)
 	{
 		hogs_pink[i] = new Bedgehog(spriteHandler, this, BEDGEHOG_PINK);
-		hogs_pink[i]->SetActive(false);
+		hogs_pink[i]->SetActive(true);
 		enemyGroup->AddGameObject(hogs_pink[i]);
 	}
 
@@ -225,7 +226,8 @@ void World::Update(float t)
 
 void World::Render(LPDIRECT3DDEVICE9 d3ddv)
 {
-	samus->Render();
+	//samus->Render();
+	samus->RenderDebug(d3ddv);
 
 	bullets->Render();
 	missiles->Render();
@@ -267,12 +269,14 @@ void World::Render(LPDIRECT3DDEVICE9 d3ddv)
 
 	collisionGroup->Render();
 	effectgroup->Render();
-	enemyGroup->Render();
+	//enemyGroup->Render();
+	enemyGroup->RenderDebug(d3ddv);
 	otherGO->Render();
 
 	gate->Render();
 
-	colGroundBrick->Render();
+	//colGroundBrick->Render();
+	colGroundBrick->RenderDebug(d3ddv);
 }
 
 void World::InitSprites(LPDIRECT3DDEVICE9 d3ddv)
