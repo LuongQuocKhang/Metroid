@@ -13,6 +13,7 @@
 #include "Energy.h"
 #include "Number.h"
 #include "Gate.h"
+#include "Boom.h"
 #include "utils.h"
 
 using namespace std;
@@ -35,11 +36,12 @@ World::World(LPD3DXSPRITE spriteHandler, Metroid * metroid)
 
 	//qtreeGroup = new GroupObject(this);
 	quadtreeGroup = new GroupObject(this);
-	
+
 	rootQNode1 = NULL;
 	rootQNode2 = NULL;
 
 	bullets = new BulletManager(this, STANDARD);
+	boom = new BulletManager(this, BOOM);
 	//bullets->InitPosition(samus->GetPosX(), samus->GetPosY());
 	missiles = new BulletManager(this, MISSILE);
 	//missiles->InitPosition(samus->GetPosX(), samus->GetPosY());
@@ -74,7 +76,7 @@ World::World(LPD3DXSPRITE spriteHandler, Metroid * metroid)
 	//bird = new Bird(spriteHandler, this, BIRD);
 	//block = new Block(spriteHandler, this, BLOCK);
 	//bee = new Bee(spriteHandler, this, BEE);
-	
+
 	// hog yellow
 	for (int i = 0; i < BEDGEHOG_YELLOW_COUNT; i++)
 	{
@@ -133,6 +135,8 @@ World::World(LPD3DXSPRITE spriteHandler, Metroid * metroid)
 	numberofenergy2 = new Number(spriteHandler, this, DONVI, NUMBEROFENERGY);
 	numberofmissile1 = new Number(spriteHandler, this, CHUC, NUMBEROFMISSILE);
 	numberofmissile2 = new Number(spriteHandler, this, DONVI, NUMBEROFMISSILE);
+
+
 }
 
 
@@ -156,9 +160,9 @@ void World::Update(float t)
 	/*std::vector<PostInfo> listStatic = posManager->GetListInCamera((int)OBJECT_TYPE::GATE);
 	for (int i = 0; i < listStatic.size(); i++)
 	{
-		GroupObject::SetGameObjectActive(staticGroup, listStatic[i].object_type, listStatic[i].detail_type, listStatic[i].x, listStatic[i].y);
+	GroupObject::SetGameObjectActive(staticGroup, listStatic[i].object_type, listStatic[i].detail_type, listStatic[i].x, listStatic[i].y);
 	}*/
-	
+
 	otherGO->SetOtherGOActive();
 
 	//<=============
@@ -168,6 +172,7 @@ void World::Update(float t)
 
 	bullets->Update(t);
 	missiles->Update(t);
+	boom->Update(t);
 
 	birdbullets->Update(t);
 	ridleyBoomerang->Update(t);
@@ -192,7 +197,7 @@ void World::Update(float t)
 
 	/*hog_yellow->Update(t);
 	hog_pink->Update(t);
-	
+
 	bird->Update(t);
 	bee->Update(t);*/
 
@@ -228,9 +233,9 @@ void World::Render(LPDIRECT3DDEVICE9 d3ddv)
 {
 	//samus->Render();
 	samus->RenderDebug(d3ddv);
-
 	bullets->Render();
 	missiles->Render();
+	boom->Render();
 
 	birdbullets->Render();
 	ridleyBoomerang->Render();
@@ -242,11 +247,11 @@ void World::Render(LPDIRECT3DDEVICE9 d3ddv)
 	explsEffect->Render();
 	//qtreeGroup->Render();
 	quadtreeGroup->Render();
-	
+
 
 	/*hog_yellow->Render();
 	hog_pink->Render();
-	
+
 	bird->Render();
 	bee->Render();*/
 
@@ -283,6 +288,7 @@ void World::InitSprites(LPDIRECT3DDEVICE9 d3ddv)
 {
 	samus->InitSprites(d3ddv);
 	bullets->InitSprites(d3ddv);
+	boom->InitSprites(d3ddv);
 	missiles->InitSprites(d3ddv);
 	sentrybullets->InitSprites(d3ddv);
 	birdbullets->InitSprites(d3ddv);

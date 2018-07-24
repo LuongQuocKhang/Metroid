@@ -22,91 +22,91 @@ void Samus::Render()
 	spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
 	if (isImmortal == false)
 	{
-		switch (state)
-		{
-		case APPEARANCE:
-			appearing->Render(pos_x, pos_y);
-			break;
-		case RIGHTING:
-			running_right->Render(pos_x, pos_y);
-			break;
-		case LEFTING:
-			running_left->Render(pos_x, pos_y);
-			break;
-		case AIMING_UP_LEFT:
-			run_aim_up_left->Render(pos_x, pos_y);
-			break;
-		case AIMING_UP_RIGHT:
-			run_aim_up_right->Render(pos_x, pos_y);
-			break;
-		case IDLING_AIM_UP_LEFT:
-			idle_aim_up_left->Render(pos_x, pos_y);
-			break;
-		case IDLING_AIM_UP_RIGHT:
-			idle_aim_up_right->Render(pos_x, pos_y);
-			break;
-		case IDLE_LEFT:
-			idle_left->Render(pos_x, pos_y);
-			break;
-		case IDLE_RIGHT:
-			idle_right->Render(pos_x, pos_y);
-			break;
-		case ON_MORPH_LEFT:
-			morph_ball_left->Render(pos_x, pos_y);
-			break;
-		case ON_MORPH_RIGHT:
-			morph_ball_right->Render(pos_x, pos_y);
-			break;
-		case ON_RUN_SHOOTING_LEFT:
-			run_shooting_left->Render(pos_x, pos_y);
-			break;
-		case ON_RUN_SHOOTING_RIGHT:
-			run_shooting_right->Render(pos_x, pos_y);
-			break;
-		case ON_JUMP_LEFT:
-			jump_left->Render(pos_x, pos_y);
-			break;
-		case ON_JUMP_RIGHT:
-			jump_right->Render(pos_x, pos_y);
-			break;
-		case ON_SOMERSAULT_LEFT:
-			somersault_left->Render(pos_x, pos_y);
-			break;
-		case ON_SOMERSAULT_RIGHT:
-			somersault_right->Render(pos_x, pos_y);
-			break;
-		case ON_JUMPING_SHOOTING_LEFT:
-			jumping_shooting_left->Render(pos_x, pos_y);
-			break;
-		case ON_JUMPING_SHOOTING_RIGHT:
-			jumping_shooting_right->Render(pos_x, pos_y);
-			break;
-		case ON_JUMP_AIM_UP_LEFT:
-			jump_aim_up_left->Render(pos_x, pos_y);
-			break;
-		case ON_JUMP_AIM_UP_RIGHT:
-			jump_aim_up_right->Render(pos_x, pos_y);
-			break;
-		case IDLING_SHOOTING_LEFT:
-			idle_shooting_left->Render(pos_x, pos_y);
-			break;
-		case IDLING_SHOOTING_RIGHT:
-			idle_shooting_right->Render(pos_x, pos_y);
-			break;
-		case IDLING_SHOOTING_UP_LEFT:
-			idle_shooting_up_left->Render(pos_x, pos_y);
-			break;
-		case IDLING_SHOOTING_UP_RIGHT:
-			idle_shooting_up_right->Render(pos_x, pos_y);
-			break;
-		case ON_JUMP_SHOOTING_UP_LEFT:
-			jump_shooting_up_right->Render(pos_x, pos_y);
-			break;
-		case ON_JUMP_SHOOTING_UP_RIGHT:
-			jump_shooting_up_right->Render(pos_x, pos_y);
-			break;
-		}
+	switch (state)
+	{
+	case APPEARANCE:
+		appearing->Render(pos_x, pos_y);
+		break;
+	case RIGHTING:
+		running_right->Render(pos_x, pos_y);
+		break;
+	case LEFTING:
+		running_left->Render(pos_x, pos_y);
+		break;
+	case AIMING_UP_LEFT:
+		run_aim_up_left->Render(pos_x, pos_y);
+		break;
+	case AIMING_UP_RIGHT:
+		run_aim_up_right->Render(pos_x, pos_y);
+		break;
+	case IDLING_AIM_UP_LEFT:
+		idle_aim_up_left->Render(pos_x, pos_y);
+		break;
+	case IDLING_AIM_UP_RIGHT:
+		idle_aim_up_right->Render(pos_x, pos_y);
+		break;
+	case IDLE_LEFT:
+		idle_left->Render(pos_x, pos_y);
+		break;
+	case IDLE_RIGHT:
+		idle_right->Render(pos_x, pos_y);
+		break;
+	case ON_MORPH_LEFT:
+		morph_ball_left->Render(pos_x, pos_y);
+		break;
+	case ON_MORPH_RIGHT:
+		morph_ball_right->Render(pos_x, pos_y);
+		break;
+	case ON_RUN_SHOOTING_LEFT:
+		run_shooting_left->Render(pos_x, pos_y);
+		break;
+	case ON_RUN_SHOOTING_RIGHT:
+		run_shooting_right->Render(pos_x, pos_y);
+		break;
+	case ON_JUMP_LEFT:
+		jump_left->Render(pos_x, pos_y);
+		break;
+	case ON_JUMP_RIGHT:
+		jump_right->Render(pos_x, pos_y);
+		break;
+	case ON_SOMERSAULT_LEFT:
+		somersault_left->Render(pos_x, pos_y);
+		break;
+	case ON_SOMERSAULT_RIGHT:
+		somersault_right->Render(pos_x, pos_y);
+		break;
+	case ON_JUMPING_SHOOTING_LEFT:
+		jumping_shooting_left->Render(pos_x, pos_y);
+		break;
+	case ON_JUMPING_SHOOTING_RIGHT:
+		jumping_shooting_right->Render(pos_x, pos_y);
+		break;
+	case ON_JUMP_AIM_UP_LEFT:
+		jump_aim_up_left->Render(pos_x, pos_y);
+		break;
+	case ON_JUMP_AIM_UP_RIGHT:
+		jump_aim_up_right->Render(pos_x, pos_y);
+		break;
+	case IDLING_SHOOTING_LEFT:
+		idle_shooting_left->Render(pos_x, pos_y);
+		break;
+	case IDLING_SHOOTING_RIGHT:
+		idle_shooting_right->Render(pos_x, pos_y);
+		break;
+	case IDLING_SHOOTING_UP_LEFT:
+		idle_shooting_up_left->Render(pos_x, pos_y);
+		break;
+	case IDLING_SHOOTING_UP_RIGHT:
+		idle_shooting_up_right->Render(pos_x, pos_y);
+		break;
+	case ON_JUMP_SHOOTING_UP_LEFT:
+		jump_shooting_up_right->Render(pos_x, pos_y);
+		break;
+	case ON_JUMP_SHOOTING_UP_RIGHT:
+		jump_shooting_up_right->Render(pos_x, pos_y);
+		break;
 	}
+}
 	else
 	{
 		D3DXCOLOR color;
@@ -206,14 +206,10 @@ void Samus::Render()
 	}
 
 
+
 	spriteHandler->End();
 }
 
-//void Samus::RenderDebug(LPDIRECT3DDEVICE9 d3ddv)
-//{
-//	Render();
-//	DrawCollider(d3ddv, this->pos_x, this->pos_y, this->collider, D3DCOLOR_ARGB(0, 255, 0, 0));
-//}
 void Samus::Destroy()
 {
 	//Ngưng active
@@ -302,7 +298,7 @@ Samus::Samus(LPD3DXSPRITE spriteHandler, World * manager)
 
 	missile_numbers = 10; // set số lượng missile ban đầu
 
-	//Collider
+						  //Collider
 	this->collider = new Collider();
 	this->collider->SetCollider(0, 0, -this->height, this->width);
 	state = APPEARANCE;
@@ -365,7 +361,11 @@ void Samus::_Shoot(BULLET_DIRECTION dir, Metroid * metroid)
 		metroid->SetStart_shoot(0);
 	}
 }
+void Samus::_SetBoom(BULLET_DIRECTION dir, Metroid * metroid)
+{
 
+	(metroid->GetWorld())->boom->Next(dir, this->GetPosX(), this->GetPosY());
+}
 void Samus::_ShootMissile(BULLET_DIRECTION dir, Metroid * metroid)
 {
 	(metroid->GetWorld())->missiles->Next(dir, this->GetPosX(), this->GetPosY());
@@ -548,8 +548,8 @@ void Samus::Update(float t)
 					//{
 					//case BEDGEHOG_YELLOW:
 					//{// take damge cho samus, truyen vao dame cua con nay
-					//	// co the them thuoc tinh damage cho moi con enemy de truyen vao
-					//	// Vd: this->TakeDamage(float enemy_damage)
+					// // co the them thuoc tinh damage cho moi con enemy de truyen vao
+					// // Vd: this->TakeDamage(float enemy_damage)
 					//	Bedgehog* hog_yellow = (Bedgehog*)manager->enemyGroup->objects[i];
 					//	TakeDamage(hog_yellow->damage);
 					//}
@@ -638,57 +638,57 @@ void Samus::Update(float t)
 	}
 	//----------------------------
 
-	/*Xử lý va chạm với ground
-	for (int i = 0; i < manager->quadtreeGroup->size; i++)
-	{
-		switch (manager->quadtreeGroup->objects[i]->GetType())
-		{
-		case BRICK:
-			Brick * brick = (Brick*)(manager->quadtreeGroup->objects[i]);
-			float timeScale = SweptAABB(manager->quadtreeGroup->objects[i], t);
-			if (timeScale < 1.0f)
-			{
-				if (brick->IsPassable())
-				{
-					if (this->vx > 0)
-					{
-						Camera::moveRight = true;
+	//Xử lý va chạm với ground
+	//for (int i = 0; i < manager->quadtreeGroup->size; i++)
+	//{
+	//	switch (manager->quadtreeGroup->objects[i]->GetType())
+	//	{
+	//	case BRICK:
+	//		Brick * brick = (Brick*)(manager->quadtreeGroup->objects[i]);
+	//		float timeScale = SweptAABB(manager->quadtreeGroup->objects[i], t);
+	//		if (timeScale < 1.0f)
+	//		{
+	//			if (brick->IsPassable())
+	//			{
+	//				if (this->vx > 0)
+	//				{
+	//					Camera::moveRight = true;
+	//					
+	//					if (manager->posManager->GetIndexRoom() <= 1)
+	//						manager->posManager->Next();	// tăng index pooling đến room kế tiếp
+	//					else if (manager->posManager->GetIndexRoom() == 2)
+	//					{
+	//						manager->posManager->Next();
+	//						manager->metroid->isOnFloor = true;
+	//					}
+	//					else if (manager->posManager->GetIndexRoom() == 4)
+	//						manager->posManager->Back();
 
-						if (manager->posManager->GetIndexRoom() <= 1)
-							manager->posManager->Next();	// tăng index pooling đến room kế tiếp
-						else if (manager->posManager->GetIndexRoom() == 2)
-						{
-							manager->posManager->Next();
-							manager->metroid->isOnFloor = true;
-						}
-						else if (manager->posManager->GetIndexRoom() == 4)
-							manager->posManager->Back();
+	//					this->pos_x += 65;
+	//				}
+	//				else if (this->vx < 0)
+	//				{
+	//					Camera::moveLeft = true;
 
-						this->pos_x += 65;
-					}
-					else if (this->vx < 0)
-					{
-						Camera::moveLeft = true;
-
-						if (manager->posManager->GetIndexRoom() < 3)
-							manager->posManager->Back();	// giảm index pooling đến room phía sau
-						else if (manager->posManager->GetIndexRoom() == 3)
-							manager->posManager->Next();	// vào room boss
-
-						this->pos_x -= 65;
-					}
-				}
-				else
-				{
-					SlideFromGround(manager->quadtreeGroup->objects[i], t, timeScale);
-					manager->samus->isOnAir = false;
-				}
-				//Response(manager->quadtreeGroup->objects[i], t, timeScale);
-			}
-			break;
-		}
-
-	}*/
+	//					if (manager->posManager->GetIndexRoom() < 3)
+	//						manager->posManager->Back();	// giảm index pooling đến room phía sau
+	//					else if (manager->posManager->GetIndexRoom() == 3)
+	//						manager->posManager->Next();	// vào room boss
+	//					
+	//					this->pos_x -= 65;
+	//				}
+	//			}
+	//			else
+	//			{
+	//				SlideFromGround(manager->quadtreeGroup->objects[i], t, timeScale);
+	//				manager->samus->isOnAir = false;
+	//			}
+	//			//Response(manager->quadtreeGroup->objects[i], t, timeScale);
+	//		}
+	//		break;
+	//	}
+	//	
+	//}
 
 	for (int i = 0; i < manager->colGroundBrick->size; i++)
 	{
@@ -793,7 +793,7 @@ void Samus::Update(float t)
 						{
 							manager->posManager->Next();	// vào room boss
 
-							//tắt nhạc nền và thêm nhạc phòng boss ở đây
+															//tắt nhạc nền và thêm nhạc phòng boss ở đây
 							Game::gameSound->playSoundLoop(BACKGROUND_MOTHER_BRAIN_BOSS);
 							Game::gameSound->stopSound(BACKGROUND_MAP);
 						}
@@ -947,20 +947,20 @@ void Samus::Update(float t)
 	//Check if samus is on ground or not
 	/*if (pos_y > GROUND_Y)
 	{
-		vy -= gravity;
+	vy -= gravity;
 	}
 	else
 	{
-		pos_y = GROUND_Y;
-		vy = 0;
-		if (state == ON_JUMP_LEFT || state == ON_JUMPING_SHOOTING_LEFT || state == ON_SOMERSAULT_LEFT || state == ON_JUMP_AIM_UP_LEFT)
-		{
-			state = IDLE_LEFT;
-		}
-		else if (state == ON_JUMP_RIGHT || state == ON_JUMPING_SHOOTING_RIGHT || state == ON_SOMERSAULT_RIGHT || state == ON_JUMP_AIM_UP_RIGHT)
-		{
-			state = IDLE_RIGHT;
-		}
+	pos_y = GROUND_Y;
+	vy = 0;
+	if (state == ON_JUMP_LEFT || state == ON_JUMPING_SHOOTING_LEFT || state == ON_SOMERSAULT_LEFT || state == ON_JUMP_AIM_UP_LEFT)
+	{
+	state = IDLE_LEFT;
+	}
+	else if (state == ON_JUMP_RIGHT || state == ON_JUMPING_SHOOTING_RIGHT || state == ON_SOMERSAULT_RIGHT || state == ON_JUMP_AIM_UP_RIGHT)
+	{
+	state = IDLE_RIGHT;
+	}
 	}*/
 
 	//Render
@@ -1565,6 +1565,87 @@ void Samus::OnkeyDown(int KeyCode, Metroid * metroid, int& screenMode)
 				}
 				break;
 			}
+		case DIK_V:
+		{
+			Game::gameSound->playSound(SHOOT_MISSILE);
+			if (this->GetState() == IDLING_AIM_UP_LEFT)
+			{
+				this->SetState(IDLING_SHOOTING_UP_LEFT);
+
+				_SetBoom(ON_UP, metroid);
+			}
+			if (this->GetState() == IDLING_AIM_UP_RIGHT)
+			{
+				this->SetState(IDLING_SHOOTING_UP_RIGHT);
+
+				_SetBoom(ON_UP, metroid);
+			}
+			//State Chạy bắn lên
+			if (this->GetState() == AIMING_UP_LEFT)
+			{
+				this->SetState(AIMING_UP_LEFT);
+				_SetBoom(ON_UP, metroid);
+			}
+			if (this->GetState() == AIMING_UP_RIGHT)
+			{
+				this->SetState(AIMING_UP_RIGHT);
+				_SetBoom(ON_UP, metroid);
+			}
+			//State Nhảy bắn lên => bug
+			if (this->GetState() == ON_JUMP_AIM_UP_LEFT)
+			{
+				this->SetState(ON_JUMP_SHOOTING_UP_LEFT);
+
+				_SetBoom(ON_UP, metroid);
+			}
+			if (this->GetState() == ON_JUMP_AIM_UP_RIGHT)
+			{
+				this->SetState(ON_JUMP_SHOOTING_UP_RIGHT);
+
+				_SetBoom(ON_UP, metroid);
+			}
+			//State nhảy bắn
+			if (this->GetState() == ON_JUMP_LEFT || this->GetState() == ON_SOMERSAULT_LEFT || this->GetState() == ON_JUMPING_SHOOTING_LEFT)
+			{
+				this->SetState(ON_JUMPING_SHOOTING_LEFT);
+
+				_SetBoom(ON_LEFT, metroid);
+			}
+			if (this->GetState() == ON_JUMP_RIGHT || this->GetState() == ON_SOMERSAULT_RIGHT || this->GetState() == ON_JUMPING_SHOOTING_RIGHT)
+			{
+				this->SetState(ON_JUMPING_SHOOTING_RIGHT);
+
+				_SetBoom(ON_RIGHT, metroid);
+			}
+			//State chạy bắn
+			if (this->GetState() == LEFTING)
+			{
+				this->SetState(ON_RUN_SHOOTING_LEFT);
+
+				_SetBoom(ON_LEFT, metroid);
+			}
+			if (this->GetState() == RIGHTING)
+			{
+				this->SetState(ON_RUN_SHOOTING_RIGHT);
+
+				_SetBoom(ON_RIGHT, metroid);
+			}
+			//State đứng bắn
+			if (this->GetState() == IDLE_LEFT)
+			{
+				this->SetState(IDLING_SHOOTING_LEFT);
+
+				_SetBoom(ON_LEFT, metroid);
+			}
+			if (this->GetState() == IDLE_RIGHT)
+			{
+				this->SetState(IDLING_SHOOTING_RIGHT);
+
+				_SetBoom(ON_RIGHT, metroid);
+
+			}
+			break;
+		}
 
 		}
 	}

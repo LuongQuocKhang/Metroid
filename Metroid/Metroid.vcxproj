@@ -137,6 +137,7 @@
     <ClCompile Include="Bird.cpp" />
     <ClCompile Include="BirdBullet.cpp" />
     <ClCompile Include="Block.cpp" />
+    <ClCompile Include="Boom.cpp" />
     <ClCompile Include="BoundingBox.cpp" />
     <ClCompile Include="Brick.cpp" />
     <ClCompile Include="Bullet.cpp" />
@@ -187,6 +188,7 @@
     <ClInclude Include="Bird.h" />
     <ClInclude Include="BirdBullet.h" />
     <ClInclude Include="Block.h" />
+    <ClInclude Include="Boom.h" />
     <ClInclude Include="BoundingBox.h" />
     <ClInclude Include="Brick.h" />
     <ClInclude Include="Bullet.h" />

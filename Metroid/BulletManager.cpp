@@ -5,12 +5,13 @@
 #include "SentryBullet.h"
 #include "BirdBullet.h"
 #include "RidleyBoomerang.h"
+#include "Boom.h"
 
 BulletManager::BulletManager(World * manager, BULLET_TYPE bullet_type)
 {
 	this->manager = manager;
 	//Create instance bullet_list
-	
+
 	switch (bullet_type)
 	{
 	case STANDARD:
@@ -18,6 +19,9 @@ BulletManager::BulletManager(World * manager, BULLET_TYPE bullet_type)
 		break;
 	case MISSILE:
 		num = MISSILE_NUM;
+		break;
+	case BOOM:
+		num = BOOM_NUM;
 		break;
 	case SENTRY_BULLET:
 		num = SENTRY_BULLET_NUM;
@@ -48,6 +52,12 @@ BulletManager::BulletManager(World * manager, BULLET_TYPE bullet_type)
 			bullet_list[i] = new Missile(manager);
 		}
 		break;
+	case BOOM:
+		for (int i = 0; i < num; i++)
+		{
+			bullet_list[i] = new Boom(manager);
+		}
+		break;
 	case SENTRY_BULLET:
 		//bullet_list = new BulletObject*[SENTRY_BULLET_NUM];
 		for (int i = 0; i < num; i++)
@@ -69,6 +79,7 @@ BulletManager::BulletManager(World * manager, BULLET_TYPE bullet_type)
 			bullet_list[i] = new RidleyBoomerang(manager);
 		}
 		break;
+		// ...
 	}
 
 	_Index = 0;
@@ -174,4 +185,3 @@ int BulletManager::getNum()
 //		start_shoot = 0;
 //	}
 //}
-

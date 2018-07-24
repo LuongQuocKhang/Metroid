@@ -21,10 +21,11 @@
 #include "Number.h"
 #include "Energy.h"
 #include "Gate.h"
+#include "Boom.h"
 
 /*
-	Class này chứa tất cả những thứ trong Game
-	Các class khác chứa con trỏ đến class này để thao tác với các đối tượng trong class này
+Class này chứa tất cả những thứ trong Game
+Các class khác chứa con trỏ đến class này để thao tác với các đối tượng trong class này
 */
 
 class Metroid;
@@ -47,7 +48,7 @@ public:
 	GroupObject * colGroundBrick;
 	GroupObject * otherGO;	// hiện đang chứa sentry
 
-	//Enemy
+							//Enemy
 	Bedgehog * hogs_yellow[BEDGEHOG_YELLOW_COUNT];
 	Bedgehog * hogs_pink[BEDGEHOG_PINK_COUNT];
 	Bird * birds[BIRD_COUNT];
@@ -80,6 +81,7 @@ public:
 	BulletManager * sentrybullets;
 	BulletManager * birdbullets;
 	BulletManager * ridleyBoomerang;
+	BulletManager * boom;
 
 	MorphItem * morphItem;
 	EnergyItem * energyItem;
@@ -109,4 +111,3 @@ public:
 };
 
 #endif // !_WORLD_H_
-

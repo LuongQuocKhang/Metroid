@@ -29,7 +29,7 @@ protected:
 	float time_jump;
 	float time_freezing;
 	float time_in_game;
-	
+
 
 	DWORD start_shoot;
 	DWORD now_shoot;
@@ -68,6 +68,7 @@ public:
 	void SetStart_shoot(DWORD);
 	void SetNow_shoot(DWORD);
 	void _Shoot(BULLET_DIRECTION dir);
+	void _SetBoom(BULLET_DIRECTION dir);
 	void _ShootMissile(BULLET_DIRECTION dir);
 
 	void SetStart_jump(DWORD startjump);
@@ -90,4 +91,3 @@ public:
 };
 
 #endif // !_METROID_
-	

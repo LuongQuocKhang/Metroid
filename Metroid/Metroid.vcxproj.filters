@@ -222,6 +222,9 @@
     <ClCompile Include="BoundingBox.cpp">
       <Filter>Source Files\Collision</Filter>
     </ClCompile>
+    <ClCompile Include="Boom.cpp">
+      <Filter>Source Files\Projectile</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sprite.h">
@@ -370,6 +373,9 @@
     </ClInclude>
     <ClInclude Include="BoundingBox.h">
       <Filter>Header Files\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Boom.h">
+      <Filter>Header Files\Projectile</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

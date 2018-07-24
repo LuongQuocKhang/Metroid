@@ -19,7 +19,7 @@ void Metroid::_InitSprites(LPDIRECT3DDEVICE9 d3ddv)
 	//tiles->InitSprites(d3ddv);
 	//intro = new Sprite(spriteHandler, INTRO_FILE, INTRO, 640, 640, 156, 1);
 	//tiles->InitSprites(d3ddv);
-	
+
 }
 
 void Metroid::_InitPositions()
@@ -36,7 +36,7 @@ void Metroid::_InitPositions()
 	//world->sentryRight->InitPostition(1900, 350);
 	//world->motherBrain->InitPostition(1400, 200);
 	//world->ridley->InitPostition(1550, 120);
-	
+
 	//world->morphItem->SetPosX(world->samus->GetPosX());
 	//world->morphItem->SetPosY(world->samus->GetPosX());
 	//bulletManager->InitPosition(world->samus->GetPosX(), world->samus->GetPosY());
@@ -98,13 +98,16 @@ void Metroid::_Shoot(BULLET_DIRECTION dir)
 		start_shoot = 0;
 	}
 }
-
+void Metroid::_SetBoom(BULLET_DIRECTION dir)
+{
+	world->boom->Next(dir, world->samus->GetPosX(), world->samus->GetPosY());
+}
 void Metroid::_ShootMissile(BULLET_DIRECTION dir)
 {
 	world->missiles->Next(dir, world->samus->GetPosX(), world->samus->GetPosY());
 }
 
-Metroid::Metroid(HINSTANCE hInstance, LPWSTR Name, int Mode, int IsFullScreen, int FrameRate):Game(hInstance, Name, Mode, IsFullScreen, FrameRate)
+Metroid::Metroid(HINSTANCE hInstance, LPWSTR Name, int Mode, int IsFullScreen, int FrameRate) :Game(hInstance, Name, Mode, IsFullScreen, FrameRate)
 {
 	//tiles = new Tiles();
 	tick_per_frame = 1000 / _FrameRate;
@@ -125,7 +128,7 @@ Metroid::Metroid(HINSTANCE hInstance, LPWSTR Name, int Mode, int IsFullScreen, i
 Metroid::~Metroid()
 {
 	//delete(tiles);
-	
+
 	//delete(bulletManager);
 
 	delete(first_room);
@@ -190,7 +193,7 @@ void Metroid::UpdateIntro(float Delta)
 }
 
 void Metroid::UpdateFrame(float Delta)
-{	
+{
 	if (isInGame)
 	{
 		for (int i = 0; i < 4; i++)
@@ -240,7 +243,7 @@ void Metroid::Render(LPDIRECT3DDEVICE9 d3ddv)
 		break;
 		// game running
 	case GAMEMODE_GAMERUN:
-		RenderFrame(d3ddv);	
+		RenderFrame(d3ddv);
 		break;
 		// game over
 	case GAMEMODE_GAMEOVER:
@@ -250,7 +253,7 @@ void Metroid::Render(LPDIRECT3DDEVICE9 d3ddv)
 	}
 }
 
-void Metroid::RenderStartScreen(LPDIRECT3DDEVICE9 d3ddv) 
+void Metroid::RenderStartScreen(LPDIRECT3DDEVICE9 d3ddv)
 {
 	// Background
 	d3ddv->StretchRect(
@@ -280,7 +283,7 @@ void Metroid::RenderIntro(LPDIRECT3DDEVICE9 d3ddv)
 }
 
 void Metroid::RenderFrame(LPDIRECT3DDEVICE9 d3ddv)
-{		
+{
 	world->Render(d3ddv);
 
 	if (isOnFloor)

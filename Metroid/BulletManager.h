@@ -3,6 +3,7 @@
 #define _BULLETMANAGER_H_
 #include "Bullet.h"
 #include "Missile.h"
+#include "Boom.h"
 #include "Parameters.h"
 #define BULLET_COUNT 5
 
@@ -19,7 +20,7 @@ private:
 	DWORD tick_per_frame;
 	int frame_rate;
 	int num;		// số lượng đạn tạo sẵn, tùy theo mỗi loại đạn mà có số lượng khác nhau
-	
+
 public:
 	//BulletManager();
 	BulletManager(World * manager, BULLET_TYPE bullet_type);
@@ -42,6 +43,3 @@ public:
 };
 
 #endif // !_BULLETMANAGER_H_
-
-
-

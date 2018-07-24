@@ -10,9 +10,9 @@
 
 enum SAMUS_STATE {
 	APPEARANCE,
-	IDLE_LEFT, 
+	IDLE_LEFT,
 	IDLE_RIGHT,
-	LEFTING, 
+	LEFTING,
 	RIGHTING,
 	IDLING_AIM_UP_LEFT,
 	IDLING_AIM_UP_RIGHT,
@@ -74,7 +74,7 @@ protected:
 	int num;
 	bool isMorph;	// Kiểm tra xem Samus đã nhặt Morph ball Item chưa để có thể crouch
 	int missile_numbers;		//số lượng missile ban đầu
-	//DirectCollision direction;
+								//DirectCollision direction;
 public:
 	float health;	// Máu của Samus
 	bool isDeath;	// Trạng thái chết của Samus
@@ -89,7 +89,7 @@ public:
 	~Samus();
 	//DirectCollision getDirection();
 	//void setDirection(DirectCollision direction);
-	
+
 	void InitSprites(LPDIRECT3DDEVICE9 d3ddv);
 	void InitPostition();
 
@@ -121,13 +121,13 @@ public:
 	{
 		return isOnGround;
 	}
-
 	bool isSamusImmortal();
 	void setSamusImmortal(bool result);
 	float getImmortalTime();
 	void setImmortalTime(float time);
 
 	void _Shoot(BULLET_DIRECTION dir, Metroid*);
+	void _SetBoom(BULLET_DIRECTION dir, Metroid*);
 	void _ShootMissile(BULLET_DIRECTION dir, Metroid*);
 	void SetMissileNumbers(int value);
 	int GetMissileNumbers();
@@ -136,8 +136,6 @@ public:
 	void Reset(int  x, int y);
 	void Update(float t);
 	void Render();
-	//void RenderDebug(LPDIRECT3DDEVICE9 d3ddv);
-
 	void Destroy();
 	void SetHealth(float value);
 	float GetHealth();
@@ -153,4 +151,3 @@ public:
 	//================= END OVERRIDE VIRTUAL METHOD =============
 };
 #endif // !_SAMUS_H
-

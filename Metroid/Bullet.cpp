@@ -137,7 +137,7 @@ void Bullet::Update(float t)
 		manager->samus->setImmortalTime(manager->samus->getImmortalTime() - t);
 		if (manager->samus->getImmortalTime() <= 0)
 		{
-			manager->samus->setSamusImmortal(false);
+		manager->samus->setSamusImmortal(false);
 			float temp = SAMUS_IMMORTAL_TIME;
 			manager->samus->setImmortalTime(temp);
 		}

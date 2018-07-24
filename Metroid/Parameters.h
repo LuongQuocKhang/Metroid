@@ -24,6 +24,8 @@ class PositionManager;
 class PosInfo;
 class Number;
 class Energy;
+class Boom;
+
 
 //================ SCREEN RESOLUTION ================
 #define GAME_SCREEN_RESOLUTION_480_480_24	0
@@ -258,11 +260,12 @@ enum MOTHERBRAIN_STATE
 
 //================ BULLET TYPE ================
 enum BULLET_TYPE
-{	
+{
 	STANDARD,	// Đạn thường của samus
 	MISSILE,	// Missile của samus
 	SENTRY_BULLET,
 	BIRD_BULLET,
+	BOOM,
 	BOOMERANG,
 };
 //================ END BULLET TYPE ============
@@ -285,14 +288,18 @@ enum BULLET_DIRECTION
 #define BULLET_PUSH_VELOCITY_Y 0.11f
 //================= END BULLET ===========
 
+
 //================= BULLET MANAGER ================
 #define STANDARD_NUM 5
 #define MISSILE_NUM 3
+#define BOOM_NUM 10
 #define SENTRY_BULLET_NUM 10
 #define BIRD_BULLET_NUM 2
 #define RIDLEY_BOOMERANG_NUM 10
 //================= END BULLET MANAGER ============
 
+#define BOOM_TIME_SURVIVE 1000
+#define DAMAGE_SAMUS_BOOM 10
 //================= OBJECT TYPE ================
 enum OBJECT_TYPE
 {
