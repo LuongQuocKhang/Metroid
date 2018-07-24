@@ -36,8 +36,6 @@ protected:
 	//
 	//Các thuộc tính Collision
 	//
-	Collider * collider;
-	Collider * broadPhaseBox;
 
 	//
 	//Các thuộc tính Collision (mới)
@@ -54,7 +52,8 @@ protected:
 	int health;
 public:
 	bool isHit;
-
+	Collider * collider;
+	Collider * broadPhaseBox;
 	DWORD last_time; // this is to control the animate rate of kitty
 	GameObject();
 	//======================== GET - SET METHOD ================================

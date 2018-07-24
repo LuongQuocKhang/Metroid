@@ -96,72 +96,7 @@ void BulletObject::Update(float t)
 			if (timeScale < 1.0f)
 			{
 				manager->enemyGroup->objects[i]->isHit = true;
-				switch (manager->enemyGroup->objects[i]->GetType())
-				{
-				case BEDGEHOG_YELLOW:
-				{
-					Bedgehog * hog_yellow = (Bedgehog*)manager->enemyGroup->objects[i];
-					switch (getBulletType())
-					{
-					case STANDARD:	hog_yellow->TakeDamage(this->damage); break;
-					case MISSILE:	hog_yellow->TakeDamage(this->damage); break;
-					}
-				}
-				break;
-				case BEDGEHOG_PINK:
-				{
-					Bedgehog * hog_pink = (Bedgehog*)manager->enemyGroup->objects[i];
-					switch (getBulletType())
-					{
-					case STANDARD:	hog_pink->TakeDamage(this->damage); break;
-					case MISSILE:	hog_pink->TakeDamage(this->damage); break;
-					}
-				}
-
-				break;
-				case BIRD:
-				{
-					Bird * bird = (Bird*)manager->enemyGroup->objects[i];
-					switch (getBulletType())
-					{
-					case STANDARD:	bird->TakeDamage(this->damage); break;
-					case MISSILE:	bird->TakeDamage(this->damage); break;
-					}
-				}
-				break;
-				case BEE:
-				{
-					Bee * bee = (Bee*)manager->enemyGroup->objects[i];
-					switch (getBulletType())
-					{
-					case STANDARD:	bee->TakeDamage(this->damage); break;
-					case MISSILE:	bee->TakeDamage(this->damage); break;
-					}
-				}
-				break;
-				case RIDLEY:
-				{
-					Ridley * ridley = (Ridley*)manager->enemyGroup->objects[i];
-					switch (getBulletType())
-					{
-					case STANDARD:	ridley->TakeDamage(this->damage); break;
-					case MISSILE:	ridley->TakeDamage(this->damage); break;
-					}
-				}
-				break;
-				case MOTHER_BRAIN:
-				{
-					MotherBrain * motherBrain = (MotherBrain*)manager->enemyGroup->objects[i];
-					switch (getBulletType())
-					{
-					case STANDARD:	motherBrain->TakeDamage(this->damage); break;
-					case MISSILE:	motherBrain->TakeDamage(this->damage); break;
-					}
-				}
-				break;
-				case BLOCK:
-					break;
-				}
+				((Enemy*)(manager->enemyGroup->objects[i]));
 				Reset();
 			}
 		}

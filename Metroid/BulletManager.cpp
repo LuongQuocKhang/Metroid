@@ -69,7 +69,6 @@ BulletManager::BulletManager(World * manager, BULLET_TYPE bullet_type)
 			bullet_list[i] = new RidleyBoomerang(manager);
 		}
 		break;
-		// ...
 	}
 
 	_Index = 0;

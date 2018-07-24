@@ -14,98 +14,198 @@
 #include "MorphItem.h"
 
 void Samus::Render()
-{	
+{
 	// Nếu không active thì không render
 	if (!isActive)
 		return;
 
 	spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
-
-	switch (state)
+	if (isImmortal == false)
 	{
-	case APPEARANCE:
-		appearing->Render(pos_x, pos_y);
-		break;
-	case RIGHTING:
-		running_right->Render(pos_x, pos_y);
-		break;
-	case LEFTING:
-		running_left->Render(pos_x, pos_y);
-		break;
-	case AIMING_UP_LEFT:
-		run_aim_up_left->Render(pos_x, pos_y);
-		break;
-	case AIMING_UP_RIGHT:
-		run_aim_up_right->Render(pos_x, pos_y);
-		break;
-	case IDLING_AIM_UP_LEFT:
-		idle_aim_up_left->Render(pos_x, pos_y);
-		break;
-	case IDLING_AIM_UP_RIGHT:
-		idle_aim_up_right-> Render(pos_x, pos_y);
-		break;
-	case IDLE_LEFT:
-		idle_left->Render(pos_x, pos_y);
-		break;
-	case IDLE_RIGHT:
-		idle_right->Render(pos_x, pos_y);
-		break;
-	case ON_MORPH_LEFT:
-		morph_ball_left->Render(pos_x, pos_y);
-		break;
-	case ON_MORPH_RIGHT:
-		morph_ball_right->Render(pos_x, pos_y);
-		break;
-	case ON_RUN_SHOOTING_LEFT:
-		run_shooting_left->Render(pos_x, pos_y);
-		break;
-	case ON_RUN_SHOOTING_RIGHT:
-		run_shooting_right->Render(pos_x, pos_y);
-		break;
-	case ON_JUMP_LEFT:
-		jump_left->Render(pos_x, pos_y);
-		break;
-	case ON_JUMP_RIGHT:
-		jump_right->Render(pos_x, pos_y);
-		break;
-	case ON_SOMERSAULT_LEFT:
-		somersault_left->Render(pos_x, pos_y);
-		break;
-	case ON_SOMERSAULT_RIGHT:
-		somersault_right->Render(pos_x, pos_y);
-		break;
-	case ON_JUMPING_SHOOTING_LEFT:
-		jumping_shooting_left->Render(pos_x, pos_y);
-		break;
-	case ON_JUMPING_SHOOTING_RIGHT:
-		jumping_shooting_right->Render(pos_x, pos_y);
-		break;
-	case ON_JUMP_AIM_UP_LEFT:
-		jump_aim_up_left->Render(pos_x, pos_y);
-		break;
-	case ON_JUMP_AIM_UP_RIGHT:
-		jump_aim_up_right->Render(pos_x, pos_y);
-		break;
-	case IDLING_SHOOTING_LEFT:
-		idle_shooting_left->Render(pos_x, pos_y);
-		break;
-	case IDLING_SHOOTING_RIGHT:
-		idle_shooting_right->Render(pos_x, pos_y);
-		break;
-	case IDLING_SHOOTING_UP_LEFT:
-		idle_shooting_up_left->Render(pos_x, pos_y);
-		break;
-	case IDLING_SHOOTING_UP_RIGHT:
-		idle_shooting_up_right->Render(pos_x, pos_y);
-		break;
-	case ON_JUMP_SHOOTING_UP_LEFT:
-		jump_shooting_up_right->Render(pos_x, pos_y);
-		break;
-	case ON_JUMP_SHOOTING_UP_RIGHT:
-		jump_shooting_up_right->Render(pos_x, pos_y);
-		break;
+		switch (state)
+		{
+		case APPEARANCE:
+			appearing->Render(pos_x, pos_y);
+			break;
+		case RIGHTING:
+			running_right->Render(pos_x, pos_y);
+			break;
+		case LEFTING:
+			running_left->Render(pos_x, pos_y);
+			break;
+		case AIMING_UP_LEFT:
+			run_aim_up_left->Render(pos_x, pos_y);
+			break;
+		case AIMING_UP_RIGHT:
+			run_aim_up_right->Render(pos_x, pos_y);
+			break;
+		case IDLING_AIM_UP_LEFT:
+			idle_aim_up_left->Render(pos_x, pos_y);
+			break;
+		case IDLING_AIM_UP_RIGHT:
+			idle_aim_up_right->Render(pos_x, pos_y);
+			break;
+		case IDLE_LEFT:
+			idle_left->Render(pos_x, pos_y);
+			break;
+		case IDLE_RIGHT:
+			idle_right->Render(pos_x, pos_y);
+			break;
+		case ON_MORPH_LEFT:
+			morph_ball_left->Render(pos_x, pos_y);
+			break;
+		case ON_MORPH_RIGHT:
+			morph_ball_right->Render(pos_x, pos_y);
+			break;
+		case ON_RUN_SHOOTING_LEFT:
+			run_shooting_left->Render(pos_x, pos_y);
+			break;
+		case ON_RUN_SHOOTING_RIGHT:
+			run_shooting_right->Render(pos_x, pos_y);
+			break;
+		case ON_JUMP_LEFT:
+			jump_left->Render(pos_x, pos_y);
+			break;
+		case ON_JUMP_RIGHT:
+			jump_right->Render(pos_x, pos_y);
+			break;
+		case ON_SOMERSAULT_LEFT:
+			somersault_left->Render(pos_x, pos_y);
+			break;
+		case ON_SOMERSAULT_RIGHT:
+			somersault_right->Render(pos_x, pos_y);
+			break;
+		case ON_JUMPING_SHOOTING_LEFT:
+			jumping_shooting_left->Render(pos_x, pos_y);
+			break;
+		case ON_JUMPING_SHOOTING_RIGHT:
+			jumping_shooting_right->Render(pos_x, pos_y);
+			break;
+		case ON_JUMP_AIM_UP_LEFT:
+			jump_aim_up_left->Render(pos_x, pos_y);
+			break;
+		case ON_JUMP_AIM_UP_RIGHT:
+			jump_aim_up_right->Render(pos_x, pos_y);
+			break;
+		case IDLING_SHOOTING_LEFT:
+			idle_shooting_left->Render(pos_x, pos_y);
+			break;
+		case IDLING_SHOOTING_RIGHT:
+			idle_shooting_right->Render(pos_x, pos_y);
+			break;
+		case IDLING_SHOOTING_UP_LEFT:
+			idle_shooting_up_left->Render(pos_x, pos_y);
+			break;
+		case IDLING_SHOOTING_UP_RIGHT:
+			idle_shooting_up_right->Render(pos_x, pos_y);
+			break;
+		case ON_JUMP_SHOOTING_UP_LEFT:
+			jump_shooting_up_right->Render(pos_x, pos_y);
+			break;
+		case ON_JUMP_SHOOTING_UP_RIGHT:
+			jump_shooting_up_right->Render(pos_x, pos_y);
+			break;
+		}
 	}
-	
+	else
+	{
+		D3DXCOLOR color;
+		if (color.r == 127 && color.g == 127 && color.b == 127)
+		{
+			color.r = 255; color.g = 255; color.b = 255;
+		}
+		else
+		{
+			color.r = 127; color.g = 127; color.b = 127;
+		}
+
+		switch (state)
+		{
+		case APPEARANCE:
+			appearing->Render(pos_x, pos_y, color);
+			break;
+		case RIGHTING:
+			running_right->Render(pos_x, pos_y, color);
+			break;
+		case LEFTING:
+			running_left->Render(pos_x, pos_y, color);
+			break;
+		case AIMING_UP_LEFT:
+			run_aim_up_left->Render(pos_x, pos_y, color);
+			break;
+		case AIMING_UP_RIGHT:
+			run_aim_up_right->Render(pos_x, pos_y, color);
+			break;
+		case IDLING_AIM_UP_LEFT:
+			idle_aim_up_left->Render(pos_x, pos_y, color);
+			break;
+		case IDLING_AIM_UP_RIGHT:
+			idle_aim_up_right->Render(pos_x, pos_y, color);
+			break;
+		case IDLE_LEFT:
+			idle_left->Render(pos_x, pos_y, color);
+			break;
+		case IDLE_RIGHT:
+			idle_right->Render(pos_x, pos_y, color);
+			break;
+		case ON_MORPH_LEFT:
+			morph_ball_left->Render(pos_x, pos_y, color);
+			break;
+		case ON_MORPH_RIGHT:
+			morph_ball_right->Render(pos_x, pos_y, color);
+			break;
+		case ON_RUN_SHOOTING_LEFT:
+			run_shooting_left->Render(pos_x, pos_y, color);
+			break;
+		case ON_RUN_SHOOTING_RIGHT:
+			run_shooting_right->Render(pos_x, pos_y, color);
+			break;
+		case ON_JUMP_LEFT:
+			jump_left->Render(pos_x, pos_y, color);
+			break;
+		case ON_JUMP_RIGHT:
+			jump_right->Render(pos_x, pos_y, color);
+			break;
+		case ON_SOMERSAULT_LEFT:
+			somersault_left->Render(pos_x, pos_y, color);
+			break;
+		case ON_SOMERSAULT_RIGHT:
+			somersault_right->Render(pos_x, pos_y, color);
+			break;
+		case ON_JUMPING_SHOOTING_LEFT:
+			jumping_shooting_left->Render(pos_x, pos_y, color);
+			break;
+		case ON_JUMPING_SHOOTING_RIGHT:
+			jumping_shooting_right->Render(pos_x, pos_y, color);
+			break;
+		case ON_JUMP_AIM_UP_LEFT:
+			jump_aim_up_left->Render(pos_x, pos_y, color);
+			break;
+		case ON_JUMP_AIM_UP_RIGHT:
+			jump_aim_up_right->Render(pos_x, pos_y, color);
+			break;
+		case IDLING_SHOOTING_LEFT:
+			idle_shooting_left->Render(pos_x, pos_y, color);
+			break;
+		case IDLING_SHOOTING_RIGHT:
+			idle_shooting_right->Render(pos_x, pos_y, color);
+			break;
+		case IDLING_SHOOTING_UP_LEFT:
+			idle_shooting_up_left->Render(pos_x, pos_y, color);
+			break;
+		case IDLING_SHOOTING_UP_RIGHT:
+			idle_shooting_up_right->Render(pos_x, pos_y, color);
+			break;
+		case ON_JUMP_SHOOTING_UP_LEFT:
+			jump_shooting_up_right->Render(pos_x, pos_y, color);
+			break;
+		case ON_JUMP_SHOOTING_UP_RIGHT:
+			jump_shooting_up_right->Render(pos_x, pos_y, color);
+			break;
+		}
+	}
+
+
 	spriteHandler->End();
 }
 
@@ -313,7 +413,24 @@ void Samus::InitPostition()
 	//Init state of samus
 	state = APPEARANCE;
 }
-
+bool Samus::isSamusImmortal()
+{
+	if (isImmortal == true)
+		return true;
+	return false;
+}
+void Samus::setSamusImmortal(bool result)
+{
+	isImmortal = result;
+}
+float Samus::getImmortalTime()
+{
+	return immortal_time;
+}
+void Samus::setImmortalTime(float time)
+{
+	immortal_time = time;
+}
 int max_camera_x = 300;
 int max_camera_y = 480;
 
@@ -420,50 +537,51 @@ void Samus::Update(float t)
 					Deflect(enemy, t, timeScale);
 					isImmortal = true;
 
+					TakeDamage(((Enemy*)manager->enemyGroup->objects[i])->damage);
 					// xong rồi tùy con mà takedamage
-					switch (enemy->GetEnemyType())
-					{
-					case BEDGEHOG_YELLOW:
-					{// take damge cho samus, truyen vao dame cua con nay
-						// co the them thuoc tinh damage cho moi con enemy de truyen vao
-						// Vd: this->TakeDamage(float enemy_damage)
-						Bedgehog* hog_yellow = (Bedgehog*)manager->enemyGroup->objects[i];
-						TakeDamage(hog_yellow->damage);
-					}
-					break;
-					case BEDGEHOG_PINK:
-					{
-						Bedgehog * hog_pink = (Bedgehog*)manager->enemyGroup->objects[i];
-						TakeDamage(hog_pink->damage);
-					}
-					break;
-					case BIRD:
-					{
-						Bird * bird = (Bird*)manager->enemyGroup->objects[i];
-						TakeDamage(bird->damage);
-						pos_y = GROUND_Y; // Set giá trị vị trí cho samus khi va chạm bird, tránh bị bug xuyên đất
-					}
-					break;
-					case BLOCK:
-					{
-						Block * block = (Block*)manager->enemyGroup->objects[i];
-						TakeDamage(block->damage);
-					}
-					break;
-					case BEE:
-					{
-						Bee * bee = (Bee*)manager->enemyGroup->objects[i];
-						TakeDamage(bee->damage);
-					}
-					break;
-					case RIDLEY:
-					{
-						Ridley * ridley = (Ridley*)manager->enemyGroup->objects[i];
-						TakeDamage(ridley->damage);
-					}
-					break;
-					// ...
-					}
+					//switch (enemy->GetEnemyType())
+					//{
+					//case BEDGEHOG_YELLOW:
+					//{// take damge cho samus, truyen vao dame cua con nay
+					//	// co the them thuoc tinh damage cho moi con enemy de truyen vao
+					//	// Vd: this->TakeDamage(float enemy_damage)
+					//	Bedgehog* hog_yellow = (Bedgehog*)manager->enemyGroup->objects[i];
+					//	TakeDamage(hog_yellow->damage);
+					//}
+					//break;
+					//case BEDGEHOG_PINK:
+					//{
+					//	Bedgehog * hog_pink = (Bedgehog*)manager->enemyGroup->objects[i];
+					//	TakeDamage(hog_pink->damage);
+					//}
+					//break;
+					//case BIRD:
+					//{
+					//	Bird * bird = (Bird*)manager->enemyGroup->objects[i];
+					//	TakeDamage(bird->damage);
+					//	pos_y = GROUND_Y; // Set giá trị vị trí cho samus khi va chạm bird, tránh bị bug xuyên đất
+					//}
+					//break;
+					//case BLOCK:
+					//{
+					//	Block * block = (Block*)manager->enemyGroup->objects[i];
+					//	TakeDamage(block->damage);
+					//}
+					//break;
+					//case BEE:
+					//{
+					//	Bee * bee = (Bee*)manager->enemyGroup->objects[i];
+					//	TakeDamage(bee->damage);
+					//}
+					//break;
+					//case RIDLEY:
+					//{
+					//	Ridley * ridley = (Ridley*)manager->enemyGroup->objects[i];
+					//	TakeDamage(ridley->damage);
+					//}
+					//break;
+					//// ...
+					//}
 				}
 			}
 			else

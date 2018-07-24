@@ -48,28 +48,27 @@ void RidleyBoomerang::Update(float t)
 	vy -= 0.1f;
 
 	// Va chạm của Ridley_Boomerang đối với Samus
-	float TimeScale = SweptAABB(manager->samus, t);
-	if (TimeScale < 1.0f)
+	if (manager->samus->isSamusImmortal() == false)
 	{
-		manager->samus->TakeDamage(this->damage);
-		//Reset();
-	}
-
-	// Xử lý va chạm
-	for (int i = 0; i < manager->quadtreeGroup->size; i++)
-	{
-		switch (manager->quadtreeGroup->objects[i]->GetType())
+		float TimeScale = SweptAABB(manager->samus, t);
+		if (TimeScale < 1.0f)
 		{
-		case BRICK:
-			float timeScale = SweptAABB(manager->quadtreeGroup->objects[i], t);
-			if (timeScale < 1.0f)
-			{
-				Reset();
-			}
-			break;
+			manager->samus->TakeDamage(this->damage);
+			manager->samus->setSamusImmortal(true);
+		}
+	}
+	else
+	{
+		manager->samus->setImmortalTime(manager->samus->getImmortalTime() - t);
+		if (manager->samus->getImmortalTime() <= 0)
+		{
+			manager->samus->setSamusImmortal(false);
+			float temp = SAMUS_IMMORTAL_TIME;
+			manager->samus->setImmortalTime(temp);
 		}
 	}
 
+	// Xử lý va chạm
 	for (int i = 0; i < manager->colFloorBrick->size; i++)
 	{
 		float timeScale = SweptAABB(manager->colFloorBrick->objects[i], t);

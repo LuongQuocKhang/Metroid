@@ -39,6 +39,7 @@ public:
 
 	// Render current sprite at location (X,Y)
 	void Render(int X, int Y);
+	void Render(int X, int Y, D3DXCOLOR Color);
 
 	//============== GET METHOD ======================
 	int GetIndex();

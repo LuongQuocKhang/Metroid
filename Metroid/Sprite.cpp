@@ -244,6 +244,45 @@ void Sprite::Render(int X, int Y)
 	);
 }
 
+void Sprite::Render(int X, int Y, D3DXCOLOR color)
+{
+	RECT rect;
+	rect.left = spriteInfo[_Index].pos_x;
+	rect.top = spriteInfo[_Index].pos_y;
+	rect.right = spriteInfo[_Index].pos_x + _Width;
+	rect.bottom = spriteInfo[_Index].pos_y + _Height;
+
+	D3DXVECTOR3 position((float)X, (float)Y, 0);
+
+	//
+	// WORLD TO VIEWPORT TRANSFORM USING MATRIX
+	//
+
+	D3DXMATRIX mt;
+	D3DXMatrixIdentity(&mt);
+	mt._22 = -1.0f;
+	mt._41 = -Camera::currentCamX;
+	mt._42 = Camera::currentCamY;	// --TO DO:  Fix lại chỗ này sau
+	D3DXVECTOR4 vp_pos;
+	D3DXVec3Transform(&vp_pos, &position, &mt);
+
+	D3DXVECTOR3 p(vp_pos.x, vp_pos.y, 0);
+
+	D3DXVECTOR3 center((float)_Width / 2, (float)_Height / 2, 0);
+
+	/*D3DXMATRIX mt1;
+	D3DXMatrixScaling(&mt1, 1.5, 1.5, 1);
+	_SpriteHandler->SetTransform(&mt1);*/
+
+	_SpriteHandler->Draw(
+		_Image,
+		&rect,
+		&center,
+		&p,
+		D3DCOLOR_XRGB((int)color.r, (int)color.g, (int)color.b)
+	);
+}
+
 int Sprite::GetIndex()
 {
 	return _Index;

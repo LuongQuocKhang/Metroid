@@ -141,23 +141,23 @@ void Sentry::Update(float t)
 			{
 			case ON_SENTRY_A1:
 				manager->sentrybullets->Next(ON_UP, pos_x, pos_y);
-				state = ON_SENTRY_A2;
+				//state = ON_SENTRY_A2;
 				break;
 			case ON_SENTRY_A2:
 				manager->sentrybullets->Next(ON_TOPRIGHT, pos_x, pos_y);
-				state = ON_SENTRY_A3;
+				//state = ON_SENTRY_A3;
 				break;
 			case ON_SENTRY_A3:
 				manager->sentrybullets->Next(ON_RIGHT, pos_x, pos_y);
-				state = ON_SENTRY_A4;
+				//state = ON_SENTRY_A4;
 				break;
 			case ON_SENTRY_A4:
 				manager->sentrybullets->Next(ON_BOTTOMRIGHT, pos_x, pos_y);
-				state = ON_SENTRY_A5;
+				//state = ON_SENTRY_A5;
 				break;
 			case ON_SENTRY_A5:
 				manager->sentrybullets->Next(ON_BOTTOM, pos_x, pos_y);
-				state = ON_SENTRY_A1;
+				//state = ON_SENTRY_A1;
 				break;
 			}
 			break;
@@ -166,23 +166,23 @@ void Sentry::Update(float t)
 			{
 			case ON_SENTRY_A1:
 				manager->sentrybullets->Next(ON_LEFT, pos_x, pos_y);
-				state = ON_SENTRY_A2;
+				//state = ON_SENTRY_A2;
 				break;
 			case ON_SENTRY_A2:
 				manager->sentrybullets->Next(ON_BOTTOMLEFT, pos_x, pos_y);
-				state = ON_SENTRY_A3;
+				//state = ON_SENTRY_A3;
 				break;
 			case ON_SENTRY_A3:
 				manager->sentrybullets->Next(ON_BOTTOM, pos_x, pos_y);
-				state = ON_SENTRY_A4;
+				//state = ON_SENTRY_A4;
 				break;
 			case ON_SENTRY_A4:
 				manager->sentrybullets->Next(ON_BOTTOMRIGHT, pos_x, pos_y);
-				state = ON_SENTRY_A5;
+				//state = ON_SENTRY_A5;
 				break;
 			case ON_SENTRY_A5:
 				manager->sentrybullets->Next(ON_RIGHT, pos_x, pos_y);
-				state = ON_SENTRY_A1;
+				//state = ON_SENTRY_A1;
 				break;
 			}
 			break;
@@ -191,23 +191,23 @@ void Sentry::Update(float t)
 			{
 			case ON_SENTRY_A1:
 				manager->sentrybullets->Next(ON_UP, pos_x, pos_y);
-				state = ON_SENTRY_A2;
+				//state = ON_SENTRY_A2;
 				break;
 			case ON_SENTRY_A2:
 				manager->sentrybullets->Next(ON_TOPLEFT, pos_x, pos_y);
-				state = ON_SENTRY_A3;
+				//state = ON_SENTRY_A3;
 				break;
 			case ON_SENTRY_A3:
 				manager->sentrybullets->Next(ON_LEFT, pos_x, pos_y);
-				state = ON_SENTRY_A4;
+				//state = ON_SENTRY_A4;
 				break;
 			case ON_SENTRY_A4:
 				manager->sentrybullets->Next(ON_BOTTOMLEFT, pos_x, pos_y);
-				state = ON_SENTRY_A5;
+				//state = ON_SENTRY_A5;
 				break;
 			case ON_SENTRY_A5:
 				manager->sentrybullets->Next(ON_BOTTOM, pos_x, pos_y);
-				state = ON_SENTRY_A1;
+				//state = ON_SENTRY_A1;
 				break;
 			}
 			break;
@@ -245,5 +245,31 @@ void Sentry::Render()
 		a5->Render(pos_x, pos_y);
 		break;
 	}
+
+	DWORD statenow = GetTickCount();
+	
+	if (statenow - state_last_time > 2000 / 1)
+	{
+		switch (state)
+		{
+		case ON_SENTRY_A1:
+			state = ON_SENTRY_A2;
+			break;
+		case ON_SENTRY_A2:
+			state = ON_SENTRY_A3;
+			break;
+		case ON_SENTRY_A3:
+			state = ON_SENTRY_A4;
+			break;
+		case ON_SENTRY_A4:
+			state = ON_SENTRY_A5;
+			break;
+		case ON_SENTRY_A5:
+			state = ON_SENTRY_A1;
+			break;
+		}
+		state_last_time = statenow;
+	}
+
 	spriteHandler->End();
 }

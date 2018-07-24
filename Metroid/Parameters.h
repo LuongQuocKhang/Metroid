@@ -45,8 +45,6 @@ class Energy;
 #define STARTSCREEN_FILE L"Resources\\scene\\start_background.png"
 #define INTROSCREEN_FILE L"Resources\\scene\\intro_background.png"
 #define GAMEOVERSCREEN_FILE L"Resources\\scene\\gameover_background.png"
-#define INTRO_FILE L"Resources\\intro\\intro.png"
-#define INTRO "Resources\\intro\\intro.txt"
 
 #define GAMEMODE_INTRO 0
 #define GAMEMODE_START 1
@@ -59,7 +57,7 @@ class Energy;
 #define GROUND_Y 120
 #define SHOOTING_SPEED 15
 #define SAMUS_SPEED 0.15f
-#define SAMUS_IMMORTAL_TIME 4000;
+#define SAMUS_IMMORTAL_TIME 2500.0f;
 
 #define SAMUS_SPRITES_PATH L"sprites\\samus\\samus_sprites.png"
 
@@ -167,10 +165,9 @@ class Energy;
 #define NUMBER_HEIGHT 14
 #define NUMBER_PATH "sprites\\font\\font.txt"
 //////MISSILEINFO
-#define MISSILE_INFO_SPRITE_PATH L"sprites\\missile\\missile.png"
 #define MISSILE_INFO_WIDTH 20
 #define MISSILE_INFO_HEIGHT 30
-#define MISSILE_PATH "sprites\\missile\\missile.txt"
+#define MISSILE_PATH "sprites\\item\\ITEM_MISSILE.txt"
 #define MISSILE_SPRITE_COUNT 1
 
 //--YElLOW
@@ -197,6 +194,7 @@ class Energy;
 
 #define BIRD_STANDARD_ANIMATE_RATE 7
 #define BIRD_BOOST_ANIMATE_RATE 30
+#define TIMEALIVE 2000.0f
 //================== END BIRD =================
 
 //================== BLOCK =====================

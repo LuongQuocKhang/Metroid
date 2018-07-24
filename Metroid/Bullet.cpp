@@ -66,7 +66,7 @@ void Bullet::Update(float t)
 		return;
 
 	// Đạn samus va chạm với Enemy (Hiện chỉ có Missile của samus là tác dụng va chạm dc tới enemy)
-	/*for (int i = 0; i < manager->enemyGroup->size; i++)
+	for (int i = 0; i < manager->enemyGroup->size; i++)
 	{
 		if (manager->enemyGroup->objects[i]->IsActive())
 		{
@@ -74,72 +74,12 @@ void Bullet::Update(float t)
 			if (timeScale < 1.0f)
 			{
 				manager->enemyGroup->objects[i]->isHit = true;
-				switch (manager->enemyGroup->objects[i]->GetType())
-				{
-				case BEDGEHOG_YELLOW:
-				{
-					Bedgehog * hog_yellow = (Bedgehog*)manager->enemyGroup->objects[i];
-					switch (getBulletType())
-					{
-						hog_yellow->TakeDamage(this->damage); break;
-					}
-				}
-				break;
-				case BEDGEHOG_PINK:
-				{
-					Bedgehog * hog_pink = (Bedgehog*)manager->enemyGroup->objects[i];
-					switch (getBulletType())
-					{
-						hog_pink->TakeDamage(this->damage); break;
-					}
-				}
-
-				break;
-				case BIRD:
-				{
-					Bird * bird = (Bird*)manager->enemyGroup->objects[i];
-					switch (getBulletType())
-					{
-						bird->TakeDamage(this->damage); break;
-					}
-				}
-				break;
-				case BEE:
-				{
-					Bee * bee = (Bee*)manager->enemyGroup->objects[i];
-					switch (getBulletType())
-					{
-						bee->TakeDamage(this->damage); break;
-					
-					}
-				}
-				break;
-				case RIDLEY:
-				{
-					Ridley * ridley = (Ridley*)manager->enemyGroup->objects[i];
-					switch (getBulletType())
-					{
-						ridley->TakeDamage(this->damage); break;
-					}
-				}
-				break;
-				case MOTHER_BRAIN:
-				{
-					MotherBrain * motherBrain = (MotherBrain*)manager->enemyGroup->objects[i];
-					switch (getBulletType())
-					{
-						motherBrain->TakeDamage(this->damage); break;
-					}
-				}
-				break;
-				case BLOCK:
-					break;
-				}
+				((Enemy*)(manager->enemyGroup->objects[i]));
 				Reset();
 			}
 		}
 	}
-*/
+
 	// Xử lý va chạm
 	if (!(manager->metroid->isOnFloor))
 	{
@@ -183,11 +123,24 @@ void Bullet::Update(float t)
 	
 
 	// Va chạm của Bird_bullet đối với samus
-	float TimeScale = SweptAABB(manager->samus, t);
-	if (TimeScale < 1.0f)
+	if (manager->samus->isSamusImmortal() == false)
 	{
-		manager->samus->TakeDamage(this->damage);
-		Reset();
+		float TimeScale = SweptAABB(manager->samus, t);
+		if (TimeScale < 1.0f)
+		{
+			manager->samus->TakeDamage(this->damage);
+			manager->samus->setSamusImmortal(true);
+		}
+	}
+	else
+	{
+		manager->samus->setImmortalTime(manager->samus->getImmortalTime() - t);
+		if (manager->samus->getImmortalTime() <= 0)
+		{
+			manager->samus->setSamusImmortal(false);
+			float temp = SAMUS_IMMORTAL_TIME;
+			manager->samus->setImmortalTime(temp);
+		}
 	}
 
 	//

@@ -26,7 +26,7 @@ Bird::Bird(LPD3DXSPRITE spriteHandler, World * manager, ENEMY_TYPE enemy_type) :
 
 	width = BIRD_WIDTH;
 	height = BIRD_HEIGHT;
-
+	timealive = TIMEALIVE;
 	//Set animate rate ban đầu
 	animate_rate = BIRD_STANDARD_ANIMATE_RATE;
 
@@ -119,14 +119,17 @@ void Bird::Update(float t)
 			{
 				ColliderBrick * brick = (ColliderBrick*)manager->colGroundBrick->objects[i];
 				SlideFromGround(brick, t, timeScale);
-
 				DeathByShoot = false;
-				if (pos_y - height <= GROUND_Y && normalx == 0)
+
+				if (pos_y - height/2 -10 <= GROUND_Y && normalx == 0)
 				{
-					if (this->DeathByShoot == false)
+					timealive -= t;
+					if (this->DeathByShoot == false && timealive <= 0)
 					{
 						manager->birdbullets->Next(ON_LEFT, this->pos_x, pos_y);
 						isActive = false;
+						timealive = TIMEALIVE;
+						this->vy = 0;
 					}
 				}
 			}
@@ -139,11 +142,11 @@ void Bird::Update(float t)
 		return;
 	}
 
-	/*float scaletime = SweptAABB(manager->samus, t);
+	float scaletime = SweptAABB(manager->samus, t);
 	if (scaletime < 1.0f)
 	{
 		Deflect(manager->samus, t, scaletime);
-	}*/
+	}
 
 	pos_x += vx * t;
 	pos_y += vy * t;
@@ -193,7 +196,41 @@ void Bird::Response(GameObject * target, const float & DeltaTime, const float & 
 {
 
 }
+void Bird::SlideFromGround(GameObject *target, const float &DeltaTime, const float &CollisionTimeScale)
+{
+	//ResponseFrom(target, _DeltaTime, collisionTimeScale);
+	// lỡ đụng 2,3 ground mà chạy cái này nhiều lần sẽ rất sai
+	// "góc lag" sẽ làm đi luôn vào trong tường
 
+
+	if (normalx > 0.1f)	// tông bên phải gạch
+	{
+		this->pos_x = (target->GetPosX() + target->collider->GetRight() - this->collider->GetLeft()) + 0.1f;
+		pos_x -= vx * DeltaTime;
+		//vx = 0.0f;
+	}
+
+	else if (normalx < -0.1f)// tông bên trái gạch
+	{
+		this->pos_x = (target->GetPosX() + target->collider->GetLeft() - this->collider->GetRight()) - 0.1f;
+		pos_x -= vx * DeltaTime;
+		//vx = 0.0f;
+	}
+
+	if (normaly > 0.1f) // trên xuống (không vào normaly được)
+	{
+		this->pos_y = (target->GetPosY() + target->collider->GetTop() - this->collider->GetBottom()) + 0.1f;
+		pos_y -= vy * DeltaTime;
+		vx = 0;
+	}
+	else if (normaly < -0.1f)	// tông ở dưới lên
+	{
+		//this->pos_y = (target->pos_y + target->collider->GetTop() - this->collider->GetBottom()) - 0.1f;
+		pos_y -= vy * DeltaTime;
+		vy = 0;
+	}
+	return;
+}
 void Bird::Destroy()
 {
 	// Effect explosion

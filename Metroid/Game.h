@@ -84,6 +84,8 @@ public:
 	int GetDepth();
 	int FrameRate;
 
+	int IsKeyDown(int KeyCode);
+
 	Game();
 	Game(HINSTANCE hInstance, LPWSTR Name, int Mode, int IsFullscreen, int FrameRate) ;
 	~Game();
@@ -93,7 +95,6 @@ public:
 
 	// Run game
 	void Run();
-	int IsKeyDown(int KeyCode);
 };
 
 #endif

@@ -11,6 +11,7 @@ protected:
 	Sprite * fly;
 
 	Collider * collider_area;
+	float timealive;
 
 	int animate_rate;	// cần biến này vì khi dí theo Samus animate rate thay đổi
 public:
@@ -25,6 +26,7 @@ public:
 	//============== END OVERRIDE VIRTUAL METHOD ===============
 	bool IsCollide(GameObject* target);
 	void Response(GameObject *target, const float &DeltaTime, const float &CollisionTimeScale);
+	void SlideFromGround(GameObject *target, const float &DeltaTime, const float &CollisionTimeScale);
 	void Destroy();
 };
 

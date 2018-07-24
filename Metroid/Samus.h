@@ -122,6 +122,10 @@ public:
 		return isOnGround;
 	}
 
+	bool isSamusImmortal();
+	void setSamusImmortal(bool result);
+	float getImmortalTime();
+	void setImmortalTime(float time);
 
 	void _Shoot(BULLET_DIRECTION dir, Metroid*);
 	void _ShootMissile(BULLET_DIRECTION dir, Metroid*);

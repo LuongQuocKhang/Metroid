@@ -23,7 +23,7 @@ protected:
 	Sprite * a3;
 	Sprite * a4;
 	Sprite * a5;
-
+	DWORD state_last_time;
 public:
 	Sentry();
 	Sentry(LPD3DXSPRITE spriteHandler, World * manager, SENTRY_TYPE sentry_type);

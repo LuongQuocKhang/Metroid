@@ -132,8 +132,6 @@ World::World(LPD3DXSPRITE spriteHandler, Metroid * metroid)
 	numberofenergy2 = new Number(spriteHandler, this, DONVI, NUMBEROFENERGY);
 	numberofmissile1 = new Number(spriteHandler, this, CHUC, NUMBEROFMISSILE);
 	numberofmissile2 = new Number(spriteHandler, this, DONVI, NUMBEROFMISSILE);
-
-
 }
 
 
@@ -169,7 +167,7 @@ void World::Update(float t)
 
 	bullets->Update(t);
 	missiles->Update(t);
-	
+
 	birdbullets->Update(t);
 	ridleyBoomerang->Update(t);
 
@@ -228,10 +226,10 @@ void World::Update(float t)
 void World::Render(LPDIRECT3DDEVICE9 d3ddv)
 {
 	samus->Render();
-	//zoomer->Render();
+
 	bullets->Render();
 	missiles->Render();
-	
+
 	birdbullets->Render();
 	ridleyBoomerang->Render();
 
