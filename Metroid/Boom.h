@@ -10,7 +10,7 @@
 #define BOOM_SPRITE "sprites\\boom\\BOOM.txt"
 #define BOOM_WIDTH 20
 #define BOOM_HEIGHT 20
-#define BOOM_COUNT 5
+#define BOOM_COUNT 2
 #define SPRITE_PER_ROW 1
 class Boom : public BulletObject
 {

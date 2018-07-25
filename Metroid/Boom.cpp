@@ -36,7 +36,7 @@ Boom::Boom(World * manager, int x_holder, int y_holder)
 	limit_dist_y = 0;
 	isActive = false;
 	this->manager = manager;
-	this->time_survive = ITEM_TIME_SURVIVE;
+	this->time_survive = BOOM_TIME_SURVIVE;;
 	damage = DAMAGE_SAMUS_BOOM;
 	this->bulletType = BOOM;
 	pos_x_holder = x_holder;

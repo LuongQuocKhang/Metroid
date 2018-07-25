@@ -292,14 +292,14 @@ enum BULLET_DIRECTION
 //================= BULLET MANAGER ================
 #define STANDARD_NUM 5
 #define MISSILE_NUM 3
-#define BOOM_NUM 99
+#define BOOM_NUM  100
 #define SENTRY_BULLET_NUM 10
 #define BIRD_BULLET_NUM 2
 #define RIDLEY_BOOMERANG_NUM 10
 //================= END BULLET MANAGER ============
 
 #define BOOM_TIME_SURVIVE 1000
-#define DAMAGE_SAMUS_BOOM 10
+#define DAMAGE_SAMUS_BOOM 100
 //================= OBJECT TYPE ================
 enum OBJECT_TYPE
 {
