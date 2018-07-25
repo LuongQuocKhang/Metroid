@@ -66,7 +66,7 @@ void Bullet::Update(float t)
 		return;
 
 	// Đạn samus va chạm với Enemy (Hiện chỉ có Missile của samus là tác dụng va chạm dc tới enemy)
-	for (int i = 0; i < manager->enemyGroup->size; i++)
+	/*for (int i = 0; i < manager->enemyGroup->size; i++)
 	{
 		if (manager->enemyGroup->objects[i]->IsActive())
 		{
@@ -78,7 +78,7 @@ void Bullet::Update(float t)
 				Reset();
 			}
 		}
-	}
+	}*/
 
 	// Xử lý va chạm
 	if (!(manager->metroid->isOnFloor))

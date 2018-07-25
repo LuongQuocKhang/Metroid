@@ -26,7 +26,6 @@ public:
 	void InitSprites(LPDIRECT3DDEVICE9 d3ddv);
 	void Update(float t);
 	void Render();
-
 };
 
 #endif // !_BOOM_H

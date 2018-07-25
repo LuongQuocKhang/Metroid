@@ -2,6 +2,7 @@
 #include "World.h"
 #include "GroupObject.h"
 #include "Metroid.h"
+#include "Enemy.h"
 
 void Boom::Render()
 {
@@ -25,7 +26,7 @@ Boom::Boom(World * manager)
 	this->time_survive = BOOM_TIME_SURVIVE;
 	this->bulletType = BOOM;
 	this->manager = manager;
-	collider = new Collider(BOOM_HEIGHT / 2, -BOOM_WIDTH / 2, -BOOM_HEIGHT / 2, BOOM_WIDTH / 2);
+	collider = new Collider(BOOM_HEIGHT, -BOOM_WIDTH, -BOOM_HEIGHT, BOOM_WIDTH);
 }
 
 Boom::Boom(World * manager, int x_holder, int y_holder)
@@ -41,6 +42,7 @@ Boom::Boom(World * manager, int x_holder, int y_holder)
 	pos_x_holder = x_holder;
 	pos_y_holder = y_holder;
 	//collider = new Collider(0, 0, -BOOM_HEIGHT, BOOM_WIDTH);
+	collider = new Collider(BOOM_HEIGHT, -BOOM_WIDTH, -BOOM_HEIGHT, BOOM_WIDTH);
 }
 
 
@@ -58,96 +60,16 @@ void Boom::InitSprites(LPDIRECT3DDEVICE9 d3ddv)
 
 	//Create sprite
 	boom = new Sprite(_SpriteHandler, BOOM_SPRITE_PATH, BOOM_SPRITE, BOOM_WIDTH, BOOM_HEIGHT, BOOM_COUNT, SPRITE_PER_ROW);
-	time_survive = ITEM_TIME_SURVIVE;
-
+	time_survive = BOOM_TIME_SURVIVE;
+		
 }
 
 void Boom::Update(float t)
 {
 	if (!isActive)
 		return;
-
-	for (int i = 0; i < manager->enemyGroup->size; i++)
-	{
-		if (manager->enemyGroup->objects[i]->IsActive())
-		{
-			float timeScale = SweptAABB(manager->enemyGroup->objects[i], t);
-			if (timeScale < 1.0f)
-			{
-				manager->enemyGroup->objects[i]->isHit = true;
-				switch (manager->enemyGroup->objects[i]->GetType())
-				{
-				case BEDGEHOG_YELLOW:
-				{
-					Bedgehog * hog_yellow = (Bedgehog*)manager->enemyGroup->objects[i];
-					switch (getBulletType())
-					{
-					case BOOM:hog_yellow->TakeDamage(this->damage); break;
-					}
-				}
-				break;
-				case BEDGEHOG_PINK:
-				{
-
-					Bedgehog * hog_pink = (Bedgehog*)manager->enemyGroup->objects[i];
-					switch (getBulletType())
-					{
-
-					case BOOM:	hog_pink->TakeDamage(this->damage); break;
-					}
-				}
-
-				break;
-				case BIRD:
-				{
-					Bird * bird = (Bird*)manager->enemyGroup->objects[i];
-					switch (getBulletType())
-					{
-
-					case BOOM:	bird->TakeDamage(this->damage); break;
-					}
-				}
-				break;
-				case BEE:
-				{
-					Bee * bee = (Bee*)manager->enemyGroup->objects[i];
-					switch (getBulletType())
-					{
-
-					case BOOM:	bee->TakeDamage(this->damage); break;
-
-					}
-				}
-				break;
-				case RIDLEY:
-				{
-					Ridley * ridley = (Ridley*)manager->enemyGroup->objects[i];
-					switch (getBulletType())
-					{
-
-					case BOOM:	ridley->TakeDamage(this->damage); break;
-					}
-				}
-				break;
-				case MOTHER_BRAIN:
-				{
-					MotherBrain * motherBrain = (MotherBrain*)manager->enemyGroup->objects[i];
-					switch (getBulletType())
-					{
-
-					case BOOM:	motherBrain->TakeDamage(this->damage); break;
-					}
-				}
-				break;
-				case BLOCK:
-					break;
-				}
-				Reset();
-			}
-		}
-	}
 	// Xử lý va chạm
-	if (!(manager->metroid->isOnFloor))
+	/*if (!(manager->metroid->isOnFloor))
 	{
 		for (int i = 0; i < manager->colGroundBrick->size; i++)
 		{
@@ -168,43 +90,36 @@ void Boom::Update(float t)
 				Reset();
 		}
 	}
-
-	//Xử lý va chạm với gate
-	for (int i = 0; i < manager->otherGO->size; i++)
-	{
-		float timeScale = SweptAABB(manager->otherGO->objects[i], t);
-		if (timeScale < 1.0f)
-		{
-			switch (manager->otherGO->objects[i]->GetType())
-			{
-			case GATE:
-			{
-				Gate * gate = (Gate*)manager->otherGO->objects[i];
-				gate->DestroyGate();
-				break;
-			}
-			}
-		}
-	}
-
-	DWORD now = GetTickCount();
-	if (now - last_time > 1000 / ANIMATE_RATE)
-	{
-		boom->Next();
-		last_time = now;
-	}
-
-	// Tính thời gian hiển thị
+*/
 	time_survive -= t;
 	// Nếu hết thời gian thì không hiển thị nữa
 	if (time_survive <= 0)
 	{
 		manager->explsEffect->Init(this->pos_x, this->pos_y - 20);
+		collider->SetCollider(BOOM_HEIGHT * 3, -BOOM_WIDTH * 3, -BOOM_HEIGHT * 3, BOOM_WIDTH * 3);
+		for (int i = 0; i < manager->enemyGroup->size; i++)
+		{
+			if (manager->enemyGroup->objects[i]->IsActive())
+			{		
+				//float timescale = SweptAABB(manager->enemyGroup->objects[i], t);
+				//if (timescale < 1.0f || (timescale == 1 && ((Enemy*)manager->enemyGroup->objects[i])->GetEnemyType() == BIRD))
+				//{
+				//	manager->enemyGroup->objects[i]->isHit = true;
+				//	((Enemy*)manager->enemyGroup->objects[i])->SetActive(false);
+				//}
+				if (IsCollide(manager->enemyGroup->objects[i]))
+				{
+					manager->enemyGroup->objects[i]->isHit = true;
+					((Enemy*)manager->enemyGroup->objects[i])->SetActive(false);
+				}
+			}
+		}
 		isActive = false;
-		Reset();
-
 	}
-
-
-
+	DWORD now = GetTickCount();
+	if (now - last_time > 1000 / 10)
+	{
+		boom->Next();
+		last_time = now;
+	}
 }

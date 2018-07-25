@@ -363,7 +363,6 @@ void Samus::_Shoot(BULLET_DIRECTION dir, Metroid * metroid)
 }
 void Samus::_SetBoom(BULLET_DIRECTION dir, Metroid * metroid)
 {
-
 	(metroid->GetWorld())->boom->Next(dir, this->GetPosX(), this->GetPosY());
 }
 void Samus::_ShootMissile(BULLET_DIRECTION dir, Metroid * metroid)
@@ -542,51 +541,7 @@ void Samus::Update(float t)
 					Deflect(enemy, t, timeScale);
 					isImmortal = true;
 
-					TakeDamage(((Enemy*)manager->enemyGroup->objects[i])->damage);
-					// xong rồi tùy con mà takedamage
-					//switch (enemy->GetEnemyType())
-					//{
-					//case BEDGEHOG_YELLOW:
-					//{// take damge cho samus, truyen vao dame cua con nay
-					// // co the them thuoc tinh damage cho moi con enemy de truyen vao
-					// // Vd: this->TakeDamage(float enemy_damage)
-					//	Bedgehog* hog_yellow = (Bedgehog*)manager->enemyGroup->objects[i];
-					//	TakeDamage(hog_yellow->damage);
-					//}
-					//break;
-					//case BEDGEHOG_PINK:
-					//{
-					//	Bedgehog * hog_pink = (Bedgehog*)manager->enemyGroup->objects[i];
-					//	TakeDamage(hog_pink->damage);
-					//}
-					//break;
-					//case BIRD:
-					//{
-					//	Bird * bird = (Bird*)manager->enemyGroup->objects[i];
-					//	TakeDamage(bird->damage);
-					//	pos_y = GROUND_Y; // Set giá trị vị trí cho samus khi va chạm bird, tránh bị bug xuyên đất
-					//}
-					//break;
-					//case BLOCK:
-					//{
-					//	Block * block = (Block*)manager->enemyGroup->objects[i];
-					//	TakeDamage(block->damage);
-					//}
-					//break;
-					//case BEE:
-					//{
-					//	Bee * bee = (Bee*)manager->enemyGroup->objects[i];
-					//	TakeDamage(bee->damage);
-					//}
-					//break;
-					//case RIDLEY:
-					//{
-					//	Ridley * ridley = (Ridley*)manager->enemyGroup->objects[i];
-					//	TakeDamage(ridley->damage);
-					//}
-					//break;
-					//// ...
-					//}
+					TakeDamage(((Enemy*)manager->enemyGroup->objects[i])->damage);		
 				}
 			}
 			else
@@ -636,60 +591,6 @@ void Samus::Update(float t)
 			manager->metroid->isFreezing = true;
 		}
 	}
-	//----------------------------
-
-	//Xử lý va chạm với ground
-	//for (int i = 0; i < manager->quadtreeGroup->size; i++)
-	//{
-	//	switch (manager->quadtreeGroup->objects[i]->GetType())
-	//	{
-	//	case BRICK:
-	//		Brick * brick = (Brick*)(manager->quadtreeGroup->objects[i]);
-	//		float timeScale = SweptAABB(manager->quadtreeGroup->objects[i], t);
-	//		if (timeScale < 1.0f)
-	//		{
-	//			if (brick->IsPassable())
-	//			{
-	//				if (this->vx > 0)
-	//				{
-	//					Camera::moveRight = true;
-	//					
-	//					if (manager->posManager->GetIndexRoom() <= 1)
-	//						manager->posManager->Next();	// tăng index pooling đến room kế tiếp
-	//					else if (manager->posManager->GetIndexRoom() == 2)
-	//					{
-	//						manager->posManager->Next();
-	//						manager->metroid->isOnFloor = true;
-	//					}
-	//					else if (manager->posManager->GetIndexRoom() == 4)
-	//						manager->posManager->Back();
-
-	//					this->pos_x += 65;
-	//				}
-	//				else if (this->vx < 0)
-	//				{
-	//					Camera::moveLeft = true;
-
-	//					if (manager->posManager->GetIndexRoom() < 3)
-	//						manager->posManager->Back();	// giảm index pooling đến room phía sau
-	//					else if (manager->posManager->GetIndexRoom() == 3)
-	//						manager->posManager->Next();	// vào room boss
-	//					
-	//					this->pos_x -= 65;
-	//				}
-	//			}
-	//			else
-	//			{
-	//				SlideFromGround(manager->quadtreeGroup->objects[i], t, timeScale);
-	//				manager->samus->isOnAir = false;
-	//			}
-	//			//Response(manager->quadtreeGroup->objects[i], t, timeScale);
-	//		}
-	//		break;
-	//	}
-	//	
-	//}
-
 	for (int i = 0; i < manager->colGroundBrick->size; i++)
 	{
 		float timeScale = SweptAABB(manager->colGroundBrick->objects[i], t);
@@ -833,24 +734,6 @@ void Samus::Update(float t)
 	}
 
 
-	//float collisiontime = SweptAABB(manager->gateleft, t);
-	//	if (collisiontime < 1.0f)
-	//	{
-	//		if (manager->gateleft->IsActive())
-	//		{
-	//			this->SlideFromGround(manager->gateleft, t, collisiontime);
-	//		}
-	//	}
-
-	//	float collisiontime1 = SweptAABB(manager->gateright, t);
-	//	if (collisiontime1 < 1.0f)
-	//	{
-	//		if (manager->gateright->IsActive())
-	//		{
-	//			this->SlideFromGround(manager->gateright, t, collisiontime1);
-	//		}
-	//	}
-
 	pos_x += vx * t;
 	pos_y += vy * t;
 
@@ -933,38 +816,9 @@ void Samus::Update(float t)
 		case IDLING_SHOOTING_UP_RIGHT:
 			idle_shooting_up_right->Next();
 			break;
-		case ON_JUMP_SHOOTING_UP_LEFT:
-			jump_shooting_up_left->Next();
-			break;
-		case ON_JUMP_SHOOTING_UP_RIGHT:
-			jump_shooting_up_right->Next();
-			break;
-
 		}
 		last_time = now;
 	}
-
-	//Check if samus is on ground or not
-	/*if (pos_y > GROUND_Y)
-	{
-	vy -= gravity;
-	}
-	else
-	{
-	pos_y = GROUND_Y;
-	vy = 0;
-	if (state == ON_JUMP_LEFT || state == ON_JUMPING_SHOOTING_LEFT || state == ON_SOMERSAULT_LEFT || state == ON_JUMP_AIM_UP_LEFT)
-	{
-	state = IDLE_LEFT;
-	}
-	else if (state == ON_JUMP_RIGHT || state == ON_JUMPING_SHOOTING_RIGHT || state == ON_SOMERSAULT_RIGHT || state == ON_JUMP_AIM_UP_RIGHT)
-	{
-	state = IDLE_RIGHT;
-	}
-	}*/
-
-	//Render
-	//Render();
 
 }
 
@@ -1109,13 +963,20 @@ void Samus::ProcessInput(LPDIRECT3DDEVICE9 d3ddv, float Delta, Metroid* metroid)
 		{
 			this->SetState(RIGHTING);
 		}
+
+		if (this->GetState() == ON_MORPH_LEFT)
+			this->SetState(ON_MORPH_RIGHT);
+		if (this->GetState() == ON_SOMERSAULT_LEFT)
+			this->SetState(ON_SOMERSAULT_RIGHT);
+		if (this->GetState() == ON_JUMP_LEFT)
+			this->SetState(ON_JUMP_RIGHT);
+		if (this->GetState() == ON_JUMPING_SHOOTING_LEFT || this->GetState() == ON_JUMP_AIM_UP_LEFT)
+			this->SetState(ON_JUMPING_SHOOTING_RIGHT);
+		if (this->GetState() == RIGHTING && (metroid->IsKeyDown(DIK_C)))
+			this->SetState(ON_RUN_SHOOTING_RIGHT);
 	}
 	else if (metroid->IsKeyDown(DIK_LEFT))
 	{
-		//Camera::currentCamX -= 2.0f;
-
-		//this->setgravity(FALLDOWN_VELOCITY_DECREASE);
-		//this->setNormalx(-1.0f);
 		this->SetVelocityXLast(this->GetVelocityX());
 		this->SetVelocityX(-SAMUS_SPEED);
 		if (this->GetState() != ON_MORPH_LEFT && this->GetState() != ON_MORPH_RIGHT
@@ -1125,6 +986,17 @@ void Samus::ProcessInput(LPDIRECT3DDEVICE9 d3ddv, float Delta, Metroid* metroid)
 		{
 			this->SetState(LEFTING);
 		}
+
+		if (this->GetState() == ON_MORPH_RIGHT)
+			this->SetState(ON_MORPH_LEFT);
+		if (this->GetState() == ON_SOMERSAULT_LEFT)
+			this->SetState(ON_SOMERSAULT_RIGHT);
+		if (this->GetState() == ON_JUMP_RIGHT)
+			this->SetState(ON_JUMP_LEFT);
+		if (this->GetState() == ON_JUMPING_SHOOTING_RIGHT || this->GetState() == ON_JUMP_AIM_UP_RIGHT)
+			this->SetState(ON_JUMPING_SHOOTING_LEFT);
+		if (this->GetState() == LEFTING && (metroid->IsKeyDown(DIK_C) ))
+			this->SetState(ON_RUN_SHOOTING_LEFT);
 	}
 	else
 	{
@@ -1165,19 +1037,22 @@ void Samus::ProcessInput(LPDIRECT3DDEVICE9 d3ddv, float Delta, Metroid* metroid)
 		if (this->GetState() == IDLE_RIGHT)
 			this->SetState(IDLING_AIM_UP_RIGHT);
 		if (this->GetState() == ON_JUMP_LEFT/* || this->GetState() == ON_JUMPING_SHOOTING_LEFT*/)
-		{
 			this->SetState(ON_JUMP_AIM_UP_LEFT);
-			Game::gameSound->playSound(JUMP);
-		}
 		if (this->GetState() == ON_JUMP_RIGHT/* || this->GetState() == ON_JUMPING_SHOOTING_RIGHT*/)
-		{
 			this->SetState(ON_JUMP_AIM_UP_RIGHT);
-			Game::gameSound->playSound(JUMP);
-		}
 		if (this->GetState() == ON_MORPH_LEFT)
 			this->SetState(IDLE_LEFT);
 		if (this->GetState() == ON_MORPH_RIGHT)
 			this->SetState(IDLE_RIGHT);
+		if (this->GetState() == ON_SOMERSAULT_LEFT)
+			this->SetState(ON_JUMP_AIM_UP_LEFT);
+		if (this->GetState() == ON_SOMERSAULT_RIGHT)
+			this->SetState(ON_JUMP_AIM_UP_RIGHT);
+
+		if (this->GetState() == ON_JUMPING_SHOOTING_LEFT || this->GetState() == ON_JUMP_AIM_UP_LEFT)
+			this->SetState(ON_JUMP_AIM_UP_LEFT);
+		if (this->GetState() == ON_JUMPING_SHOOTING_RIGHT || this->GetState() == ON_JUMP_AIM_UP_RIGHT)
+			this->SetState(ON_JUMP_AIM_UP_RIGHT);
 	}
 
 	if (metroid->IsKeyDown(DIK_Z))
@@ -1198,26 +1073,26 @@ void Samus::ProcessInput(LPDIRECT3DDEVICE9 d3ddv, float Delta, Metroid* metroid)
 			_Shoot(ON_UP, metroid);
 		}
 		//State Chạy bắn lên
-		if (this->GetState() == AIMING_UP_LEFT)
+		if (this->GetState() == AIMING_UP_LEFT || (this->GetState() == ON_JUMP_AIM_UP_LEFT && metroid->IsKeyDown(DIK_LEFT)))
 		{
 			this->SetState(AIMING_UP_LEFT);
 			_Shoot(ON_UP, metroid);
 		}
-		if (this->GetState() == AIMING_UP_RIGHT)
+		if (this->GetState() == AIMING_UP_RIGHT || (this->GetState() == ON_JUMP_AIM_UP_RIGHT && metroid->IsKeyDown(DIK_RIGHT)))
 		{
 			this->SetState(AIMING_UP_RIGHT);
 			_Shoot(ON_UP, metroid);
 		}
-		//State Nhảy bắn lên => bug
+		//State Nhảy bắn lên
 		if (this->GetState() == ON_JUMP_AIM_UP_LEFT)
 		{
-			this->SetState(ON_JUMP_SHOOTING_UP_LEFT);
+			this->SetState(ON_JUMP_AIM_UP_LEFT);
 
 			_Shoot(ON_UP, metroid);
 		}
 		if (this->GetState() == ON_JUMP_AIM_UP_RIGHT)
 		{
-			this->SetState(ON_JUMP_SHOOTING_UP_RIGHT);
+			this->SetState(ON_JUMP_AIM_UP_RIGHT);
 
 			_Shoot(ON_UP, metroid);
 		}
@@ -1309,32 +1184,16 @@ void Samus::OnkeyDown(int KeyCode, Metroid * metroid, int& screenMode)
 				Game::gameSound->playSound(JUMP);
 				this->isOnGround = false;
 				this->setNormaly(1.0f);
-				if (this->GetState() != ON_SOMERSAULT_RIGHT && metroid->IsKeyDown(DIK_RIGHT)/*&& samus->GetState() != ON_JUMP_AIM_UP_RIGHT*/)
+				if (this->GetState() != ON_SOMERSAULT_RIGHT && metroid->IsKeyDown(DIK_RIGHT))/*&& samus->GetState() != ON_JUMP_AIM_UP_RIGHT*/
 				{
-					metroid->SetStart_jump(GetTickCount());
-
 					this->SetState(ON_SOMERSAULT_RIGHT);
 					this->SetVelocityY(JUMP_VELOCITY_BOOST_FIRST);
-
-					/*metroid->SetNow_jump(GetTickCount());
-					if ((metroid->GetNow_jump() - metroid->GetStart_jump()) <= 10 * metroid->GetTickPerFrame())
-					{
-					this->SetVelocityY(this->GetVelocityY() + JUMP_VELOCITY_BOOST);
-					}*/
 				}
 
-				if (this->GetState() != ON_SOMERSAULT_LEFT && metroid->IsKeyDown(DIK_LEFT)/*&& samus->GetState() != ON_JUMP_AIM_UP_LEFT*/)
+				if (this->GetState() != ON_SOMERSAULT_LEFT && metroid->IsKeyDown(DIK_LEFT))/*&& samus->GetState() != ON_JUMP_AIM_UP_LEFT*/
 				{
-					metroid->SetStart_jump(GetTickCount());
-					metroid->SetNow_jump(GetTickCount());
 					this->SetState(ON_SOMERSAULT_LEFT);
 					this->SetVelocityY(JUMP_VELOCITY_BOOST_FIRST);
-
-					//now_jump = GetTickCount();
-					/*if ((metroid->GetNow_jump() - metroid->GetStart_jump()) <= 10 * metroid->GetTickPerFrame())
-					{
-					this->SetVelocityY(this->GetVelocityY() + JUMP_VELOCITY_BOOST);
-					}*/
 				}
 
 				if (this->GetVelocityXLast() < 0)
@@ -1510,16 +1369,16 @@ void Samus::OnkeyDown(int KeyCode, Metroid * metroid, int& screenMode)
 					this->SetState(AIMING_UP_RIGHT);
 					_ShootMissile(ON_UP, metroid);
 				}
-				//State Nhảy bắn lên => bug
+				//State Nhảy bắn lên
 				if (this->GetState() == ON_JUMP_AIM_UP_LEFT)
 				{
-					this->SetState(ON_JUMP_SHOOTING_UP_LEFT);
+					this->SetState(ON_JUMP_AIM_UP_LEFT);
 
 					_ShootMissile(ON_UP, metroid);
 				}
 				if (this->GetState() == ON_JUMP_AIM_UP_RIGHT)
 				{
-					this->SetState(ON_JUMP_SHOOTING_UP_RIGHT);
+					this->SetState(ON_JUMP_AIM_UP_RIGHT);
 
 					_ShootMissile(ON_UP, metroid);
 				}

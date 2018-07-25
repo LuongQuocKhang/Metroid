@@ -97,7 +97,7 @@ World::World(LPD3DXSPRITE spriteHandler, Metroid * metroid)
 	for (int i = 0; i < BIRD_COUNT; i++)
 	{
 		birds[i] = new Bird(spriteHandler, this, BIRD);
-		birds[i]->SetActive(false);
+		birds[i]->SetActive(true);
 		enemyGroup->AddGameObject(birds[i]);
 	}
 

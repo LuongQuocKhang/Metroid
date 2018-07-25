@@ -33,7 +33,7 @@ Bird::Bird(LPD3DXSPRITE spriteHandler, World * manager, ENEMY_TYPE enemy_type) :
 	this->vx = 0;
 	//Set collider
 	collider = new Collider();
-	collider->SetCollider(BIRD_HEIGHT / 2, -BIRD_WIDTH / 2, -BIRD_HEIGHT / 2, BIRD_WIDTH / 2);
+	collider->SetCollider(BIRD_HEIGHT, -BIRD_WIDTH, -BIRD_HEIGHT, BIRD_WIDTH);
 
 	// collider dùng khi samus đi vào vùng va chạm
 	collider_area = new Collider();
@@ -143,11 +143,11 @@ void Bird::Update(float t)
 		return;
 	}
 
-	float scaletime = SweptAABB(manager->samus, t);
+	/*float scaletime = SweptAABB(manager->samus, t);
 	if (scaletime < 1.0f)
 	{
 		Deflect(manager->samus, t, scaletime);
-	}
+	}*/
 
 	pos_x += vx * t;
 	pos_y += vy * t;
