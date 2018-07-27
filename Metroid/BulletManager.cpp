@@ -40,7 +40,7 @@ BulletManager::BulletManager(World * manager, BULLET_TYPE bullet_type)
 		//bullet_list = new BulletObject*[STANDARD_NUM];
 		for (int i = 0; i < num; i++)
 		{
-			bullet_list[i] = new Bullet(manager);
+			bullet_list[i] = new Bullet(manager, STANDARD);
 		}
 		manager->samus->setNum(num);
 		manager->samus->setListBullet(bullet_list);

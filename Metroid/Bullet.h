@@ -25,7 +25,7 @@ protected:
 	
 public:
 
-	Bullet(World * manager);
+	Bullet(World * manager,BULLET_TYPE bullettype);
 	Bullet(World * manager, int x_holder, int y_holder);
 	~Bullet();
 

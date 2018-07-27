@@ -22,7 +22,7 @@ Boom::Boom(World * manager)
 	limit_dist_x = 0;
 	limit_dist_y = 0;
 	isActive = false;
-
+	this->damage = DAMAGE_SAMUS_BOOM;
 	this->time_survive = BOOM_TIME_SURVIVE;
 	this->bulletType = BOOM;
 	this->manager = manager;
@@ -37,7 +37,7 @@ Boom::Boom(World * manager, int x_holder, int y_holder)
 	isActive = false;
 	this->manager = manager;
 	this->time_survive = BOOM_TIME_SURVIVE;;
-	damage = DAMAGE_SAMUS_BOOM;
+	this->damage = DAMAGE_SAMUS_BOOM;
 	this->bulletType = BOOM;
 	pos_x_holder = x_holder;
 	pos_y_holder = y_holder;
@@ -69,13 +69,14 @@ void Boom::Update(float t)
 	if (!isActive)
 		return;
 	// Xử lý va chạm
-	/*if (!(manager->metroid->isOnFloor))
+	if (!(manager->metroid->isOnFloor))
 	{
 		for (int i = 0; i < manager->colGroundBrick->size; i++)
 		{
 			float timeScale = SweptAABB(manager->colGroundBrick->objects[i], t);
 			if (timeScale < 1.0f)
 			{
+				SlideFromGround(manager->colGroundBrick->objects[i], t, timeScale);
 				Reset();
 			}
 		}
@@ -87,10 +88,13 @@ void Boom::Update(float t)
 		{
 			float timeScale = SweptAABB(manager->colFloorBrick->objects[i], t);
 			if (timeScale < 1.0f)
+			{
+				SlideFromGround(manager->colGroundBrick->objects[i], t, timeScale);
 				Reset();
+			}			
 		}
 	}
-*/
+
 	time_survive -= t;
 	// Nếu hết thời gian thì không hiển thị nữa
 	if (time_survive <= 0)
@@ -101,16 +105,21 @@ void Boom::Update(float t)
 		{
 			if (manager->enemyGroup->objects[i]->IsActive())
 			{		
-				//float timescale = SweptAABB(manager->enemyGroup->objects[i], t);
-				//if (timescale < 1.0f || (timescale == 1 && ((Enemy*)manager->enemyGroup->objects[i])->GetEnemyType() == BIRD))
-				//{
-				//	manager->enemyGroup->objects[i]->isHit = true;
-				//	((Enemy*)manager->enemyGroup->objects[i])->SetActive(false);
-				//}
 				if (IsCollide(manager->enemyGroup->objects[i]))
 				{
 					manager->enemyGroup->objects[i]->isHit = true;
-					((Enemy*)manager->enemyGroup->objects[i])->SetActive(false);
+					((Enemy*)manager->enemyGroup->objects[i])->TakeDamage(this->damage);
+				}
+			}
+		}
+		if (!(manager->metroid->isOnFloor))
+		{
+			for (int i = 0; i < manager->colGroundBrick->size; i++)
+			{				
+				float timeScale = SweptAABB(manager->colGroundBrick->objects[i], t);
+				if (timeScale < 1.0f)
+				{
+					Reset();
 				}
 			}
 		}

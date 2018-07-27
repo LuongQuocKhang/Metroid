@@ -13,14 +13,15 @@ void Bullet::Render()
 	}
 }
 
-Bullet::Bullet(World * manager)
+Bullet::Bullet(World * manager , BULLET_TYPE bullettyupe)
 {
 	bullet = NULL;
 	limit_dist_x = 0;
 	limit_dist_y = 0;
 	isActive = false;
 
-	this->bulletType = STANDARD;
+	damage = DAMAGE_SAMUS_BULLET;
+	this->bulletType = bullettyupe;
 	this->manager = manager;
 	collider = new Collider(BULLET_HEIGHT / 2, -BULLET_WIDTH / 2, -BULLET_HEIGHT / 2, BULLET_WIDTH / 2);
 }
@@ -66,19 +67,22 @@ void Bullet::Update(float t)
 		return;
 
 	// Đạn samus va chạm với Enemy (Hiện chỉ có Missile của samus là tác dụng va chạm dc tới enemy)
-	/*for (int i = 0; i < manager->enemyGroup->size; i++)
+	if (this->getBulletType() == STANDARD)
 	{
-		if (manager->enemyGroup->objects[i]->IsActive())
+		for (int i = 0; i < manager->enemyGroup->size; i++)
 		{
-			float timeScale = SweptAABB(manager->enemyGroup->objects[i], t);
-			if (timeScale < 1.0f)
+			if (manager->enemyGroup->objects[i]->IsActive())
 			{
-				manager->enemyGroup->objects[i]->isHit = true;
-				((Enemy*)(manager->enemyGroup->objects[i]));
-				Reset();
+				float timeScale = SweptAABB(manager->enemyGroup->objects[i], t);
+				if (timeScale < 1.0f)
+				{
+					manager->enemyGroup->objects[i]->isHit = true;
+					//((Enemy*)(manager->enemyGroup->objects[i]))->TakeDamage(this->damage);
+					Reset();
+				}
 			}
 		}
-	}*/
+	}
 
 	// Xử lý va chạm
 	if (!(manager->metroid->isOnFloor))
@@ -111,12 +115,12 @@ void Bullet::Update(float t)
 		{
 			switch (manager->otherGO->objects[i]->GetType())
 			{
-			case GATE:
-			{
-				Gate * gate = (Gate*)manager->otherGO->objects[i];
-				gate->DestroyGate();
-				break;
-			}
+				case GATE:
+				{
+					Gate * gate = (Gate*)manager->otherGO->objects[i];
+					gate->DestroyGate();
+					break;
+				}
 			}
 		}
 	}

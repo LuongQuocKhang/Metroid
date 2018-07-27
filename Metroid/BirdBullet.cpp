@@ -15,9 +15,9 @@ BirdBullet::BirdBullet(World * manager)
 
 	for (int i = 0; i < BIRD_BULLET_COUNT; i++)
 	{
-		bullets[i] = new Bullet(this->manager);
+		bullets[i] = new Bullet(this->manager, BIRD_BULLET);
 		bullets[i]->damage = DAMAGE_BIRD_BULLET;
-		this->bulletType = BIRD_BULLET;
+		//this->bulletType = BIRD_BULLET;
 	}
 }
 

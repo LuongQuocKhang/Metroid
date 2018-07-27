@@ -54,7 +54,7 @@ void Enemy::Update(float t)
 
 void Enemy::TakeDamage(float damage)
 {
-	health -= damage;
+	this->health -= damage;
 	Game::gameSound->playSound(BULLET_HIT_ENEMY);
 
 	if (health <= 0)

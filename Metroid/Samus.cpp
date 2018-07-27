@@ -204,9 +204,6 @@ void Samus::Render()
 			break;
 		}
 	}
-
-
-
 	spriteHandler->End();
 }
 
@@ -227,12 +224,6 @@ void Samus::TakeDamage(float damage)
 {
 	health -= damage;
 	Game::gameSound->playSound(SAMUS_HIT_ENEMY);
-
-	//int randomX = rand() % 32 - 16;
-	//int randomY = rand() % 32 - 16;
-	//Effect* newEffect = Effect::CreateEffect(EFFECT_HIT, this->postX + randomX, this->postY + randomY, 1, spriteHandler, manager);
-	//manager->groupEffect->AddObject(newEffect);
-
 	if (health <= 0)
 		Destroy();
 }
@@ -338,15 +329,6 @@ Samus::~Samus()
 	delete(jump_shooting_up_right);
 }
 
-//DirectCollision Samus::getDirection()
-//{
-//	return this->direction;
-//}
-//void Samus::setDirection(DirectCollision direction)
-//{
-//	this->direction = direction;
-//}
-
 void Samus::_Shoot(BULLET_DIRECTION dir, Metroid * metroid)
 {
 	metroid->SetNow_shoot(GetTickCount());
@@ -364,6 +346,10 @@ void Samus::_Shoot(BULLET_DIRECTION dir, Metroid * metroid)
 void Samus::_SetBoom(BULLET_DIRECTION dir, Metroid * metroid)
 {
 	(metroid->GetWorld())->boom->Next(dir, this->GetPosX(), this->GetPosY());
+}
+void Samus::_SetBoom(BULLET_DIRECTION dir, Metroid * metroid,float pos_x , float pos_y)
+{
+	(metroid->GetWorld())->boom->Next(dir, pos_x , pos_y);
 }
 void Samus::_ShootMissile(BULLET_DIRECTION dir, Metroid * metroid)
 {
@@ -491,8 +477,7 @@ bool Samus::isSamusDeath()
 
 bool Samus::isSamusCrouch()
 {
-	if (isMorph == true)
-		return true;
+	return isMorph;
 }
 
 bool Samus::GetStateActive()
@@ -723,12 +708,12 @@ void Samus::Update(float t)
 		{
 			switch (manager->otherGO->objects[i]->GetType())
 			{
-			case SENTRY:
-			case GATE:
-			{
-				this->SlideFromGround(manager->otherGO->objects[i], t, timeScale);
-				break;
-			}
+				case SENTRY:
+				case GATE:
+				{
+					this->SlideFromGround(manager->otherGO->objects[i], t, timeScale);
+					break;
+				}
 			}
 		}
 	}
@@ -935,11 +920,13 @@ void Samus::Deflect(GameObject *target, const float &DeltaTime, const float &Col
 			vy *= -1;
 	}
 
-	if (normaly != 0)
+	/*if (normaly != 0)
 	{
 		pos_x += vx * (CollisionTimeScale)* DeltaTime + 15.0f*normalx;
 		pos_y += vy * (CollisionTimeScale)* DeltaTime + 15.0f*normaly;
-	}
+	}*/
+	pos_x += vx * (CollisionTimeScale)* DeltaTime + 15.0f*normalx;
+	pos_y += vy * (CollisionTimeScale)* DeltaTime + 15.0f*normaly;
 }
 void Samus::ProcessInput(LPDIRECT3DDEVICE9 d3ddv, float Delta, Metroid* metroid)
 {
@@ -948,12 +935,6 @@ void Samus::ProcessInput(LPDIRECT3DDEVICE9 d3ddv, float Delta, Metroid* metroid)
 
 	if (metroid->IsKeyDown(DIK_RIGHT))
 	{
-
-		/*Camera::currentCamX += 2.0f;
-		float c = Camera::currentCamY + 5;*/
-
-		//this->setNormalx(1.0f);
-		//this->setgravity(FALLDOWN_VELOCITY_DECREASE);
 		this->SetVelocityXLast(this->GetVelocityX());
 		this->SetVelocityX(SAMUS_SPEED);
 		if (this->GetState() != ON_MORPH_LEFT && this->GetState() != ON_MORPH_RIGHT
@@ -1028,6 +1009,7 @@ void Samus::ProcessInput(LPDIRECT3DDEVICE9 d3ddv, float Delta, Metroid* metroid)
 
 	if (metroid->IsKeyDown(DIK_UP))
 	{
+		if (isCrouching == true) return;
 		if (this->GetState() == LEFTING)
 			this->SetState(AIMING_UP_LEFT);
 		if (this->GetState() == RIGHTING)
@@ -1147,9 +1129,9 @@ void Samus::ProcessInput(LPDIRECT3DDEVICE9 d3ddv, float Delta, Metroid* metroid)
 				{
 					if ((metroid->GetWorld())->enemyGroup->objects[i]->IsActive())
 					{
-						float damge = DAMAGE_SAMUS_BULLET;
+						float damage = list[i]->damage;
 						((Enemy*)((metroid->GetWorld())->enemyGroup->objects[i]))->DeathByShoot = true;
-						((Enemy*)((metroid->GetWorld())->enemyGroup->objects[i]))->TakeDamage(damge);
+						((Enemy*)((metroid->GetWorld())->enemyGroup->objects[i]))->TakeDamage(damage);
 						//list[j]->Reset();
 						break;
 					}
@@ -1195,7 +1177,10 @@ void Samus::OnkeyDown(int KeyCode, Metroid * metroid, int& screenMode)
 					this->SetState(ON_SOMERSAULT_LEFT);
 					this->SetVelocityY(JUMP_VELOCITY_BOOST_FIRST);
 				}
-
+				if (this->GetState() == ON_MORPH_LEFT || this->GetState() == ON_MORPH_RIGHT)
+				{
+					return;
+				}
 				if (this->GetVelocityXLast() < 0)
 				{
 					if (this->GetState() != ON_JUMP_LEFT && this->GetState() != ON_SOMERSAULT_LEFT
@@ -1295,6 +1280,7 @@ void Samus::OnkeyDown(int KeyCode, Metroid * metroid, int& screenMode)
 					this->ResetAllSprites();
 					this->SetState(ON_MORPH_LEFT);
 					this->GetCollider()->SetCollider(0, 0, -MORPH_BALL_HEIGHT, MORPH_BALL_WIDTH);
+					isCrouching = true;
 				}
 				else if (this->GetState() == IDLE_RIGHT)
 				{
@@ -1302,15 +1288,16 @@ void Samus::OnkeyDown(int KeyCode, Metroid * metroid, int& screenMode)
 					this->ResetAllSprites();
 					this->SetState(ON_MORPH_RIGHT);
 					this->GetCollider()->SetCollider(0, 0, -MORPH_BALL_HEIGHT, MORPH_BALL_WIDTH);
+					isCrouching = true;
 				}
 				else if (this->GetState() == ON_MORPH_LEFT) //otherwise, reset to idle (left of right)
 				{
 					this->SetVelocityX(0);
 					this->ResetAllSprites();
 					this->SetState(IDLE_LEFT);
-					//this->setDirection(DirectCollision::RIGHT);
 					this->SetPosY(this->GetPosY() + this->GetHeight() + MORPH_BALL_HEIGHT);
 					this->GetCollider()->SetCollider(0, 0, -this->GetHeight(), 24);
+					isCrouching = false;
 				}
 				else if (this->GetState() == ON_MORPH_RIGHT)
 				{
@@ -1319,27 +1306,17 @@ void Samus::OnkeyDown(int KeyCode, Metroid * metroid, int& screenMode)
 					this->SetState(IDLE_RIGHT);
 					this->SetPosY(this->GetPosY() + this->GetHeight() + MORPH_BALL_HEIGHT);
 					this->GetCollider()->SetCollider(0, 0, -this->GetHeight(), this->width);
-					//this->setDirection(DirectCollision::LEFT);
+					isCrouching = false;
 				}
 				break;
 			}
 		case DIK_LEFT:
-			/*if (samus->GetState() == ON_JUMP_RIGHT)
-			samus->SetState(ON_JUMP_LEFT);*/
 			if (this->GetState() == ON_MORPH_RIGHT)
 				this->SetState(ON_MORPH_LEFT);
-			/*else if (samus->GetState() != ON_MORPH_LEFT && samus->GetState() != ON_JUMP_LEFT && samus->GetState() != ON_JUMP_RIGHT
-			&& samus->GetState() != ON_SOMERSAULT_RIGHT)
-			samus->SetState(LEFTING);*/
 			break;
 		case DIK_RIGHT:
-			/*if (samus->GetState() == ON_JUMP_LEFT)
-			samus->SetState(ON_JUMP_RIGHT);*/
 			if (this->GetState() == ON_MORPH_LEFT)
 				this->SetState(ON_MORPH_RIGHT);
-			/*else if (this->GetState() != ON_MORPH_RIGHT && this->GetState() != ON_JUMP_LEFT && this->GetState() != ON_JUMP_RIGHT
-			&& this->GetState() != ON_SOMERSAULT_LEFT)
-			this->SetState(RIGHTING);*/
 			break;
 
 		case DIK_C:
@@ -1424,85 +1401,18 @@ void Samus::OnkeyDown(int KeyCode, Metroid * metroid, int& screenMode)
 				}
 				break;
 			}
+			break;
 		case DIK_V:
 		{
-			Game::gameSound->playSound(SHOOT_MISSILE);
-			if (this->GetState() == IDLING_AIM_UP_LEFT)
+			//Game::gameSound->playSound(SHOOT_MISSILE);
+			if (isCrouching == true)
 			{
-				this->SetState(IDLING_SHOOTING_UP_LEFT);
-
+				_SetBoom(ON_UP, metroid, this->GetPosX(), this->GetPosY() + 24);
+			}
+			else
+			{
 				_SetBoom(ON_UP, metroid);
-			}
-			if (this->GetState() == IDLING_AIM_UP_RIGHT)
-			{
-				this->SetState(IDLING_SHOOTING_UP_RIGHT);
-
-				_SetBoom(ON_UP, metroid);
-			}
-			//State Chạy bắn lên
-			if (this->GetState() == AIMING_UP_LEFT)
-			{
-				this->SetState(AIMING_UP_LEFT);
-				_SetBoom(ON_UP, metroid);
-			}
-			if (this->GetState() == AIMING_UP_RIGHT)
-			{
-				this->SetState(AIMING_UP_RIGHT);
-				_SetBoom(ON_UP, metroid);
-			}
-			//State Nhảy bắn lên => bug
-			if (this->GetState() == ON_JUMP_AIM_UP_LEFT)
-			{
-				this->SetState(ON_JUMP_SHOOTING_UP_LEFT);
-
-				_SetBoom(ON_UP, metroid);
-			}
-			if (this->GetState() == ON_JUMP_AIM_UP_RIGHT)
-			{
-				this->SetState(ON_JUMP_SHOOTING_UP_RIGHT);
-
-				_SetBoom(ON_UP, metroid);
-			}
-			//State nhảy bắn
-			if (this->GetState() == ON_JUMP_LEFT || this->GetState() == ON_SOMERSAULT_LEFT || this->GetState() == ON_JUMPING_SHOOTING_LEFT)
-			{
-				this->SetState(ON_JUMPING_SHOOTING_LEFT);
-
-				_SetBoom(ON_LEFT, metroid);
-			}
-			if (this->GetState() == ON_JUMP_RIGHT || this->GetState() == ON_SOMERSAULT_RIGHT || this->GetState() == ON_JUMPING_SHOOTING_RIGHT)
-			{
-				this->SetState(ON_JUMPING_SHOOTING_RIGHT);
-
-				_SetBoom(ON_RIGHT, metroid);
-			}
-			//State chạy bắn
-			if (this->GetState() == LEFTING)
-			{
-				this->SetState(ON_RUN_SHOOTING_LEFT);
-
-				_SetBoom(ON_LEFT, metroid);
-			}
-			if (this->GetState() == RIGHTING)
-			{
-				this->SetState(ON_RUN_SHOOTING_RIGHT);
-
-				_SetBoom(ON_RIGHT, metroid);
-			}
-			//State đứng bắn
-			if (this->GetState() == IDLE_LEFT)
-			{
-				this->SetState(IDLING_SHOOTING_LEFT);
-
-				_SetBoom(ON_LEFT, metroid);
-			}
-			if (this->GetState() == IDLE_RIGHT)
-			{
-				this->SetState(IDLING_SHOOTING_RIGHT);
-
-				_SetBoom(ON_RIGHT, metroid);
-
-			}
+			}		
 			break;
 		}
 

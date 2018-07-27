@@ -83,6 +83,7 @@ public:
 	bool isImmortal;
 	float jumdistance;
 	bool isOnGround;
+	bool isCrouching;
 
 	Samus();
 	Samus(LPD3DXSPRITE spriteHandler, World * manager);
@@ -128,9 +129,12 @@ public:
 
 	void _Shoot(BULLET_DIRECTION dir, Metroid*);
 	void _SetBoom(BULLET_DIRECTION dir, Metroid*);
+	void _SetBoom(BULLET_DIRECTION dir, Metroid * metroid, float pos_x, float pos_y);
+
 	void _ShootMissile(BULLET_DIRECTION dir, Metroid*);
 	void SetMissileNumbers(int value);
 	int GetMissileNumbers();
+	void ShootReused(float &Delta, Metroid* metroid);
 
 	//================ OVERRIDE VIRTUAL METHOD ==================
 	void Reset(int  x, int y);

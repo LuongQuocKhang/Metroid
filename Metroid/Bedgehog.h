@@ -32,7 +32,7 @@ public:
 	~Bedgehog();
 	void InitSprites();
 	void ResponseGround(GameObject *target, const float &DeltaTime, const float &CollisionTimeScale);
-	void ResponseGround2(GameObject *target, const float &DeltaTime, const float &CollisionTimeScale);
+	
 	//============== OVERRIDE VIRTUAL METHOD ===================
 	virtual void Update(float t);
 	virtual void Render();

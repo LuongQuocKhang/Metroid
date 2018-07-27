@@ -298,8 +298,8 @@ enum BULLET_DIRECTION
 #define RIDLEY_BOOMERANG_NUM 10
 //================= END BULLET MANAGER ============
 
-#define BOOM_TIME_SURVIVE 1000
-#define DAMAGE_SAMUS_BOOM 100
+#define BOOM_TIME_SURVIVE 2000
+#define DAMAGE_SAMUS_BOOM 10
 //================= OBJECT TYPE ================
 enum OBJECT_TYPE
 {

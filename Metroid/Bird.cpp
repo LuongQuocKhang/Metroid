@@ -37,7 +37,7 @@ Bird::Bird(LPD3DXSPRITE spriteHandler, World * manager, ENEMY_TYPE enemy_type) :
 
 	// collider dùng khi samus đi vào vùng va chạm
 	collider_area = new Collider();
-	collider_area->SetCollider(0, -width, -480, width * 2);
+	collider_area->SetCollider(BIRD_HEIGHT, -BIRD_WIDTH * 2, -480, BIRD_WIDTH * 2);
 }
 
 
