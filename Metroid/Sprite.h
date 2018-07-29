@@ -27,7 +27,8 @@ public:
 
 	//Constructor cho những GameObject có animation, nhiều sprite
 	Sprite(LPD3DXSPRITE SpriteHandler, LPWSTR ImagePath, char* infoFilePath, int Width, int Height, int Count, int SpritePerRow);
-	
+	Sprite(LPD3DXSPRITE SpriteHandler, LPDIRECT3DTEXTURE9 image, char * infoFilePath, int Width, int Height, int Count, int SpritePerRow);
+	Sprite(LPD3DXSPRITE SpriteHandler, LPDIRECT3DTEXTURE9 image, int posX, int posY, int Width, int Height);
 	//Constructor cho những GameObject chỉ có duy nhất 1 sprite (đỡ dài dòng)
 	Sprite(LPD3DXSPRITE SpriteHandler, LPWSTR ImagePath, int posX, int posY, int Width, int Height);
 

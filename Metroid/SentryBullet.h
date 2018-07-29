@@ -13,7 +13,8 @@ protected:
 	Sprite * bottomleft;
 	Sprite * bottomright;
 public:
-	SentryBullet(World * manager);
+	SentryBullet(LPD3DXSPRITE spriteHandler,World * manager);
+	void InitSprites(LPDIRECT3DDEVICE9 d3ddv, LPDIRECT3DTEXTURE9 image);
 	~SentryBullet();
 	void InitSprites(LPDIRECT3DDEVICE9 d3ddv);
 	void Update(float t);

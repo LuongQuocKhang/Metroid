@@ -12,6 +12,7 @@
 #include "EnergyItem.h"
 #include "MissileItem.h"
 #include "MorphItem.h"
+#include "utils.h"
 
 void Samus::Render()
 {
@@ -266,6 +267,7 @@ Samus::Samus()
 	collider->SetCollider(0, 0, -this->height, this->width);
 	this->isActive = true;
 	state = APPEARANCE;
+    
 }
 
 Samus::Samus(LPD3DXSPRITE spriteHandler, World * manager)
@@ -359,9 +361,9 @@ void Samus::_ShootMissile(BULLET_DIRECTION dir, Metroid * metroid)
 void Samus::InitSprites(LPDIRECT3DDEVICE9 d3ddv)
 {
 	if (d3ddv == NULL) return;
-
+	LPDIRECT3DTEXTURE9 image = LoadTexture(SAMUS_SPRITES_PATH, spriteHandler);
 	//Create instance of sprites
-	appearing = new Sprite(spriteHandler, SAMUS_SPRITES_PATH, APPEARING, APPEARING_WIDTH, APPEARING_HEIGHT, APPEARING_COUNT, SPRITE_PER_ROW);
+	/*appearing = new Sprite(spriteHandler, SAMUS_SPRITES_PATH, APPEARING, APPEARING_WIDTH, APPEARING_HEIGHT, APPEARING_COUNT, SPRITE_PER_ROW);
 	running_left = new Sprite(spriteHandler, SAMUS_SPRITES_PATH, RUNNING_LEFT, RUNNING_WIDTH, RUNNING_HEIGHT, RUNNING_COUNT, SPRITE_PER_ROW);
 	running_right = new Sprite(spriteHandler, SAMUS_SPRITES_PATH, RUNNING_RIGHT, RUNNING_WIDTH, RUNNING_HEIGHT, RUNNING_COUNT, SPRITE_PER_ROW);
 	jump_left = new Sprite(spriteHandler, SAMUS_SPRITES_PATH, JUMP_LEFT, JUMP_WIDTH, JUMP_HEIGHT, JUMP_COUNT, SPRITE_PER_ROW);
@@ -388,7 +390,37 @@ void Samus::InitSprites(LPDIRECT3DDEVICE9 d3ddv)
 	idle_shooting_up_right = new Sprite(spriteHandler, SAMUS_SPRITES_PATH, STAND_SHOOTING_UP_RIGHT, STANDING_SHOOTING_UP_WIDTH, STANDING_SHOOTING_UP_HEIGHT, STAND_SHOOTING_UP_COUNT, SPRITE_PER_ROW);
 	jump_shooting_up_left = new Sprite(spriteHandler, SAMUS_SPRITES_PATH, JUMP_SHOOTING_UP_LEFT, JUMP_SHOOTING_UP_WIDTH, JUMP_SHOOTING_UP_HEIGHT, JUMP_SHOOTING_UP_COUNT, SPRITE_PER_ROW);
 	jump_shooting_up_right = new Sprite(spriteHandler, SAMUS_SPRITES_PATH, JUMP_SHOOTING_UP_RIGHT, JUMP_SHOOTING_UP_WIDTH, JUMP_SHOOTING_UP_HEIGHT, JUMP_SHOOTING_UP_COUNT, SPRITE_PER_ROW);
-}
+*/
+
+	appearing = new Sprite(spriteHandler, image, APPEARING, APPEARING_WIDTH, APPEARING_HEIGHT, APPEARING_COUNT, SPRITE_PER_ROW);
+	running_left = new Sprite(spriteHandler, image, RUNNING_LEFT, RUNNING_WIDTH, RUNNING_HEIGHT, RUNNING_COUNT, SPRITE_PER_ROW);
+	running_right = new Sprite(spriteHandler, image, RUNNING_RIGHT, RUNNING_WIDTH, RUNNING_HEIGHT, RUNNING_COUNT, SPRITE_PER_ROW);
+	jump_left = new Sprite(spriteHandler, image, JUMP_LEFT, JUMP_WIDTH, JUMP_HEIGHT, JUMP_COUNT, SPRITE_PER_ROW);
+	jump_right = new Sprite(spriteHandler, image, JUMP_RIGHT, JUMP_WIDTH, JUMP_HEIGHT, JUMP_COUNT, SPRITE_PER_ROW);
+	run_shooting_left = new Sprite(spriteHandler, image, RUN_SHOOTING_LEFT, RUN_SHOOTING_WIDTH, RUN_SHOOTING_HEIGHT, RUN_SHOOTING_COUNT, SPRITE_PER_ROW);
+	run_shooting_right = new Sprite(spriteHandler, image, RUN_SHOOTING_RIGHT, RUN_SHOOTING_WIDTH, RUN_SHOOTING_HEIGHT, RUN_SHOOTING_COUNT, SPRITE_PER_ROW);
+	run_aim_up_left = new Sprite(spriteHandler, image, RUN_AIM_UP_LEFT, RUN_AIM_UP_WIDTH, RUN_AIM_UP_HEIGHT, RUN_AIM_UP_COUNT, SPRITE_PER_ROW);
+	run_aim_up_right = new Sprite(spriteHandler, image, RUN_AIM_UP_RIGHT, RUN_AIM_UP_WIDTH, RUN_AIM_UP_HEIGHT, RUN_AIM_UP_COUNT, SPRITE_PER_ROW);
+	idle_aim_up_left = new Sprite(spriteHandler, image, IDLE_AIM_UP_LEFT, IDLE_AIM_UP_WIDTH, IDLE_AIM_UP_HEIGHT, IDLE_AIM_UP_COUNT, SPRITE_PER_ROW);
+	idle_aim_up_right = new Sprite(spriteHandler, image, IDLE_AIM_UP_RIGHT, IDLE_AIM_UP_WIDTH, IDLE_AIM_UP_HEIGHT, IDLE_AIM_UP_COUNT, SPRITE_PER_ROW);
+	idle_left = new Sprite(spriteHandler, image, STANDING_LEFT, STANDING_WIDTH, STANDING_HEIGHT, STANDING_COUNT, SPRITE_PER_ROW);
+	idle_right = new Sprite(spriteHandler, image, STANDING_RIGHT, STANDING_WIDTH, STANDING_HEIGHT, STANDING_COUNT, SPRITE_PER_ROW);
+	morph_ball_left = new Sprite(spriteHandler, image, MORPH_BALL_LEFT, MORPH_BALL_WIDTH, MORPH_BALL_HEIGHT, MORPH_BALL_COUNT, SPRITE_PER_ROW);
+	morph_ball_right = new Sprite(spriteHandler, image, MORPH_BALL_RIGHT, MORPH_BALL_WIDTH, MORPH_BALL_HEIGHT, MORPH_BALL_COUNT, SPRITE_PER_ROW);
+	somersault_left = new Sprite(spriteHandler, image, SOMERSAULT_LEFT, SOMERSAULT_WIDTH, SOMERSAULT_HEIGHT, SOMERSAULT_COUNT, SPRITE_PER_ROW);
+	somersault_right = new Sprite(spriteHandler, image, SOMERSAULT_RIGHT, SOMERSAULT_WIDTH, SOMERSAULT_HEIGHT, SOMERSAULT_COUNT, SPRITE_PER_ROW);
+	jumping_shooting_left = new Sprite(spriteHandler, image, JUMPING_SHOOTING_LEFT, JUMPING_SHOOTING_WIDTH, JUMPING_SHOOTING_HEIGHT, JUMPING_SHOOTING_COUNT, SPRITE_PER_ROW);
+	jumping_shooting_right = new Sprite(spriteHandler, image, JUMPING_SHOOTING_RIGHT, JUMPING_SHOOTING_WIDTH, JUMPING_SHOOTING_HEIGHT, JUMPING_SHOOTING_COUNT, SPRITE_PER_ROW);
+	jump_aim_up_left = new Sprite(spriteHandler, image, JUMP_AIM_UP_LEFT, JUMP_AIM_UP_WIDTH, JUMP_AIM_UP_HEIGHT, JUMP_AIM_UP_COUNT, SPRITE_PER_ROW);
+	jump_aim_up_right = new Sprite(spriteHandler, image, JUMP_AIM_UP_RIGHT, JUMP_AIM_UP_WIDTH, JUMP_AIM_UP_HEIGHT, JUMP_AIM_UP_COUNT, SPRITE_PER_ROW);
+	idle_shooting_left = new Sprite(spriteHandler, image, STAND_SHOOTING_LEFT, STANDING_SHOOTING_WIDTH, STANDING_SHOOTING_HEIGHT, STAND_SHOOTING_COUNT, SPRITE_PER_ROW);
+	idle_shooting_right = new Sprite(spriteHandler, image, STAND_SHOOTING_RIGHT, STANDING_SHOOTING_WIDTH, STANDING_SHOOTING_HEIGHT, STAND_SHOOTING_COUNT, SPRITE_PER_ROW);
+	idle_shooting_up_left = new Sprite(spriteHandler, image, STAND_SHOOTING_UP_LEFT, STANDING_SHOOTING_UP_WIDTH, STANDING_SHOOTING_UP_HEIGHT, STAND_SHOOTING_UP_COUNT, SPRITE_PER_ROW);
+	idle_shooting_up_right = new Sprite(spriteHandler, image, STAND_SHOOTING_UP_RIGHT, STANDING_SHOOTING_UP_WIDTH, STANDING_SHOOTING_UP_HEIGHT, STAND_SHOOTING_UP_COUNT, SPRITE_PER_ROW);
+	jump_shooting_up_left = new Sprite(spriteHandler, image, JUMP_SHOOTING_UP_LEFT, JUMP_SHOOTING_UP_WIDTH, JUMP_SHOOTING_UP_HEIGHT, JUMP_SHOOTING_UP_COUNT, SPRITE_PER_ROW);
+	jump_shooting_up_right = new Sprite(spriteHandler, image, JUMP_SHOOTING_UP_RIGHT, JUMP_SHOOTING_UP_WIDTH, JUMP_SHOOTING_UP_HEIGHT, JUMP_SHOOTING_UP_COUNT, SPRITE_PER_ROW);
+
+	}
 
 void Samus::InitPostition()
 {
@@ -504,14 +536,7 @@ void Samus::Reset(int x, int y)
 
 void Samus::Update(float t)
 {
-	//
-	// Update samus status
-	//
-	//GameObject::Update(t);
-
 	vy -= gravity;
-
-	//===========> Quan update - updating . . .
 	for (int i = 0; i < manager->enemyGroup->size; i++)
 	{
 		Enemy * enemy = (Enemy*)manager->enemyGroup->objects[i];
@@ -524,6 +549,10 @@ void Samus::Update(float t)
 				{
 					//Xử lý khi va chạm với enemy
 					Deflect(enemy, t, timeScale);
+					if (pos_y < GROUND_Y)
+					{
+						pos_y = GROUND_Y;
+					}
 					isImmortal = true;
 
 					TakeDamage(((Enemy*)manager->enemyGroup->objects[i])->damage);		
@@ -571,9 +600,9 @@ void Samus::Update(float t)
 			isMorph = true;
 			Game::gameSound->stopSound(BACKGROUND_MAP);
 			Game::gameSound->playSound(BACKGROUND_ITEM_ACQUIRED);
-			manager->morphItem->Destroy();
-
+			
 			manager->metroid->isFreezing = true;
+			manager->morphItem->Destroy();
 		}
 	}
 	for (int i = 0; i < manager->colGroundBrick->size; i++)
@@ -932,7 +961,7 @@ void Samus::ProcessInput(LPDIRECT3DDEVICE9 d3ddv, float Delta, Metroid* metroid)
 {
 	if (metroid->isInGame)
 		return;
-
+	if (metroid->isFreezing == true) return;
 	if (metroid->IsKeyDown(DIK_RIGHT))
 	{
 		this->SetVelocityXLast(this->GetVelocityX());
@@ -947,8 +976,8 @@ void Samus::ProcessInput(LPDIRECT3DDEVICE9 d3ddv, float Delta, Metroid* metroid)
 
 		if (this->GetState() == ON_MORPH_LEFT)
 			this->SetState(ON_MORPH_RIGHT);
-		if (this->GetState() == ON_SOMERSAULT_LEFT)
-			this->SetState(ON_SOMERSAULT_RIGHT);
+		if (this->GetState() == ON_SOMERSAULT_RIGHT)
+			this->SetState(ON_SOMERSAULT_LEFT);
 		if (this->GetState() == ON_JUMP_LEFT)
 			this->SetState(ON_JUMP_RIGHT);
 		if (this->GetState() == ON_JUMPING_SHOOTING_LEFT || this->GetState() == ON_JUMP_AIM_UP_LEFT)
@@ -1039,6 +1068,7 @@ void Samus::ProcessInput(LPDIRECT3DDEVICE9 d3ddv, float Delta, Metroid* metroid)
 
 	if (metroid->IsKeyDown(DIK_Z))
 	{
+		if (this->isCrouching) return;
 		//Để mặc định đạn thường trước
 		Game::gameSound->playSound(SHOOT_BULLET);
 		//State Đứng bắn lên
@@ -1129,7 +1159,7 @@ void Samus::ProcessInput(LPDIRECT3DDEVICE9 d3ddv, float Delta, Metroid* metroid)
 				{
 					if ((metroid->GetWorld())->enemyGroup->objects[i]->IsActive())
 					{
-						float damage = list[i]->damage;
+						float damage = DAMAGE_SAMUS_BULLET;
 						((Enemy*)((metroid->GetWorld())->enemyGroup->objects[i]))->DeathByShoot = true;
 						((Enemy*)((metroid->GetWorld())->enemyGroup->objects[i]))->TakeDamage(damage);
 						//list[j]->Reset();
@@ -1143,6 +1173,7 @@ void Samus::ProcessInput(LPDIRECT3DDEVICE9 d3ddv, float Delta, Metroid* metroid)
 
 	if (metroid->IsKeyDown(DIK_X))
 	{
+		if (this->GetState() == ON_MORPH_LEFT || this->GetState() == ON_MORPH_RIGHT) return;
 		if (this->pos_y < jumdistance + 80)
 		{
 			if (this->vy > 0)
@@ -1160,9 +1191,10 @@ void Samus::OnkeyDown(int KeyCode, Metroid * metroid, int& screenMode)
 		switch (KeyCode)
 		{
 		case DIK_X:
+			if (this->GetState() == ON_MORPH_LEFT || this->GetState() == ON_MORPH_RIGHT) return;
 			jumdistance = this->pos_y;
 			if (metroid->IsKeyDown(DIK_X))
-			{
+			{		
 				Game::gameSound->playSound(JUMP);
 				this->isOnGround = false;
 				this->setNormaly(1.0f);
@@ -1320,6 +1352,8 @@ void Samus::OnkeyDown(int KeyCode, Metroid * metroid, int& screenMode)
 			break;
 
 		case DIK_C:
+			if (this->isCrouching == true) return;
+			if (metroid->isFreezing == true) return;
 			if (this->GetMissileNumbers() > 0)
 			{
 				Game::gameSound->playSound(SHOOT_MISSILE);
@@ -1407,12 +1441,8 @@ void Samus::OnkeyDown(int KeyCode, Metroid * metroid, int& screenMode)
 			//Game::gameSound->playSound(SHOOT_MISSILE);
 			if (isCrouching == true)
 			{
-				_SetBoom(ON_UP, metroid, this->GetPosX(), this->GetPosY() + 24);
-			}
-			else
-			{
-				_SetBoom(ON_UP, metroid);
-			}		
+				_SetBoom(ON_UP, metroid, this->GetPosX(), this->GetPosY());
+			}	
 			break;
 		}
 
@@ -1435,6 +1465,8 @@ void Samus::OnKeyUp(int KeyCode, Metroid * metroid)
 {
 	if (KeyCode == DIK_X)
 	{
+		if (this->GetState() == ON_MORPH_LEFT || this->GetState() == ON_MORPH_RIGHT) return;
+		if (metroid->isFreezing) return;
 		if (this->vy > JUMP_VELOCITY_BOOST_FIRST)
 		{
 			this->vy = JUMP_VELOCITY_BOOST_FIRST;

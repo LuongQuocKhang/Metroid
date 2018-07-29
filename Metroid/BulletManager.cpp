@@ -6,31 +6,38 @@
 #include "BirdBullet.h"
 #include "RidleyBoomerang.h"
 #include "Boom.h"
+#include "utils.h"
 
-BulletManager::BulletManager(World * manager, BULLET_TYPE bullet_type)
+BulletManager::BulletManager(LPD3DXSPRITE spriteHandler,World * manager, BULLET_TYPE bullet_type)
 {
 	this->manager = manager;
 	//Create instance bullet_list
-
+	this->spriteHandler = spriteHandler;
 	switch (bullet_type)
 	{
 	case STANDARD:
 		num = STANDARD_NUM;
+		image = LoadTexture(BULLET_SPRITE_PATH, spriteHandler);
 		break;
 	case MISSILE:
 		num = MISSILE_NUM;
+		image = LoadTexture(MISSILE_SPRITE_PATH, spriteHandler);
 		break;
 	case BOOM:
 		num = BOOM_NUM;
+		image = LoadTexture(BOOM_SPRITE_PATH, spriteHandler);
 		break;
 	case SENTRY_BULLET:
 		num = SENTRY_BULLET_NUM;
+		image = LoadTexture(SENTRY_BULLET_SPIRTE_PATH, spriteHandler);
 		break;
 	case BIRD_BULLET:
 		num = BIRD_BULLET_NUM;
+		image = LoadTexture(BULLET_SPRITE_PATH, spriteHandler);
 		break;
 	case BOOMERANG:
 		num = RIDLEY_BOOMERANG_NUM;
+		image = LoadTexture(RIDLEY_BOOMERANG_SPIRTE_PATH, spriteHandler);
 		break;
 	}
 	bullet_list = new BulletObject*[num];
@@ -40,7 +47,7 @@ BulletManager::BulletManager(World * manager, BULLET_TYPE bullet_type)
 		//bullet_list = new BulletObject*[STANDARD_NUM];
 		for (int i = 0; i < num; i++)
 		{
-			bullet_list[i] = new Bullet(manager, STANDARD);
+			bullet_list[i] = new Bullet(spriteHandler,manager, STANDARD);
 		}
 		manager->samus->setNum(num);
 		manager->samus->setListBullet(bullet_list);
@@ -49,34 +56,34 @@ BulletManager::BulletManager(World * manager, BULLET_TYPE bullet_type)
 		//bullet_list = new BulletObject*[MISSILE_NUM];
 		for (int i = 0; i < num; i++)
 		{
-			bullet_list[i] = new Missile(manager);
+			bullet_list[i] = new Missile(spriteHandler,manager);
 		}
 		break;
 	case BOOM:
 		for (int i = 0; i < num; i++)
 		{
-			bullet_list[i] = new Boom(manager);
+			bullet_list[i] = new Boom(spriteHandler,manager);
 		}
 		break;
 	case SENTRY_BULLET:
 		//bullet_list = new BulletObject*[SENTRY_BULLET_NUM];
 		for (int i = 0; i < num; i++)
 		{
-			bullet_list[i] = new SentryBullet(manager);
+			bullet_list[i] = new SentryBullet(spriteHandler,manager);
 		}
 		break;
 	case BIRD_BULLET:
 		//bullet_list = new BulletObject*[BIRD_BULLET_NUM];
 		for (int i = 0; i < num; i++)
 		{
-			bullet_list[i] = new BirdBullet(manager);
+			bullet_list[i] = new BirdBullet(spriteHandler,manager);
 		}
 		break;
 	case BOOMERANG:
 		//bullet_list = new BulletObject*[BIRD_BULLET_NUM];
 		for (int i = 0; i < num; i++)
 		{
-			bullet_list[i] = new RidleyBoomerang(manager);
+			bullet_list[i] = new RidleyBoomerang(spriteHandler,manager);
 		}
 		break;
 		// ...
@@ -110,7 +117,7 @@ void BulletManager::InitSprites(LPDIRECT3DDEVICE9 d3ddv)
 {
 	for (int i = 0; i < num; i++)
 	{
-		bullet_list[i]->InitSprites(d3ddv);
+		bullet_list[i]->InitSprites(d3ddv,image);
 	}
 }
 

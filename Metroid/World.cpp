@@ -40,14 +40,15 @@ World::World(LPD3DXSPRITE spriteHandler, Metroid * metroid)
 	rootQNode1 = NULL;
 	rootQNode2 = NULL;
 
-	bullets = new BulletManager(this, STANDARD);
-	boom = new BulletManager(this, BOOM);
+	bullets = new BulletManager(spriteHandler, this, STANDARD);
 	//bullets->InitPosition(samus->GetPosX(), samus->GetPosY());
-	missiles = new BulletManager(this, MISSILE);
+	missiles = new BulletManager(spriteHandler, this, MISSILE);
+	boom = new BulletManager(spriteHandler, this, BOOM);
+
 	//missiles->InitPosition(samus->GetPosX(), samus->GetPosY());
-	sentrybullets = new BulletManager(this, SENTRY_BULLET);
-	birdbullets = new BulletManager(this, BIRD_BULLET);
-	ridleyBoomerang = new BulletManager(this, BOOMERANG);
+	sentrybullets = new BulletManager(spriteHandler, this, SENTRY_BULLET);
+	birdbullets = new BulletManager(spriteHandler, this, BIRD_BULLET);
+	ridleyBoomerang = new BulletManager(spriteHandler, this, BOOMERANG);
 
 	morphItem = new MorphItem(spriteHandler, this);
 	energyItem = new EnergyItem(spriteHandler, this);
@@ -231,8 +232,8 @@ void World::Update(float t)
 
 void World::Render(LPDIRECT3DDEVICE9 d3ddv)
 {
-	//samus->Render();
-	samus->RenderDebug(d3ddv);
+	samus->Render();
+	//samus->RenderDebug(d3ddv);
 	bullets->Render();
 	missiles->Render();
 	boom->Render();
@@ -274,14 +275,14 @@ void World::Render(LPDIRECT3DDEVICE9 d3ddv)
 
 	collisionGroup->Render();
 	effectgroup->Render();
-	//enemyGroup->Render();
-	enemyGroup->RenderDebug(d3ddv);
+	enemyGroup->Render();
+	//enemyGroup->RenderDebug(d3ddv);
 	otherGO->Render();
 
 	gate->Render();
 
-	//colGroundBrick->Render();
-	colGroundBrick->RenderDebug(d3ddv);
+	colGroundBrick->Render();
+	//colGroundBrick->RenderDebug(d3ddv);
 }
 
 void World::InitSprites(LPDIRECT3DDEVICE9 d3ddv)

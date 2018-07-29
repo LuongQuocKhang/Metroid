@@ -4,7 +4,7 @@
 #include "Bullet.h"
 
 
-BirdBullet::BirdBullet(World * manager)
+BirdBullet::BirdBullet(LPD3DXSPRITE spriteHandler,World * manager)
 {
 	limit_dist_x = 0;
 	limit_dist_y = 0;
@@ -15,13 +15,20 @@ BirdBullet::BirdBullet(World * manager)
 
 	for (int i = 0; i < BIRD_BULLET_COUNT; i++)
 	{
-		bullets[i] = new Bullet(this->manager, BIRD_BULLET);
+		bullets[i] = new Bullet(spriteHandler,this->manager, BIRD_BULLET);
 		bullets[i]->damage = DAMAGE_BIRD_BULLET;
 		//this->bulletType = BIRD_BULLET;
 	}
 }
 
 
+void BirdBullet::InitSprites(LPDIRECT3DDEVICE9 d3ddv, LPDIRECT3DTEXTURE9 image)
+{
+	for (int i = 0; i < BIRD_BULLET_COUNT; i++)
+	{
+		bullets[i]->InitSprites(d3ddv, image);
+	}
+}
 BirdBullet::~BirdBullet()
 {
 }

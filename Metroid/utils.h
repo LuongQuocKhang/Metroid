@@ -6,6 +6,7 @@
 
 LPDIRECT3DSURFACE9 CreateSurfaceFromFile(LPDIRECT3DDEVICE9 d3ddv, LPWSTR FilePath);
 void DrawCollider(LPDIRECT3DDEVICE9 d3ddv, float x, float y, Collider* collider, D3DCOLOR color);
+LPDIRECT3DTEXTURE9 LoadTexture(LPWSTR imgPath, LPD3DXSPRITE spriteHandler);
 
 struct CUSTOMVERTEX
 {

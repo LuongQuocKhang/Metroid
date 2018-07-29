@@ -20,13 +20,13 @@ protected:
 	World * manager;
 	BULLET_TYPE bulletType;
 
-	LPD3DXSPRITE _SpriteHandler;
+	//LPD3DXSPRITE _SpriteHandler;
 	BULLET_DIRECTION direction;
 public:
 	float damage;		// Lượng sát thương gây ra của BulletObject
 
 	BulletObject();
-	BulletObject(World * manager);
+	BulletObject(LPD3DXSPRITE spriteHandler,World * manager);
 	~BulletObject();
 	
 	void InitPosition(int posX, int posY);
@@ -46,6 +46,8 @@ public:
 
 	//============ VIRTUAL METHOD =================
 	virtual void InitSprites(LPDIRECT3DDEVICE9 d3ddv);
+	virtual void InitSprites(LPDIRECT3DDEVICE9 d3ddv, LPDIRECT3DTEXTURE9 image) {};
+
 	virtual void Update(float t);
 	virtual void Render();
 	virtual void Shoot(BULLET_DIRECTION dir);

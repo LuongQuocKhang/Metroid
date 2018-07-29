@@ -7,9 +7,10 @@ BulletObject::BulletObject()
 {
 }
 
-BulletObject::BulletObject(World * manager)
+BulletObject::BulletObject(LPD3DXSPRITE spriteHandler,World * manager)
 {
 	this->manager = manager;
+	this->spriteHandler = spriteHandler;
 }
 
 BulletObject::~BulletObject()

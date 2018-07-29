@@ -98,6 +98,79 @@ Sprite::Sprite(LPD3DXSPRITE SpriteHandler, LPWSTR ImagePath, char* infoFilePath,
 
 }
 
+Sprite::Sprite(LPD3DXSPRITE SpriteHandler, LPDIRECT3DTEXTURE9 image, int posX, int posY, int Width, int Height)
+{
+	spriteInfo = new SpriteInfo[1];
+	spriteInfo->pos_x = posX;
+	spriteInfo->pos_y = posY;
+	//
+	//Init sprite with DirectX
+	//
+	D3DXIMAGE_INFO info;
+	HRESULT result;
+
+	_Image = image;
+	_SpriteHandler = SpriteHandler;
+	_Width = Width;
+	_Height = Height;
+	_Count = 1;
+	_Index = 0;
+}
+
+Sprite::Sprite(LPD3DXSPRITE SpriteHandler, LPDIRECT3DTEXTURE9 image, char * infoFilePath, int Width, int Height, int Count, int SpritePerRow)
+{
+	//
+	//Init array posSprite
+	//
+	spriteInfo = new SpriteInfo[Count];
+
+	//Read file info of file
+	fstream f;
+	try
+	{
+		f.open(infoFilePath);
+	}
+	catch (std::fstream::failure e)
+	{
+		trace(L"[Sprite class]--Read sprite info from file failed");
+		return;
+	}
+	string line;
+	int id = 0;
+	while (!f.eof() && id < Count)
+	{
+		vector<string> pos;
+		string split;
+		getline(f, line);
+		istringstream iss(line);
+
+		while (getline(iss, split, ' '))
+		{
+			pos.push_back(split);
+		}
+
+		spriteInfo[id].pos_x = stoi(pos[0]);
+		spriteInfo[id].pos_y = stoi(pos[1]);
+		id++;
+	}
+	f.close();
+
+	//
+	//Init sprite with DirectX
+	//
+	D3DXIMAGE_INFO info;
+	HRESULT result;
+
+	_Image = image;
+	_SpriteHandler = SpriteHandler;
+	_Width = Width;
+	_Height = Height;
+	_Count = Count;
+	_SpritePerRow = SpritePerRow;
+	_Index = 0;
+}
+
+
 Sprite::Sprite(LPD3DXSPRITE SpriteHandler, LPWSTR ImagePath, int posX, int posY, int Width, int Height)
 {
 	spriteInfo = new SpriteInfo[1];

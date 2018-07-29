@@ -5,7 +5,7 @@ void Missile::Render()
 {
 	if (isActive)
 	{
-		_SpriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
+		spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
 		switch (direction)
 		{
 		case ON_UP:
@@ -18,11 +18,11 @@ void Missile::Render()
 			missile_right->Render(pos_x, pos_y + 10);
 			break;
 		}
-		_SpriteHandler->End();
+		spriteHandler->End();
 	}
 }
 
-Missile::Missile(World * manager)
+Missile::Missile(LPD3DXSPRITE spriteHandler,World * manager)
 {
 	missile_up = NULL;
 	missile_left = NULL;
@@ -31,6 +31,7 @@ Missile::Missile(World * manager)
 	limit_dist_y = 0;
 	isActive = false;
 	this->manager = manager;
+	this -> spriteHandler = spriteHandler;
 	this->bulletType = MISSILE;
 	damage = DAMAGE_SAMUS_MISSILE;
 
@@ -38,7 +39,7 @@ Missile::Missile(World * manager)
 	collider = new Collider(MISSILE_HEIGHT / 2, -MISSILE_WIDTH / 2, -MISSILE_HEIGHT / 2, MISSILE_WIDTH / 2);
 }
 
-Missile::Missile(World * manager, int x_holder, int y_holder)
+Missile::Missile(LPD3DXSPRITE spriteHandler,World * manager, int x_holder, int y_holder)
 {
 	missile_up = NULL;
 	missile_left = NULL;
@@ -47,6 +48,7 @@ Missile::Missile(World * manager, int x_holder, int y_holder)
 	limit_dist_y = 0;
 	isActive = false;
 	this->manager = manager;
+	this->spriteHandler = spriteHandler;
 	this->bulletType = MISSILE;
 	damage = DAMAGE_SAMUS_MISSILE;
 
@@ -66,11 +68,19 @@ void Missile::InitSprites(LPDIRECT3DDEVICE9 d3ddv)
 {
 	if (d3ddv == NULL) return;
 	//Create sprite handler
-	HRESULT result = D3DXCreateSprite(d3ddv, &_SpriteHandler);
+	HRESULT result = D3DXCreateSprite(d3ddv, &spriteHandler);
 	if (result != D3D_OK) return;
 
 	//Create sprite
-	missile_up = new Sprite(_SpriteHandler, MISSILE_SPRITE_PATH, MISSILE_UP_SPRITE, MISSILE_UP_WIDTH, MISSILE_UP_HEIGHT, MISSILE_COUNT, SPRITE_PER_ROW);
-	missile_left = new Sprite(_SpriteHandler, MISSILE_SPRITE_PATH, MISSILE_LEFT_SPRITE, MISSILE_WIDTH, MISSILE_HEIGHT, MISSILE_COUNT, SPRITE_PER_ROW);
-	missile_right = new Sprite(_SpriteHandler, MISSILE_SPRITE_PATH, MISSILE_RIGHT_SPRITE, MISSILE_WIDTH, MISSILE_HEIGHT, MISSILE_COUNT, SPRITE_PER_ROW);
+	missile_up = new Sprite(spriteHandler, MISSILE_SPRITE_PATH, MISSILE_UP_SPRITE, MISSILE_UP_WIDTH, MISSILE_UP_HEIGHT, MISSILE_COUNT, SPRITE_PER_ROW);
+	missile_left = new Sprite(spriteHandler, MISSILE_SPRITE_PATH, MISSILE_LEFT_SPRITE, MISSILE_WIDTH, MISSILE_HEIGHT, MISSILE_COUNT, SPRITE_PER_ROW);
+	missile_right = new Sprite(spriteHandler, MISSILE_SPRITE_PATH, MISSILE_RIGHT_SPRITE, MISSILE_WIDTH, MISSILE_HEIGHT, MISSILE_COUNT, SPRITE_PER_ROW);
+}
+
+void Missile::InitSprites(LPDIRECT3DDEVICE9 d3ddv, LPDIRECT3DTEXTURE9 image)
+{
+	//Create sprite
+	missile_up = new Sprite(spriteHandler, image, MISSILE_UP_SPRITE, MISSILE_UP_WIDTH, MISSILE_UP_HEIGHT, MISSILE_COUNT, SPRITE_PER_ROW);
+	missile_left = new Sprite(spriteHandler, image, MISSILE_LEFT_SPRITE, MISSILE_WIDTH, MISSILE_HEIGHT, MISSILE_COUNT, SPRITE_PER_ROW);
+	missile_right = new Sprite(spriteHandler, image, MISSILE_RIGHT_SPRITE, MISSILE_WIDTH, MISSILE_HEIGHT, MISSILE_COUNT, SPRITE_PER_ROW);
 }

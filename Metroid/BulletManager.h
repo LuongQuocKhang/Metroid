@@ -20,10 +20,12 @@ private:
 	DWORD tick_per_frame;
 	int frame_rate;
 	int num;		// số lượng đạn tạo sẵn, tùy theo mỗi loại đạn mà có số lượng khác nhau
+	LPDIRECT3DTEXTURE9 image;
+	LPD3DXSPRITE spriteHandler;
 
 public:
 	//BulletManager();
-	BulletManager(World * manager, BULLET_TYPE bullet_type);
+	BulletManager(LPD3DXSPRITE spriteHandler,World * manager, BULLET_TYPE bullet_type);
 	//BulletManager(int posX, int posY);
 	~BulletManager();
 	void InitSprites(LPDIRECT3DDEVICE9 d3ddv);

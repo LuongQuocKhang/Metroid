@@ -13,9 +13,12 @@ protected:
 public:
 	Brick();
 	Brick(LPD3DXSPRITE spriteHandler, World* manager, BRICK_TYPE type, int id, int posX, int posY);
+	Brick(LPD3DXSPRITE spriteHandler, World* manager, LPDIRECT3DTEXTURE9 image, BRICK_TYPE type, int id, int posX, int posY);
+	Brick(LPD3DXSPRITE spriteHandler, World* manager, LPDIRECT3DTEXTURE9 image, int x, int y, int posX, int posY);
 	~Brick();
 
 	void InitSprite();
+	void InitSprites(LPDIRECT3DTEXTURE9 image);
 	//============= GET - SET METHOD ======================
 	int GetId();
 	void SetId(int id);

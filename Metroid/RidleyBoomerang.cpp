@@ -4,11 +4,11 @@
 
 #define LIMIT_DISTANCE_BOOMERANG 500
 
-RidleyBoomerang::RidleyBoomerang(World * manager)
+RidleyBoomerang::RidleyBoomerang(LPD3DXSPRITE spriteHandler,World * manager)
 {
 	this->manager = manager;
 	right = NULL;
-
+	this->spriteHandler = spriteHandler;
 	limit_dist_x = 0;
 	limit_dist_y = 0;
 	isActive = false;
@@ -29,12 +29,17 @@ void RidleyBoomerang::InitSprites(LPDIRECT3DDEVICE9 d3ddv)
 {
 	if (d3ddv == NULL) return;
 	//Create sprite handler
-	HRESULT result = D3DXCreateSprite(d3ddv, &_SpriteHandler);
+	HRESULT result = D3DXCreateSprite(d3ddv, &spriteHandler);
 	if (result != D3D_OK) return;
 
 	//Create sprite
-	right = new Sprite(_SpriteHandler, RIDLEY_BOOMERANG_SPIRTE_PATH, RIDLEY_BOOMERANG_PATH, RIDLEY_BOOMERANG_WIDTH, RIDLEY_BOOMERANG_HEIGHT, RIDLEY_BOOMERANG_SPRITE_COUNT, SPRITE_PER_ROW);
+	right = new Sprite(spriteHandler, RIDLEY_BOOMERANG_SPIRTE_PATH, RIDLEY_BOOMERANG_PATH, RIDLEY_BOOMERANG_WIDTH, RIDLEY_BOOMERANG_HEIGHT, RIDLEY_BOOMERANG_SPRITE_COUNT, SPRITE_PER_ROW);
 
+}
+void RidleyBoomerang::InitSprites(LPDIRECT3DDEVICE9 d3ddv, LPDIRECT3DTEXTURE9 image)
+{
+	//Create sprite
+	right = new Sprite(spriteHandler, image, RIDLEY_BOOMERANG_PATH, RIDLEY_BOOMERANG_WIDTH, RIDLEY_BOOMERANG_HEIGHT, RIDLEY_BOOMERANG_SPRITE_COUNT, SPRITE_PER_ROW);
 }
 
 void RidleyBoomerang::Update(float t)
@@ -46,28 +51,6 @@ void RidleyBoomerang::Update(float t)
 		return;
 
 	vy -= 0.1f;
-
-	// Va chạm của Ridley_Boomerang đối với Samus
-	//if (manager->samus->isSamusImmortal() == false)
-	//{
-	//	float TimeScale = SweptAABB(manager->samus, t);
-	//	if (TimeScale < 1.0f)
-	//	{
-	//		manager->samus->TakeDamage(this->damage);
-	//		manager->samus->setSamusImmortal(true);
-	//	}
-	//}
-	//else
-	//{
-	//	manager->samus->setImmortalTime(manager->samus->getImmortalTime() - t);
-	//	if (manager->samus->getImmortalTime() <= 0)
-	//	{
-	//		manager->samus->setSamusImmortal(false);
-	//		float temp = SAMUS_IMMORTAL_TIME;
-	//		manager->samus->setImmortalTime(temp);
-	//	}
-	//}
-
 	// Xử lý va chạm
 	for (int i = 0; i < manager->colFloorBrick->size; i++)
 	{
@@ -104,38 +87,20 @@ void RidleyBoomerang::Update(float t)
 
 	pos_x += vx * t;
 	pos_y += vy * t;
-
-	//int temp_x = vx * t;
-	//int temp_y = vy * t;
-
-	//if (temp_x < 0)
-	//	temp_x = -temp_x;
-	//if (temp_y < 0)
-	//	temp_y = -temp_y;
-
-	//limit_dist_x += temp_x;
-	//limit_dist_y += temp_y;
-
-
-	////Check if the bullet reach the limit
-	//if (limit_dist_x >= LIMIT_DISTANCE_BOOMERANG || limit_dist_y >= LIMIT_DISTANCE_BOOMERANG)
-	//{
-	//	Reset();
-	//}
 }
 
 void RidleyBoomerang::Render()
 {
 	if (isActive)
 	{
-		_SpriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
+		spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
 		switch (direction)
 		{
 		case ON_RIGHT:
 			right->Render(pos_x, pos_y);
 			break;
 		}
-		_SpriteHandler->End();
+		spriteHandler->End();
 	}
 }
 

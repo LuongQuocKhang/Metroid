@@ -36,13 +36,13 @@ private:
 	Sprite * missile_right;
 
 public:
-
-	Missile(World * manager);
-	Missile(World * manager, int x_holder, int y_holder);
+	Missile(LPD3DXSPRITE spriteHandler, World * manager);
+	Missile(LPD3DXSPRITE spriteHandler, World * manager, int x_holder, int y_holder);
 	~Missile();
 
 	void InitSprites(LPDIRECT3DDEVICE9 d3ddv);
-	
+	void InitSprites(LPDIRECT3DDEVICE9 d3ddv, LPDIRECT3DTEXTURE9 image);
+
 	void Render();
 };
 

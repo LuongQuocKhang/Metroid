@@ -113,3 +113,45 @@ void DrawCollider(LPDIRECT3DDEVICE9 d3ddv, float x, float y, Collider* collider,
 
 	vertexBuffer->Release();
 }
+
+LPDIRECT3DTEXTURE9 LoadTexture(LPWSTR imgPath, LPD3DXSPRITE spriteHandler)
+{
+	D3DXIMAGE_INFO info;
+	HRESULT result;
+
+	result = D3DXGetImageInfoFromFile(imgPath, &info);
+	if (result != D3D_OK)
+	{
+		trace(L"[ERROR] Failed to get information from image file '%s'", imgPath);
+		return NULL;
+	}
+
+	LPDIRECT3DDEVICE9 d3ddv;
+	spriteHandler->GetDevice(&d3ddv);
+
+	LPDIRECT3DTEXTURE9 _Image;
+
+	result = D3DXCreateTextureFromFileEx(
+		d3ddv,
+		imgPath,
+		info.Width,
+		info.Height,
+		1,
+		D3DUSAGE_DYNAMIC,
+		D3DFMT_UNKNOWN,
+		D3DPOOL_DEFAULT,
+		D3DX_DEFAULT,
+		D3DX_DEFAULT,
+		D3DCOLOR_XRGB(0, 0, 0),
+		&info,
+		NULL,
+		&_Image);
+
+	if (result != D3D_OK)
+	{
+		trace(L"[ERROR] Failed to create texture from file '%s'", imgPath);
+		return NULL;
+	}
+
+	return _Image;
+}

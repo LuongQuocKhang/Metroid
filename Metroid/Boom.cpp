@@ -10,13 +10,13 @@ void Boom::Render()
 		return;
 	else
 	{
-		_SpriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
-		boom->Render(pos_x, pos_y - 24);
-		_SpriteHandler->End();
+		spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
+		boom->Render(pos_x, pos_y);
+		spriteHandler->End();
 	}
 }
 
-Boom::Boom(World * manager)
+Boom::Boom(LPD3DXSPRITE spriteHandler,World * manager)
 {
 	boom = NULL;
 	limit_dist_x = 0;
@@ -25,6 +25,7 @@ Boom::Boom(World * manager)
 	this->damage = DAMAGE_SAMUS_BOOM;
 	this->time_survive = BOOM_TIME_SURVIVE;
 	this->bulletType = BOOM;
+	this->spriteHandler = spriteHandler;
 	this->manager = manager;
 	collider = new Collider(BOOM_HEIGHT, -BOOM_WIDTH, -BOOM_HEIGHT, BOOM_WIDTH);
 }
@@ -55,15 +56,18 @@ void Boom::InitSprites(LPDIRECT3DDEVICE9 d3ddv)
 {
 	if (d3ddv == NULL) return;
 	//Create sprite handler
-	HRESULT result = D3DXCreateSprite(d3ddv, &_SpriteHandler);
+	HRESULT result = D3DXCreateSprite(d3ddv, &spriteHandler);
 	if (result != D3D_OK) return;
 
 	//Create sprite
-	boom = new Sprite(_SpriteHandler, BOOM_SPRITE_PATH, BOOM_SPRITE, BOOM_WIDTH, BOOM_HEIGHT, BOOM_COUNT, SPRITE_PER_ROW);
+	boom = new Sprite(spriteHandler, BOOM_SPRITE_PATH, BOOM_SPRITE, BOOM_WIDTH, BOOM_HEIGHT, BOOM_COUNT, SPRITE_PER_ROW);
 	time_survive = BOOM_TIME_SURVIVE;
 		
 }
-
+void Boom::InitSprites(LPDIRECT3DDEVICE9 d3ddv, LPDIRECT3DTEXTURE9 image)
+{
+	boom = new Sprite(spriteHandler, BOOM_SPRITE_PATH, BOOM_SPRITE, BOOM_WIDTH, BOOM_HEIGHT, BOOM_COUNT, SPRITE_PER_ROW);
+}
 void Boom::Update(float t)
 {
 	if (!isActive)
@@ -99,7 +103,7 @@ void Boom::Update(float t)
 	// Nếu hết thời gian thì không hiển thị nữa
 	if (time_survive <= 0)
 	{
-		manager->explsEffect->Init(this->pos_x, this->pos_y - 20);
+		manager->explsEffect->Init(this->pos_x, this->pos_y);
 		collider->SetCollider(BOOM_HEIGHT * 3, -BOOM_WIDTH * 3, -BOOM_HEIGHT * 3, BOOM_WIDTH * 3);
 		for (int i = 0; i < manager->enemyGroup->size; i++)
 		{

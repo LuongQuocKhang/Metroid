@@ -10,6 +10,8 @@
 #include "ColliderBrick.h"
 #include "Brick.h"
 #include "Gate.h"
+#include "utils.h"
+
 
 Loader::Loader()
 {
@@ -88,6 +90,13 @@ void Loader::ReadMatrixFromFile(const char* path, int room)
 	int width = 0;			// width của room
 	int height = 0;			// height của room
 	int counter = 0;		// biến counter để tính key cho map, biến này đếm liên tục từ phải sang trái trên xuống dưới
+
+	LPDIRECT3DTEXTURE9 image_ground = LoadTexture(BRICK_1_PATH, spriteHandler);
+	if (image_ground == NULL)
+		OutputDebugString(L"image_ground is NULL");
+	LPDIRECT3DTEXTURE9 image_floor = LoadTexture(BRICK_2_PATH, spriteHandler);
+	if (image_floor == NULL)
+		OutputDebugString(L"image_floor is NULL");
 
 	//Read file info of file
 	ifstream f;
@@ -202,7 +211,8 @@ void Loader::ReadMatrixFromFile(const char* path, int room)
 				}
 				else   // BRICK
 				{
-					Brick * brick = new Brick(spriteHandler, manager, GROUND, id, pos_x, pos_y);
+					//Brick * brick = new Brick(spriteHandler, manager, GROUND, id, pos_x, pos_y);
+					Brick * brick = new Brick(spriteHandler, manager, image_ground, GROUND, id, pos_x, pos_y);
 					// Nếu gạch ngay cổng thì cho phép băng qua
 					if (id == 12)
 						brick->SetPassable(true);
@@ -216,7 +226,7 @@ void Loader::ReadMatrixFromFile(const char* path, int room)
 				int pos_x = (i + 160 - 33) * 32;
 				int pos_y = 97 * 32 - ((row_count - 3) * 32) -(15 * 32);
 
-				Brick * brick = new Brick(spriteHandler, manager, FLOOR, id, pos_x, pos_y);
+				Brick * brick = new Brick(spriteHandler, manager, image_floor, FLOOR, id, pos_x, pos_y);
 				// Nếu gạch ngay cổng thì cho phép băng qua
 				if (id == 19)
 					brick->SetPassable(true);
