@@ -80,6 +80,7 @@ void BulletObject::Update(float t)
 				{
 					manager->enemyGroup->objects[i]->isHit = true;
 					((Enemy*)(manager->enemyGroup->objects[i]))->TakeDamage(this->damage);
+					Reset();
 				}
 			}
 		}

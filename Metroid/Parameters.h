@@ -150,7 +150,7 @@ class Boom;
 //================== ENEMY =====================
 //================== BEDGEHOG =====================
 #define ENEMY_SPRITE_PATH L"sprites\\enemy\\metroid_enemies_sheet.png"
-#define BEDGEHOG_WIDTH 32
+#define BEDGEHOG_WIDTH 36
 #define BEDGEHOG_HEIGHT 30
 #define BEDGEHOG_SPRITE_COUNT 2
 #define BEDGEHOG_SPEED 0.07f;

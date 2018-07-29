@@ -113,10 +113,11 @@ void Boom::Update(float t)
 				{
 					manager->enemyGroup->objects[i]->isHit = true;
 					((Enemy*)manager->enemyGroup->objects[i])->TakeDamage(this->damage);
+					Reset();
 				}
 			}
 		}
-		if (!(manager->metroid->isOnFloor))
+		/*if (!(manager->metroid->isOnFloor))
 		{
 			for (int i = 0; i < manager->colGroundBrick->size; i++)
 			{				
@@ -126,7 +127,7 @@ void Boom::Update(float t)
 					Reset();
 				}
 			}
-		}
+		}*/
 		isActive = false;
 	}
 	DWORD now = GetTickCount();
