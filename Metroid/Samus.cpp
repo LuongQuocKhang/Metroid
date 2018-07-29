@@ -976,8 +976,8 @@ void Samus::ProcessInput(LPDIRECT3DDEVICE9 d3ddv, float Delta, Metroid* metroid)
 
 		if (this->GetState() == ON_MORPH_LEFT)
 			this->SetState(ON_MORPH_RIGHT);
-		if (this->GetState() == ON_SOMERSAULT_RIGHT)
-			this->SetState(ON_SOMERSAULT_LEFT);
+		if (this->GetState() == ON_SOMERSAULT_LEFT)
+			this->SetState(ON_SOMERSAULT_RIGHT);
 		if (this->GetState() == ON_JUMP_LEFT)
 			this->SetState(ON_JUMP_RIGHT);
 		if (this->GetState() == ON_JUMPING_SHOOTING_LEFT || this->GetState() == ON_JUMP_AIM_UP_LEFT)
@@ -1441,7 +1441,7 @@ void Samus::OnkeyDown(int KeyCode, Metroid * metroid, int& screenMode)
 			//Game::gameSound->playSound(SHOOT_MISSILE);
 			if (isCrouching == true)
 			{
-				_SetBoom(ON_UP, metroid, this->GetPosX(), this->GetPosY());
+				_SetBoom(ON_UP, metroid, this->GetPosX(), this->GetPosY() + 24);
 			}	
 			break;
 		}

@@ -11,7 +11,7 @@ void Boom::Render()
 	else
 	{
 		spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
-		boom->Render(pos_x, pos_y);
+		boom->Render(pos_x, pos_y - 24);
 		spriteHandler->End();
 	}
 }

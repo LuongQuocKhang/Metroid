@@ -122,7 +122,7 @@ void Bird::Update(float t)
 				SlideFromGround(brick, t, timeScale);
 				DeathByShoot = false;
 
-				if (pos_y - height/2 <= GROUND_Y && normalx == 0)
+				if (pos_y - height/2 - 10 <= GROUND_Y && normalx == 0)
 				{
 					timealive -= t;
 					if (this->DeathByShoot == false && timealive <= 0)
