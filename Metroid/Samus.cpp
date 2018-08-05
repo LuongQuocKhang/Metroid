@@ -244,6 +244,16 @@ int Samus::GetMissileNumbers()
 	return missile_numbers;
 }
 
+int Samus::GetBoomNumbers()
+{
+	return this->boom_numbers;
+}
+
+void Samus::SetBoomNumbers(int num)
+{
+	this->boom_numbers = num;
+}
+
 void Samus::SetMissileNumbers(int num)
 {
 	missile_numbers = num;
@@ -262,7 +272,8 @@ Samus::Samus()
 
 	immortal_time = SAMUS_IMMORTAL_TIME;
 	isImmortal = false;
-
+	this->missile_numbers = MISSILE_NUM;
+	this->boom_numbers = BOOM_NUM;
 	collider = new Collider();
 	collider->SetCollider(0, 0, -this->height, this->width);
 	this->isActive = true;
@@ -289,9 +300,10 @@ Samus::Samus(LPD3DXSPRITE spriteHandler, World * manager)
 	immortal_time = SAMUS_IMMORTAL_TIME;
 	isImmortal = false;
 
-	missile_numbers = 10; // set số lượng missile ban đầu
+	missile_numbers = MISSILE_NUM;
+	this->boom_numbers = BOOM_NUM;
 
-						  //Collider
+	//Collider
 	this->collider = new Collider();
 	this->collider->SetCollider(0, 0, -this->height, this->width);
 	state = APPEARANCE;
@@ -348,10 +360,12 @@ void Samus::_Shoot(BULLET_DIRECTION dir, Metroid * metroid)
 void Samus::_SetBoom(BULLET_DIRECTION dir, Metroid * metroid)
 {
 	(metroid->GetWorld())->boom->Next(dir, this->GetPosX(), this->GetPosY());
+	this->boom_numbers--;
 }
 void Samus::_SetBoom(BULLET_DIRECTION dir, Metroid * metroid,float pos_x , float pos_y)
 {
 	(metroid->GetWorld())->boom->Next(dir, pos_x , pos_y);
+	this->boom_numbers--;
 }
 void Samus::_ShootMissile(BULLET_DIRECTION dir, Metroid * metroid)
 {
@@ -362,36 +376,6 @@ void Samus::InitSprites(LPDIRECT3DDEVICE9 d3ddv)
 {
 	if (d3ddv == NULL) return;
 	LPDIRECT3DTEXTURE9 image = LoadTexture(SAMUS_SPRITES_PATH, spriteHandler);
-	//Create instance of sprites
-	/*appearing = new Sprite(spriteHandler, SAMUS_SPRITES_PATH, APPEARING, APPEARING_WIDTH, APPEARING_HEIGHT, APPEARING_COUNT, SPRITE_PER_ROW);
-	running_left = new Sprite(spriteHandler, SAMUS_SPRITES_PATH, RUNNING_LEFT, RUNNING_WIDTH, RUNNING_HEIGHT, RUNNING_COUNT, SPRITE_PER_ROW);
-	running_right = new Sprite(spriteHandler, SAMUS_SPRITES_PATH, RUNNING_RIGHT, RUNNING_WIDTH, RUNNING_HEIGHT, RUNNING_COUNT, SPRITE_PER_ROW);
-	jump_left = new Sprite(spriteHandler, SAMUS_SPRITES_PATH, JUMP_LEFT, JUMP_WIDTH, JUMP_HEIGHT, JUMP_COUNT, SPRITE_PER_ROW);
-	jump_right = new Sprite(spriteHandler, SAMUS_SPRITES_PATH, JUMP_RIGHT, JUMP_WIDTH, JUMP_HEIGHT, JUMP_COUNT, SPRITE_PER_ROW);
-	run_shooting_left = new Sprite(spriteHandler, SAMUS_SPRITES_PATH, RUN_SHOOTING_LEFT, RUN_SHOOTING_WIDTH, RUN_SHOOTING_HEIGHT, RUN_SHOOTING_COUNT, SPRITE_PER_ROW);
-	run_shooting_right = new Sprite(spriteHandler, SAMUS_SPRITES_PATH, RUN_SHOOTING_RIGHT, RUN_SHOOTING_WIDTH, RUN_SHOOTING_HEIGHT, RUN_SHOOTING_COUNT, SPRITE_PER_ROW);
-	run_aim_up_left = new Sprite(spriteHandler, SAMUS_SPRITES_PATH, RUN_AIM_UP_LEFT, RUN_AIM_UP_WIDTH, RUN_AIM_UP_HEIGHT, RUN_AIM_UP_COUNT, SPRITE_PER_ROW);
-	run_aim_up_right = new Sprite(spriteHandler, SAMUS_SPRITES_PATH, RUN_AIM_UP_RIGHT, RUN_AIM_UP_WIDTH, RUN_AIM_UP_HEIGHT, RUN_AIM_UP_COUNT, SPRITE_PER_ROW);
-	idle_aim_up_left = new Sprite(spriteHandler, SAMUS_SPRITES_PATH, IDLE_AIM_UP_LEFT, IDLE_AIM_UP_WIDTH, IDLE_AIM_UP_HEIGHT, IDLE_AIM_UP_COUNT, SPRITE_PER_ROW);
-	idle_aim_up_right = new Sprite(spriteHandler, SAMUS_SPRITES_PATH, IDLE_AIM_UP_RIGHT, IDLE_AIM_UP_WIDTH, IDLE_AIM_UP_HEIGHT, IDLE_AIM_UP_COUNT, SPRITE_PER_ROW);
-	idle_left = new Sprite(spriteHandler, SAMUS_SPRITES_PATH, STANDING_LEFT, STANDING_WIDTH, STANDING_HEIGHT, STANDING_COUNT, SPRITE_PER_ROW);
-	idle_right = new Sprite(spriteHandler, SAMUS_SPRITES_PATH, STANDING_RIGHT, STANDING_WIDTH, STANDING_HEIGHT, STANDING_COUNT, SPRITE_PER_ROW);
-	morph_ball_left = new Sprite(spriteHandler, SAMUS_SPRITES_PATH, MORPH_BALL_LEFT, MORPH_BALL_WIDTH, MORPH_BALL_HEIGHT, MORPH_BALL_COUNT, SPRITE_PER_ROW);
-	morph_ball_right = new Sprite(spriteHandler, SAMUS_SPRITES_PATH, MORPH_BALL_RIGHT, MORPH_BALL_WIDTH, MORPH_BALL_HEIGHT, MORPH_BALL_COUNT, SPRITE_PER_ROW);
-	somersault_left = new Sprite(spriteHandler, SAMUS_SPRITES_PATH, SOMERSAULT_LEFT, SOMERSAULT_WIDTH, SOMERSAULT_HEIGHT, SOMERSAULT_COUNT, SPRITE_PER_ROW);
-	somersault_right = new Sprite(spriteHandler, SAMUS_SPRITES_PATH, SOMERSAULT_RIGHT, SOMERSAULT_WIDTH, SOMERSAULT_HEIGHT, SOMERSAULT_COUNT, SPRITE_PER_ROW);
-	jumping_shooting_left = new Sprite(spriteHandler, SAMUS_SPRITES_PATH, JUMPING_SHOOTING_LEFT, JUMPING_SHOOTING_WIDTH, JUMPING_SHOOTING_HEIGHT, JUMPING_SHOOTING_COUNT, SPRITE_PER_ROW);
-	jumping_shooting_right = new Sprite(spriteHandler, SAMUS_SPRITES_PATH, JUMPING_SHOOTING_RIGHT, JUMPING_SHOOTING_WIDTH, JUMPING_SHOOTING_HEIGHT, JUMPING_SHOOTING_COUNT, SPRITE_PER_ROW);
-	jump_aim_up_left = new Sprite(spriteHandler, SAMUS_SPRITES_PATH, JUMP_AIM_UP_LEFT, JUMP_AIM_UP_WIDTH, JUMP_AIM_UP_HEIGHT, JUMP_AIM_UP_COUNT, SPRITE_PER_ROW);
-	jump_aim_up_right = new Sprite(spriteHandler, SAMUS_SPRITES_PATH, JUMP_AIM_UP_RIGHT, JUMP_AIM_UP_WIDTH, JUMP_AIM_UP_HEIGHT, JUMP_AIM_UP_COUNT, SPRITE_PER_ROW);
-	idle_shooting_left = new Sprite(spriteHandler, SAMUS_SPRITES_PATH, STAND_SHOOTING_LEFT, STANDING_SHOOTING_WIDTH, STANDING_SHOOTING_HEIGHT, STAND_SHOOTING_COUNT, SPRITE_PER_ROW);
-	idle_shooting_right = new Sprite(spriteHandler, SAMUS_SPRITES_PATH, STAND_SHOOTING_RIGHT, STANDING_SHOOTING_WIDTH, STANDING_SHOOTING_HEIGHT, STAND_SHOOTING_COUNT, SPRITE_PER_ROW);
-	idle_shooting_up_left = new Sprite(spriteHandler, SAMUS_SPRITES_PATH, STAND_SHOOTING_UP_LEFT, STANDING_SHOOTING_UP_WIDTH, STANDING_SHOOTING_UP_HEIGHT, STAND_SHOOTING_UP_COUNT, SPRITE_PER_ROW);
-	idle_shooting_up_right = new Sprite(spriteHandler, SAMUS_SPRITES_PATH, STAND_SHOOTING_UP_RIGHT, STANDING_SHOOTING_UP_WIDTH, STANDING_SHOOTING_UP_HEIGHT, STAND_SHOOTING_UP_COUNT, SPRITE_PER_ROW);
-	jump_shooting_up_left = new Sprite(spriteHandler, SAMUS_SPRITES_PATH, JUMP_SHOOTING_UP_LEFT, JUMP_SHOOTING_UP_WIDTH, JUMP_SHOOTING_UP_HEIGHT, JUMP_SHOOTING_UP_COUNT, SPRITE_PER_ROW);
-	jump_shooting_up_right = new Sprite(spriteHandler, SAMUS_SPRITES_PATH, JUMP_SHOOTING_UP_RIGHT, JUMP_SHOOTING_UP_WIDTH, JUMP_SHOOTING_UP_HEIGHT, JUMP_SHOOTING_UP_COUNT, SPRITE_PER_ROW);
-*/
-
 	appearing = new Sprite(spriteHandler, image, APPEARING, APPEARING_WIDTH, APPEARING_HEIGHT, APPEARING_COUNT, SPRITE_PER_ROW);
 	running_left = new Sprite(spriteHandler, image, RUNNING_LEFT, RUNNING_WIDTH, RUNNING_HEIGHT, RUNNING_COUNT, SPRITE_PER_ROW);
 	running_right = new Sprite(spriteHandler, image, RUNNING_RIGHT, RUNNING_WIDTH, RUNNING_HEIGHT, RUNNING_COUNT, SPRITE_PER_ROW);
@@ -954,8 +938,8 @@ void Samus::Deflect(GameObject *target, const float &DeltaTime, const float &Col
 		pos_x += vx * (CollisionTimeScale)* DeltaTime + 15.0f*normalx;
 		pos_y += vy * (CollisionTimeScale)* DeltaTime + 15.0f*normaly;
 	}*/
-	pos_x += vx * (CollisionTimeScale)* DeltaTime + 15.0f*normalx;
-	pos_y += vy * (CollisionTimeScale)* DeltaTime + 15.0f*normaly;
+	pos_x += vx * (CollisionTimeScale)* DeltaTime + 20.0*normalx;
+	pos_y += vy * (CollisionTimeScale)* DeltaTime + 20.0f*normaly;
 }
 void Samus::ProcessInput(LPDIRECT3DDEVICE9 d3ddv, float Delta, Metroid* metroid)
 {
@@ -1441,6 +1425,7 @@ void Samus::OnkeyDown(int KeyCode, Metroid * metroid, int& screenMode)
 			//Game::gameSound->playSound(SHOOT_MISSILE);
 			if (isCrouching == true)
 			{
+				if ( this->boom_numbers > 0)
 				_SetBoom(ON_UP, metroid, this->GetPosX(), this->GetPosY() + 24);
 			}	
 			break;

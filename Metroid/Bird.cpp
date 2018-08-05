@@ -33,7 +33,7 @@ Bird::Bird(LPD3DXSPRITE spriteHandler, World * manager, ENEMY_TYPE enemy_type) :
 	this->vx = 0;
 	//Set collider
 	collider = new Collider();
-	collider->SetCollider(BIRD_HEIGHT, -BIRD_WIDTH, -BIRD_HEIGHT, BIRD_WIDTH);
+	collider->SetCollider(BIRD_HEIGHT / 2, -BIRD_WIDTH / 2, -BIRD_HEIGHT / 2 - 10, BIRD_WIDTH / 2);
 
 	// collider dùng khi samus đi vào vùng va chạm
 	collider_area = new Collider();
@@ -122,12 +122,12 @@ void Bird::Update(float t)
 				SlideFromGround(brick, t, timeScale);
 				DeathByShoot = false;
 
-				if (pos_y - height/2 - 10 <= GROUND_Y && normalx == 0)
+				if (pos_y <=GROUND_Y  && normalx == 0)
 				{
 					timealive -= t;
 					if (this->DeathByShoot == false && timealive <= 0)
 					{
-						manager->birdbullets->Next(ON_LEFT, this->pos_x, pos_y);
+						manager->birdbullets->Next(ON_LEFT, this->pos_x, pos_y-10);
 						isActive = false;
 						timealive = TIMEALIVE;
 						this->vy = 0;

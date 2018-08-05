@@ -103,7 +103,7 @@ void Boom::Update(float t)
 	// Nếu hết thời gian thì không hiển thị nữa
 	if (time_survive <= 0)
 	{
-		manager->explsEffect->Init(this->pos_x, this->pos_y);
+		manager->explsEffect->Init(this->pos_x, this->pos_y - 24);
 		collider->SetCollider(BOOM_HEIGHT * 3, -BOOM_WIDTH * 3, -BOOM_HEIGHT * 3, BOOM_WIDTH * 3);
 		for (int i = 0; i < manager->enemyGroup->size; i++)
 		{

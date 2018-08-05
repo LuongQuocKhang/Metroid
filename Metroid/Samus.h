@@ -74,7 +74,7 @@ protected:
 	int num;
 	bool isMorph;	// Kiểm tra xem Samus đã nhặt Morph ball Item chưa để có thể crouch
 	int missile_numbers;		//số lượng missile ban đầu
-								//DirectCollision direction;
+	int boom_numbers;					
 public:
 	float health;	// Máu của Samus
 	bool isDeath;	// Trạng thái chết của Samus
@@ -134,7 +134,8 @@ public:
 	void _ShootMissile(BULLET_DIRECTION dir, Metroid*);
 	void SetMissileNumbers(int value);
 	int GetMissileNumbers();
-	void ShootReused(float &Delta, Metroid* metroid);
+	int GetBoomNumbers();
+	void SetBoomNumbers(int num);
 
 	//================ OVERRIDE VIRTUAL METHOD ==================
 	void Reset(int  x, int y);
