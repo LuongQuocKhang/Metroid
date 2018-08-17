@@ -947,6 +947,20 @@ void Samus::Deflect(GameObject *target, const float &DeltaTime, const float &Col
 	{
 		if (vy > 0.0f)// đang bay lên => văng xuống
 			vy *= -1;
+		if (vx == 0)
+		{
+			if (state == IDLING_SHOOTING_LEFT || state== IDLE_LEFT)
+			{
+				vx = 0.8;
+				vy *= -1;
+			}
+			else if (state == IDLING_SHOOTING_RIGHT || state == IDLE_RIGHT)
+			{
+				vx = -0.8;
+				vy *= -1;
+			}
+		}
+		
 	}
 
 	if (normaly != 0)
