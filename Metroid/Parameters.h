@@ -59,7 +59,7 @@ class Boom;
 #define GROUND_Y 120
 #define SHOOTING_SPEED 15
 #define SAMUS_SPEED 0.15f
-#define SAMUS_IMMORTAL_TIME 2500.0f;
+#define SAMUS_IMMORTAL_TIME 2000.0f;
 
 #define SAMUS_SPRITES_PATH L"sprites\\samus\\samus_sprites.png"
 
@@ -292,7 +292,7 @@ enum BULLET_DIRECTION
 //================= BULLET MANAGER ================
 #define STANDARD_NUM 5
 #define MISSILE_NUM 100
-#define BOOM_NUM  5
+#define BOOM_NUM  50
 #define SENTRY_BULLET_NUM 10
 #define BIRD_BULLET_NUM 2
 #define RIDLEY_BOOMERANG_NUM 10

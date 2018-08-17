@@ -111,15 +111,17 @@ void Samus::Render()
 	else
 	{
 		D3DXCOLOR color;
-		if (color.r == 127 && color.g == 127 && color.b == 127)
+		if (isChange == true)
 		{
-			color.r = 255; color.g = 255; color.b = 255;
+				color.r = 127; color.g = 127; color.b = 127;
+				isChange = false;
 		}
 		else
 		{
-			color.r = 127; color.g = 127; color.b = 127;
+			color.r = 255; color.g = 255; color.b = 255;
+			isChange = true;
 		}
-
+		
 		switch (state)
 		{
 		case APPEARANCE:
@@ -278,7 +280,7 @@ Samus::Samus()
 	collider->SetCollider(0, 0, -this->height, this->width);
 	this->isActive = true;
 	state = APPEARANCE;
-    
+	isChange = false;
 }
 
 Samus::Samus(LPD3DXSPRITE spriteHandler, World * manager)
@@ -308,6 +310,7 @@ Samus::Samus(LPD3DXSPRITE spriteHandler, World * manager)
 	this->collider->SetCollider(0, 0, -this->height, this->width);
 	state = APPEARANCE;
 	gravity = FALLDOWN_VELOCITY_DECREASE;
+	isChange = false;
 }
 
 
@@ -538,6 +541,7 @@ void Samus::Update(float t)
 						pos_y = GROUND_Y;
 					}
 					isImmortal = true;
+					isChange = true;
 
 					TakeDamage(((Enemy*)manager->enemyGroup->objects[i])->damage);		
 				}
@@ -545,10 +549,12 @@ void Samus::Update(float t)
 			else
 			{
 				immortal_time -= t;
+			
 				if (immortal_time <= 0)
 				{
 					isImmortal = false;
 					immortal_time = SAMUS_IMMORTAL_TIME;
+
 				}
 			}
 		}
@@ -938,8 +944,8 @@ void Samus::Deflect(GameObject *target, const float &DeltaTime, const float &Col
 		pos_x += vx * (CollisionTimeScale)* DeltaTime + 15.0f*normalx;
 		pos_y += vy * (CollisionTimeScale)* DeltaTime + 15.0f*normaly;
 	}*/
-	pos_x += vx * (CollisionTimeScale)* DeltaTime + 20.0*normalx;
-	pos_y += vy * (CollisionTimeScale)* DeltaTime + 20.0f*normaly;
+	pos_x += vx * (CollisionTimeScale)* DeltaTime + 30.0f*normalx;
+	pos_y += vy * (CollisionTimeScale)* DeltaTime + 30.0f*normaly;
 }
 void Samus::ProcessInput(LPDIRECT3DDEVICE9 d3ddv, float Delta, Metroid* metroid)
 {

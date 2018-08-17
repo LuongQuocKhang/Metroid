@@ -85,6 +85,8 @@ public:
 	bool isOnGround;
 	bool isCrouching;
 
+	bool isChange;
+
 	Samus();
 	Samus(LPD3DXSPRITE spriteHandler, World * manager);
 	~Samus();
