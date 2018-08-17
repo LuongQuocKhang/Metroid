@@ -30,7 +30,7 @@ Bedgehog::Bedgehog(LPD3DXSPRITE spriteHandler, World * manager, ENEMY_TYPE enemy
 
 	last_normalx = 0;
 	last_normaly = 0;
-
+	state = ON_BEDGEHOG_UP;
 	//isCollision = false;
 }
 
@@ -93,6 +93,10 @@ void Bedgehog::Update(float t)
 	{
 		last_normalx = 0;
 		last_normaly = 0;
+		state = ON_BEDGEHOG_UP;
+		vx = BEDGEHOG_SPEED;
+		vy = -BEDGEHOG_SPEED;
+
 		return;
 	}
 
@@ -121,7 +125,6 @@ void Bedgehog::Update(float t)
 	}
 
 	bool isCollide = false;
-	// collider mới cho ground - Quan
 	if (!(manager->metroid->isOnFloor))
 	{
 		for (int i = 0; i < manager->colGroundBrick->size; i++)
@@ -174,11 +177,6 @@ void Bedgehog::Update(float t)
 			{
 				pos_x -= 2.f;
 			}
-
-			//OutputDebugString(L"pos_x: ");
-			//Output(pos_x);
-			//OutputDebugString(L"\n");
-
 			vx *= -1;
 			//vx = 0;
 			if (vx > 0)
@@ -201,13 +199,11 @@ void Bedgehog::Update(float t)
 		{
 			if (vy > 0)
 			{
-				pos_y += 2.f;	// +
-				OutputDebugString(L"vy > 0\n");
+				pos_y += 2.f;
 			}
 			else
 			{
 				pos_y -= 2.f;
-				OutputDebugString(L"vy < 0\n");
 			}
 			vy *= -1;
 			if (last_normalx > 0.1f)
@@ -218,45 +214,7 @@ void Bedgehog::Update(float t)
 			last_normalx = 0;
 		}
 
-		/*last_normalx = normalx;
-		last_normaly = normaly;*/
 	}
-
-
-
-	/*last_normalx = normalx;
-	last_normaly = normaly;*/
-
-
-
-	/*if (!isCollision && gravity == 0)
-	{
-	if (last_normalx > 0.1f)
-	{
-	state = ON_BEDGEHOG_BOTTOM;
-	vx = -BEDGEHOG_SPEED;
-	vy = 0.01f;
-	}
-	else if (last_normalx < -0.1f)
-	{
-	state = ON_BEDGEHOG_UP;
-	vx = BEDGEHOG_SPEED;
-	vy = -0.01f;
-	}
-
-	if (last_normaly > 0.1f)
-	{
-	state = ON_BEDGEHOG_RIGHT;
-	vx = -0.01f;
-	vy = -0.05f;
-	}
-	else if (last_normaly < -0.1f)
-	{
-	vx = 0.01f;
-	vy = 0.05f;
-	state = ON_BEDGEHOG_LEFT;
-	}
-	}*/
 
 
 	pos_x += vx * t;
@@ -355,6 +313,10 @@ void Bedgehog::Destroy()
 
 	// Destroy
 	Enemy::Destroy();
+	state = ON_BEDGEHOG_UP;
+	vx = BEDGEHOG_SPEED;
+	vy = -BEDGEHOG_SPEED;
+
 }
 
 // Phản xạ khi va chạm với ground

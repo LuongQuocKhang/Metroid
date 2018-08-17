@@ -920,12 +920,22 @@ void Samus::Deflect(GameObject *target, const float &DeltaTime, const float &Col
 	if (normalx > 0.1f)	// tông bên phải
 	{
 		if (vx < -0.0f)// đang chạy qua trái => văng ngược lại
+		{
 			vx *= -1;
+			vx += 1.f;
+
+			vy -= 0.5f;
+		}
 	}
 	else if (normalx < -0.1f) // tông bên trái
 	{
 		if (vx > 0.0f)//	đang chạy qua phải => văng ngược lại
+		{
 			vx *= -1;
+			vx -= 1.f;
+
+			vy -= 0.5f;
+		}
 	}
 
 	if (normaly > 0.1f) // tông phía trên
@@ -939,13 +949,11 @@ void Samus::Deflect(GameObject *target, const float &DeltaTime, const float &Col
 			vy *= -1;
 	}
 
-	/*if (normaly != 0)
+	if (normaly != 0)
 	{
-		pos_x += vx * (CollisionTimeScale)* DeltaTime + 15.0f*normalx;
-		pos_y += vy * (CollisionTimeScale)* DeltaTime + 15.0f*normaly;
-	}*/
-	pos_x += vx * (CollisionTimeScale)* DeltaTime + 20.0f*normalx;
-	pos_y += vy * (CollisionTimeScale)* DeltaTime + 20.0f*normaly;
+		pos_x += vx * (CollisionTimeScale)* DeltaTime + 20.0f*normalx;
+		pos_y += vy * (CollisionTimeScale)* DeltaTime + 20.0f*normaly;
+	}
 }
 void Samus::ProcessInput(LPDIRECT3DDEVICE9 d3ddv, float Delta, Metroid* metroid)
 {
