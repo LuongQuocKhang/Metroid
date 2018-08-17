@@ -944,8 +944,8 @@ void Samus::Deflect(GameObject *target, const float &DeltaTime, const float &Col
 		pos_x += vx * (CollisionTimeScale)* DeltaTime + 15.0f*normalx;
 		pos_y += vy * (CollisionTimeScale)* DeltaTime + 15.0f*normaly;
 	}*/
-	pos_x += vx * (CollisionTimeScale)* DeltaTime + 30.0f*normalx;
-	pos_y += vy * (CollisionTimeScale)* DeltaTime + 30.0f*normaly;
+	pos_x += vx * (CollisionTimeScale)* DeltaTime + 20.0f*normalx;
+	pos_y += vy * (CollisionTimeScale)* DeltaTime + 20.0f*normaly;
 }
 void Samus::ProcessInput(LPDIRECT3DDEVICE9 d3ddv, float Delta, Metroid* metroid)
 {

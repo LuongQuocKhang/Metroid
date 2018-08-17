@@ -3,9 +3,12 @@
 #include "GroupObject.h"
 #include "ColliderBrick.h"
 #include "Metroid.h"
+#include "utils.h"
+
 
 Bedgehog::Bedgehog()
 {
+
 }
 
 Bedgehog::Bedgehog(LPD3DXSPRITE spriteHandler, World * manager, ENEMY_TYPE enemy_type) : Enemy(spriteHandler, manager)
@@ -21,14 +24,14 @@ Bedgehog::Bedgehog(LPD3DXSPRITE spriteHandler, World * manager, ENEMY_TYPE enemy
 	collider->SetCollider(0, 0, -BEDGEHOG_HEIGHT, BEDGEHOG_WIDTH);
 
 	//Set vận tốc
-	gravity = FALLDOWN_VELOCITY_DECREASE;
+	//gravity = FALLDOWN_VELOCITY_DECREASE;
 	vx = BEDGEHOG_SPEED;
-	vy = 0;
+	vy = -BEDGEHOG_SPEED;
 
 	last_normalx = 0;
 	last_normaly = 0;
 
-	isCollision = false;
+	//isCollision = false;
 }
 
 
@@ -45,8 +48,8 @@ void Bedgehog::InitSprites()
 {
 
 	char *up_path = NULL, *bottom_path = NULL, *left_path = NULL, *right_path = NULL;
-	
-	switch(enemy_type)
+
+	switch (enemy_type)
 	{
 	case BEDGEHOG_YELLOW:
 		up_path = BEDGEHOG_YELLOW_UP;
@@ -81,18 +84,30 @@ void Bedgehog::InitSprites()
 	right = new Sprite(spriteHandler, ENEMY_SPRITE_PATH, right_path, BEDGEHOG_WIDTH, BEDGEHOG_HEIGHT, BEDGEHOG_SPRITE_COUNT, 1);
 
 }
+
 void Bedgehog::Update(float t)
 {
-	isCollision = false;
+	// isCollision = false;
 
-	if (!isActive) return;
+	if (!isActive)
+	{
+		last_normalx = 0;
+		last_normaly = 0;
+		return;
+	}
+
 
 	// Nếu không nằm trong Camera thì unactive
 	if (!IsInCamera())
 	{
 		isActive = false;
+		last_normalx = 0;
+		last_normaly = 0;
 		return;
 	}
+
+	if (time_freeze <= 300)
+		collider->SetCollider(0, 0, -BEDGEHOG_HEIGHT, BEDGEHOG_WIDTH);
 
 	if (isHit)
 	{
@@ -105,11 +120,8 @@ void Bedgehog::Update(float t)
 		return;
 	}
 
-	/*if (onGround)
-		vy -= FALLDOWN_VELOCITY_DECREASE;*/
-	if (!isCollision)
-		vy -= gravity;
-
+	bool isCollide = false;
+	// collider mới cho ground - Quan
 	if (!(manager->metroid->isOnFloor))
 	{
 		for (int i = 0; i < manager->colGroundBrick->size; i++)
@@ -118,58 +130,137 @@ void Bedgehog::Update(float t)
 			if (timeScale < 1.0f)
 			{
 				ColliderBrick * brick = (ColliderBrick*)manager->colGroundBrick->objects[i];
-				isCollision = true;
-				ResponseGround(brick, t, timeScale);
+				ResponseGround3(brick, t, timeScale);
+
+				isCollide = true;
+				isChange = false;
+
+
+				//break;
 			}
 		}
 	}
 
 	if (manager->metroid->isOnFloor)
 	{
-		for (int i = 0; i < manager->colFloorBrick->objects.size(); i++)
+		for (int i = 0; i < manager->colFloorBrick->size; i++)
 		{
 			float timeScale = SweptAABB(manager->colFloorBrick->objects[i], t);
 			// Nếu có va chạm
 			if (timeScale < 1.0f)
 			{
-				isCollision = true;
-				ResponseGround(manager->colFloorBrick->objects[i], t, timeScale);
+				ColliderBrick * brick = (ColliderBrick*)manager->colFloorBrick->objects[i];
+				ResponseGround3(brick, t, timeScale);
+
+				isCollide = true;
+				isChange = false;
 			}
 		}
 	}
 
-	if (!isCollision && gravity == 0)
+
+
+	if (!isCollide && !isChange)
 	{
-		if (last_normalx > 0.1f)
+		isChange = true;
+		//OutputDebugString(L"NOT Collided\n");
+		if ((last_normaly > 0.1f) || (last_normaly < -0.1f))// nếu frame trước va chạm dưới hoặc trên còn bây giờ thì ko
 		{
-			state = ON_BEDGEHOG_BOTTOM;
-			vx = -BEDGEHOG_SPEED;
-			vy = 0.01f;
-		}
-		else if (last_normalx < -0.1f)
-		{
-			state = ON_BEDGEHOG_UP;
-			vx = BEDGEHOG_SPEED;
-			vy = -0.01f;
+			if (vx > 0)
+			{
+				pos_x += 2.f;
+			}
+			else
+			{
+				pos_x -= 2.f;
+			}
+
+			//OutputDebugString(L"pos_x: ");
+			//Output(pos_x);
+			//OutputDebugString(L"\n");
+
+			vx *= -1;
+			//vx = 0;
+			if (vx > 0)
+				OutputDebugString(L"vx > 0 \n");
+			else
+				OutputDebugString(L"vx < 0 \n");
+			if (last_normaly > 0.1f)
+			{
+				OutputDebugString(L"Up --> Right\n");
+			}
+			else
+			{
+				OutputDebugString(L"Down --> Left\n");
+			}
+			last_normalx = 0;
+			last_normaly = 0;
 		}
 
-		if (last_normaly > 0.1f)
+		if ((last_normalx > 0.1f) || (last_normalx < -0.1f))// nếu frame trước va chạm trái hoặc phải còn bây giờ thì ko
 		{
-			state = ON_BEDGEHOG_RIGHT;
-			vx = -0.01f;
-			vy = -0.05f;
+			if (vy > 0)
+			{
+				pos_y += 2.f;	// +
+				OutputDebugString(L"vy > 0\n");
+			}
+			else
+			{
+				pos_y -= 2.f;
+				OutputDebugString(L"vy < 0\n");
+			}
+			vy *= -1;
+			if (last_normalx > 0.1f)
+				OutputDebugString(L"Right --> Down\n");
+			else
+				OutputDebugString(L"Left --> Up\n");
+			last_normaly = 0;
+			last_normalx = 0;
 		}
-		else if (last_normaly < -0.1f)
-		{
-			vx = 0.01f;
-			vy = 0.05f;
-			state = ON_BEDGEHOG_LEFT;
-		}
+
+		/*last_normalx = normalx;
+		last_normaly = normaly;*/
 	}
 
-	
-	pos_x += vx*t;
-	pos_y += vy*t;
+
+
+	/*last_normalx = normalx;
+	last_normaly = normaly;*/
+
+
+
+	/*if (!isCollision && gravity == 0)
+	{
+	if (last_normalx > 0.1f)
+	{
+	state = ON_BEDGEHOG_BOTTOM;
+	vx = -BEDGEHOG_SPEED;
+	vy = 0.01f;
+	}
+	else if (last_normalx < -0.1f)
+	{
+	state = ON_BEDGEHOG_UP;
+	vx = BEDGEHOG_SPEED;
+	vy = -0.01f;
+	}
+
+	if (last_normaly > 0.1f)
+	{
+	state = ON_BEDGEHOG_RIGHT;
+	vx = -0.01f;
+	vy = -0.05f;
+	}
+	else if (last_normaly < -0.1f)
+	{
+	vx = 0.01f;
+	vy = 0.05f;
+	state = ON_BEDGEHOG_LEFT;
+	}
+	}*/
+
+
+	pos_x += vx * t;
+	pos_y += vy * t;
 
 	DWORD now = GetTickCount();
 	if (now - last_time > 1000 / ANIMATE_RATE)
@@ -200,21 +291,46 @@ void Bedgehog::Render()
 	if (!isActive)
 		return;
 	spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
-	switch (state)
+
+	if (time_freeze <= 300) // Do ENEMY_FREEZE = 300
 	{
-	case ON_BEDGEHOG_UP:
-		up->Render(pos_x, pos_y);
-		break;
-	case ON_BEDGEHOG_BOTTOM:
-		bottom->Render(pos_x, pos_y);
-		break;
-	case ON_BEDGEHOG_LEFT:
-		left->Render(pos_x, pos_y);
-		break;
-	case ON_BEDGEHOG_RIGHT:
-		right->Render(pos_x, pos_y);
-		break;
+		switch (state)
+		{
+		case ON_BEDGEHOG_UP:
+			up->Render(pos_x, pos_y);
+			break;
+		case ON_BEDGEHOG_BOTTOM:
+			bottom->Render(pos_x, pos_y);
+			break;
+		case ON_BEDGEHOG_LEFT:
+			left->Render(pos_x, pos_y);
+			break;
+		case ON_BEDGEHOG_RIGHT:
+			right->Render(pos_x, pos_y);
+			break;
+		}
 	}
+	else
+	{
+		D3DXCOLOR color;
+		color.r = 255; color.g = 255; color.b = 255;
+		switch (state)
+		{
+		case ON_BEDGEHOG_UP:
+			up->Render(pos_x, pos_y, color);
+			break;
+		case ON_BEDGEHOG_BOTTOM:
+			bottom->Render(pos_x, pos_y, color);
+			break;
+		case ON_BEDGEHOG_LEFT:
+			left->Render(pos_x, pos_y, color);
+			break;
+		case ON_BEDGEHOG_RIGHT:
+			right->Render(pos_x, pos_y, color);
+			break;
+		}
+	}
+
 	spriteHandler->End();
 }
 
@@ -223,7 +339,7 @@ void Bedgehog::Destroy()
 	// Effect explosion
 	manager->explsEffect->Init(this->pos_x, this->pos_y);	 // Xảy ra lỗi khi giết những mục tiêu to (Ridley, Mother Brain)
 
-	// Drop item after destroyed
+															 // Drop item after destroyed
 	int random;
 
 	/* initialize random seed: */
@@ -248,7 +364,7 @@ void Bedgehog::ResponseGround(GameObject *target, const float &DeltaTime, const 
 	if (normaly > 0.1f) // trên xuống ()
 	{
 		this->pos_y = (target->GetPosY() + target->GetCollider()->GetTop() - this->collider->GetBottom()) + 0.1f;
-		pos_y -= vy*DeltaTime;
+		pos_y -= vy * DeltaTime;
 
 		gravity = 0;
 		vx = BEDGEHOG_SPEED;
@@ -262,7 +378,7 @@ void Bedgehog::ResponseGround(GameObject *target, const float &DeltaTime, const 
 	else if (normaly < -0.1f)	// tông ở dưới lên
 	{
 		this->pos_y = (target->GetPosY() + target->GetCollider()->GetBottom() - this->collider->GetTop()) - 0.1f;
-		pos_y -= vy*DeltaTime;
+		pos_y -= vy * DeltaTime;
 		/*gravity = -FALLDOWN_VELOCITY_DECREASE + 0.02f;*/
 		vx = -BEDGEHOG_SPEED;
 		vy = 0.05f;
@@ -275,8 +391,10 @@ void Bedgehog::ResponseGround(GameObject *target, const float &DeltaTime, const 
 	else if (normalx < -0.1f)// tông bên trái gạch
 	{
 		this->pos_x = (target->GetPosX() + target->GetCollider()->GetLeft() - this->collider->GetRight()) - 0.1f;
-		pos_x -= vx*DeltaTime;
-
+		pos_x -= vx * DeltaTime;
+		//pos_y += 0.1f;
+		//
+		////Test 
 		gravity = 0;
 		vx = 0.001f;
 		vy = 0.05f;
@@ -286,19 +404,132 @@ void Bedgehog::ResponseGround(GameObject *target, const float &DeltaTime, const 
 		last_normalx = normalx;
 		last_normaly = 0;
 	}
-	else if (normalx > 0.1f)	// tông bên phải gạch
+	//else if (normalx > 0.1f)	// tông bên phải gạch
+	//{
+	//	this->pos_x = (target->GetPosX() + target->GetCollider()->GetRight() - this->collider->GetLeft()) + 0.1f;
+	//	pos_x -= vx*DeltaTime;
+
+	//	gravity = 0;
+	//	vx = -0.001;
+	//	vy = -0.05f;
+
+	//	state = ON_BEDGEHOG_RIGHT;
+
+	//	last_normalx = normalx;
+	//}
+	return;
+}
+void Bedgehog::ResponseGround2(GameObject * target, const float & DeltaTime, const float & CollisionTimeScale)
+{
+	if (normaly > 0.1f) // trên xuống ()
 	{
-		this->pos_x = (target->GetPosX() + target->GetCollider()->GetRight() - this->collider->GetLeft()) + 0.1f;
-		pos_x -= vx*DeltaTime;
+		this->pos_y = (target->GetPosY() + target->GetCollider()->GetTop() - this->collider->GetBottom()) + 0.1f;
+		pos_y -= vy * DeltaTime;
 
 		gravity = 0;
-		vx = -0.001;
+		vx = BEDGEHOG_SPEED;
 		vy = -0.05f;
 
-		state = ON_BEDGEHOG_RIGHT;
+		state = ON_BEDGEHOG_UP;
+
+		last_normaly = normaly;
+		last_normalx = 0;
+	}
+	else if (normaly < -0.1f)	// tông ở dưới lên
+	{
+		this->pos_y = (target->GetPosY() + target->GetCollider()->GetBottom() - this->collider->GetTop()) - 0.1f;
+		pos_y -= vy * DeltaTime;
+		/*gravity = -FALLDOWN_VELOCITY_DECREASE + 0.02f;*/
+		vx = -BEDGEHOG_SPEED;
+		vy = 0.05f;
+
+		state = ON_BEDGEHOG_BOTTOM;
+
+		last_normaly = normaly;
+		last_normalx = 0;
+	}
+	else if (normalx < -0.1f)// tông bên trái gạch
+	{
+		this->pos_x = (target->GetPosX() + target->GetCollider()->GetLeft() - this->collider->GetRight()) - 0.1f;
+		pos_x -= vx * DeltaTime;
+		//pos_y += 0.1f;
+		//
+		////Test 
+		gravity = 0;
+		vx = 0.001f;
+		vy = 0.05f;
+
+		state = ON_BEDGEHOG_LEFT;
 
 		last_normalx = normalx;
+		last_normaly = 0;
 	}
+	//else if (normalx > 0.1f)	// tông bên phải gạch
+	//{
+	//	this->pos_x = (target->GetPosX() + target->GetCollider()->GetRight() - this->collider->GetLeft()) + 0.1f;
+	//	pos_x -= vx*DeltaTime;
+
+	//	gravity = 0;
+	//	vx = -0.001;
+	//	vy = -0.05f;
+
+	//	state = ON_BEDGEHOG_RIGHT;
+
+	//	last_normalx = normalx;
+	//}
 	return;
+}
+void Bedgehog::ResponseGround3(GameObject * target, const float & DeltaTime, const float & CollisionTimeScale)
+{
+	if (normalx > 0.1f)	// tông bên phải gạch
+	{
+		this->pos_x = (target->GetPosX() + target->GetCollider()->GetRight() - this->collider->GetLeft()) + 0.1f;
+		pos_x -= vx * DeltaTime;
+		last_normalx = normalx;
+		//last_normaly = 0;
+
+		state = ON_BEDGEHOG_RIGHT;
+	}
+
+	if (normalx < -0.1f)// tông bên trái gạch
+	{
+		this->pos_x = (target->GetPosX() + target->GetCollider()->GetLeft() - this->collider->GetRight()) - 0.1f;
+		pos_x -= vx * DeltaTime;
+		last_normalx = normalx;
+		//last_normaly = 0;
+
+		state = ON_BEDGEHOG_LEFT;
+	}
+
+	if (normaly > 0.1f) // trên xuống 
+	{
+		this->pos_y = (target->GetPosY() + target->GetCollider()->GetTop() - this->collider->GetBottom()) + 0.1f;
+		pos_y -= vy * DeltaTime;
+		last_normaly = normaly;
+		//last_normalx = 0;
+
+		state = ON_BEDGEHOG_UP;
+	}
+
+	if (normaly < -0.1f)	// tông ở dưới lên
+	{
+		//this->pos_y = (target->GetPosY() + target->GetCollider()->GetTop() - this->collider->GetBottom()) - 0.1f;
+		pos_y -= vy * DeltaTime;
+		//vy = 0;
+		last_normaly = normaly;
+		//last_normalx = 0;
+
+		state = ON_BEDGEHOG_BOTTOM;
+	}
+
+
+	if ((last_normaly > 0.1f && normaly == 0.0f) || (last_normaly < -0.1f && normaly == 0.0f))// nếu frame trước va chạm dưới còn bây giờ thì ko
+	{
+		vx *= -1;
+	}
+	if ((last_normalx > 0.1f && normalx == 0.0f) || (last_normalx < -0.1f && normalx == 0.0f))// nếu frame trước va chạm trái còn bây giờ thì ko
+	{
+		vy *= -1;
+	}
 }
 //----------------------------------

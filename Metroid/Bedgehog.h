@@ -26,13 +26,16 @@ protected:
 	float last_normalx;
 	float last_normaly;
 
+	bool isChange = false;
+
 public:
 	Bedgehog();
 	Bedgehog(LPD3DXSPRITE spriteHandler, World * manager, ENEMY_TYPE enemy_type);
 	~Bedgehog();
 	void InitSprites();
 	void ResponseGround(GameObject *target, const float &DeltaTime, const float &CollisionTimeScale);
-	
+	void ResponseGround2(GameObject *target, const float &DeltaTime, const float &CollisionTimeScale);
+	void ResponseGround3(GameObject *target, const float &DeltaTime, const float &CollisionTimeScale);
 	//============== OVERRIDE VIRTUAL METHOD ===================
 	virtual void Update(float t);
 	virtual void Render();
