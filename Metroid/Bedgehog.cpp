@@ -153,7 +153,7 @@ void Bedgehog::Update(float t)
 			if (timeScale < 1.0f)
 			{
 				ColliderBrick * brick = (ColliderBrick*)manager->colFloorBrick->objects[i];
-				ResponseGround3(brick, t, timeScale);
+				ResponseGround(brick, t, timeScale);
 
 				isCollide = true;
 				isChange = false;
@@ -166,7 +166,6 @@ void Bedgehog::Update(float t)
 	if (!isCollide && !isChange)
 	{
 		isChange = true;
-		//OutputDebugString(L"NOT Collided\n");
 		if ((last_normaly > 0.1f) || (last_normaly < -0.1f))// nếu frame trước va chạm dưới hoặc trên còn bây giờ thì ko
 		{
 			if (vx > 0)
@@ -178,19 +177,6 @@ void Bedgehog::Update(float t)
 				pos_x -= 2.f;
 			}
 			vx *= -1;
-			//vx = 0;
-			if (vx > 0)
-				OutputDebugString(L"vx > 0 \n");
-			else
-				OutputDebugString(L"vx < 0 \n");
-			if (last_normaly > 0.1f)
-			{
-				OutputDebugString(L"Up --> Right\n");
-			}
-			else
-			{
-				OutputDebugString(L"Down --> Left\n");
-			}
 			last_normalx = 0;
 			last_normaly = 0;
 		}
@@ -207,9 +193,6 @@ void Bedgehog::Update(float t)
 			}
 			vy *= -1;
 			if (last_normalx > 0.1f)
-				OutputDebugString(L"Right --> Down\n");
-			else
-				OutputDebugString(L"Left --> Up\n");
 			last_normaly = 0;
 			last_normalx = 0;
 		}
@@ -250,43 +233,20 @@ void Bedgehog::Render()
 		return;
 	spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
 
-	if (time_freeze <= 300) // Do ENEMY_FREEZE = 300
+	switch (state)
 	{
-		switch (state)
-		{
-		case ON_BEDGEHOG_UP:
-			up->Render(pos_x, pos_y);
-			break;
-		case ON_BEDGEHOG_BOTTOM:
-			bottom->Render(pos_x, pos_y);
-			break;
-		case ON_BEDGEHOG_LEFT:
-			left->Render(pos_x, pos_y);
-			break;
-		case ON_BEDGEHOG_RIGHT:
-			right->Render(pos_x, pos_y);
-			break;
-		}
-	}
-	else
-	{
-		D3DXCOLOR color;
-		color.r = 255; color.g = 255; color.b = 255;
-		switch (state)
-		{
-		case ON_BEDGEHOG_UP:
-			up->Render(pos_x, pos_y, color);
-			break;
-		case ON_BEDGEHOG_BOTTOM:
-			bottom->Render(pos_x, pos_y, color);
-			break;
-		case ON_BEDGEHOG_LEFT:
-			left->Render(pos_x, pos_y, color);
-			break;
-		case ON_BEDGEHOG_RIGHT:
-			right->Render(pos_x, pos_y, color);
-			break;
-		}
+	case ON_BEDGEHOG_UP:
+		up->Render(pos_x, pos_y);
+		break;
+	case ON_BEDGEHOG_BOTTOM:
+		bottom->Render(pos_x, pos_y);
+		break;
+	case ON_BEDGEHOG_LEFT:
+		left->Render(pos_x, pos_y);
+		break;
+	case ON_BEDGEHOG_RIGHT:
+		right->Render(pos_x, pos_y);
+		break;
 	}
 
 	spriteHandler->End();

@@ -291,7 +291,7 @@ enum BULLET_DIRECTION
 
 //================= BULLET MANAGER ================
 #define STANDARD_NUM 5
-#define MISSILE_NUM 100
+#define MISSILE_NUM 10
 #define BOOM_NUM  50
 #define SENTRY_BULLET_NUM 10
 #define BIRD_BULLET_NUM 2
