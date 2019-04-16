@@ -225,8 +225,8 @@ class Boom;
 
 //================= BRICK ====================
 #define BRICK_1_PATH L"map\\brick_room_1.png"
-#define BRICK_1_WIDTH_COUNT 5
-#define BRICK_1_HEIGHT_COUNT 4
+#define BRICK_1_WIDTH_COUNT 15
+#define BRICK_1_HEIGHT_COUNT 8
 
 #define BRICK_2_PATH L"map\\brick_room_2.png"
 #define BRICK_2_WIDTH_COUNT 9

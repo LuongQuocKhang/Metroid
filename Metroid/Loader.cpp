@@ -170,17 +170,17 @@ void Loader::ReadMatrixFromFile(const char* path, int room)
 			int id = stoi(pos[i]);
 			// Xét xem id là loại gì
 			// Nếu id là 9 thì bỏ qua (ô trống trong room 1)
-			if (room == 1 && id == 9)
-			{
-				counter++;
-				continue;
-			}
-			// Nếu id là 0 thì bỏ qua (ô trống trong room 2)
-			if (room == 2 && id == 0)
-			{
-				counter++;
-				continue;
-			}
+			//if (room == 1 && id == 9)
+			//{
+			//	counter++;
+			//	continue;
+			//}
+			//// Nếu id là 0 thì bỏ qua (ô trống trong room 2)
+			//if (room == 2 && id == 0)
+			//{
+			//	counter++;
+			//	continue;
+			//}
 
 			
 
@@ -190,36 +190,38 @@ void Loader::ReadMatrixFromFile(const char* path, int room)
 			{
 
 				int pos_x = i * 32;
-				int pos_y = (97) * 32 - (((row_count - 3) + 97 - 15) * 32);	// trừ đi 3 dòng đầu không tính	-- 97 là số height của map 2
-				if (id == 99)	// LEFT GATE
-				{
-					Gate * gate = new Gate(spriteHandler, manager, GATE_TYPE::LEFT);
-					gate->SetPosX(pos_x);
-					gate->SetPosY(pos_y);
+				//int pos_y = 416; //Luu y: y chieu huong len, dong dau tien co y= 480
+				int pos_y = 32 * (15 - (row_count-3));
+				//int pos_y = (97) * 32 - (((row_count - 3) + 97 - 15) * 32);	// trừ đi 3 dòng đầu không tính	-- 97 là số height của map 2
+				//if (id == 99)	// LEFT GATE
+				//{
+				//	Gate * gate = new Gate(spriteHandler, manager, GATE_TYPE::LEFT);
+				//	gate->SetPosX(pos_x);
+				//	gate->SetPosY(pos_y);
 
-					pair<int, GameObject*> pair_to_add(counter, gate);
-					mapGameObjects.insert(pair_to_add);
-				}
-				else if (id == 98)  // RIGHT GATE
-				{
-					Gate * gate = new Gate(spriteHandler, manager, GATE_TYPE::RIGHT);
-					gate->SetPosX(pos_x);
-					gate->SetPosY(pos_y);
+				//	pair<int, GameObject*> pair_to_add(counter, gate);
+				//	mapGameObjects.insert(pair_to_add);
+				//}
+				//else if (id == 98)  // RIGHT GATE
+				//{
+				//	Gate * gate = new Gate(spriteHandler, manager, GATE_TYPE::RIGHT);
+				//	gate->SetPosX(pos_x);
+				//	gate->SetPosY(pos_y);
 
-					pair<int, GameObject*> pair_to_add(counter, gate);
-					mapGameObjects.insert(pair_to_add);
-				}
-				else   // BRICK
-				{
+				//	pair<int, GameObject*> pair_to_add(counter, gate);
+				//	mapGameObjects.insert(pair_to_add);
+				//}
+				//else   // BRICK
+				//{
 					//Brick * brick = new Brick(spriteHandler, manager, GROUND, id, pos_x, pos_y);
 					Brick * brick = new Brick(spriteHandler, manager, image_ground, GROUND, id, pos_x, pos_y);
 					// Nếu gạch ngay cổng thì cho phép băng qua
-					if (id == 12)
-						brick->SetPassable(true);
+				/*	if (id == 12)
+						brick->SetPassable(true);*/
 
 					pair<int, GameObject*> pair_to_add(counter, brick);
 					mapGameObjects.insert(pair_to_add);
-				}
+				//}
 			}
 			else if (room == 2)
 			{
